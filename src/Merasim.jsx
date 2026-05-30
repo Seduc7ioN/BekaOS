@@ -1135,6 +1135,9 @@ function GalleryPage({events,gallery,setGallery,company,addNotif}) {
         }
       }catch(err){console.error('Upload error:',err);}
     }
+    if(uploaded>0&&addNotif){
+      await addNotif({icon:"📸",text:`${activeEv?.client||"Etkinlik"} galerisine ${uploaded} yeni fotoğraf yüklendi.`,page:"gallery"});
+    }
     setUploading(false);
     e.target.value='';
     if(uploaded>0)alert(`${uploaded} fotoğraf yüklendi!`);
@@ -2472,7 +2475,7 @@ function Dashboard() {
     calendar:<CalendarPage events={events} setPage={navigate} setPrefillDate={setPrefillDate}/>,
     tasks:<TasksPage tasks={tasks} setTasks={setTasks} events={events}/>,
     invitations:<InvitationsPage events={events} guests={guests} updateEvent={updateEvent}/>,
-    gallery:<GalleryPage events={events} gallery={gallery} setGallery={setGallery} company={company}/>,
+    gallery:<GalleryPage events={events} gallery={gallery} setGallery={setGallery} company={company} addNotif={addNotif}/>,
     payments:<PaymentsPage events={events} updateEvent={updateEvent}/>,
     reservation:<ReservationPage events={events} addEvent={addEvent} prefillDate={prefillDate} setPrefillDate={setPrefillDate}/>,
     whatsapp:<WhatsAppPage events={events}/>,
