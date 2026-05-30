@@ -8,7 +8,7 @@
 import { useState, useRef, useEffect } from "react";
 
 const initEvents = [
-  { id:1, type:"Nisan",            client:"Ayşe & Mehmet",  date:"2026-06-02", time:"18:00", guests:80,  status:"confirmed", payment:"kapora",  location:"Bahçelievler Salonu", tasks:12, done:8,  budget:15000, paid:5000,  phone:"0532 111 2233", notes:"Kırmızı & altın tema, canlı müzik." },
+  { id:1, type:"Nişan",            client:"Ayşe & Mehmet",  date:"2026-06-02", time:"18:00", guests:80,  status:"confirmed", payment:"kapora",  location:"Bahçelievler Salonu", tasks:12, done:8,  budget:15000, paid:5000,  phone:"0532 111 2233", notes:"Kırmızı & altın tema, canlı müzik." },
   { id:2, type:"Doğum Günü",       client:"Zeynep Kaya",    date:"2026-06-05", time:"15:00", guests:35,  status:"pending",   payment:"bekliyor", location:"Ev / Bahçe",          tasks:7,  done:3,  budget:8000,  paid:0,     phone:"0541 333 4455", notes:"Unicorn teması, pasta özel sipariş." },
   { id:3, type:"Kına",             client:"Fatma Demir",    date:"2026-06-08", time:"20:00", guests:120, status:"confirmed", payment:"tam",      location:"Grand Hall",          tasks:15, done:15, budget:22000, paid:22000, phone:"0505 666 7788", notes:"Tüm görevler tamamlandı." },
   { id:4, type:"Baby Shower",      client:"Selin Arslan",   date:"2026-06-12", time:"14:00", guests:25,  status:"confirmed", payment:"kapora",   location:"Cafe Bloom",          tasks:9,  done:5,  budget:6000,  paid:2000,  phone:"0533 999 0011", notes:"Pembe & beyaz, kız bebek." },
@@ -57,17 +57,17 @@ const initStaff = [
 
 const WA_TEMPLATES = [
   { id:1, name:"Rezervasyon Onayı",   icon:"\u2705", trigger:"Otomatik - Rezervasyon sonrası", cat:"rezervasyon",
-    body:"Merhaba {isim},\n\n{etkinlik_türü} organizasyonunuz için rezervasyonunuz alındı!\n\nTarih: {tarih}\nSaat: {saat}\nLokasyon: {lokasyon}\n\nEkibimiz sizinle iletişime gececektir.\n\nBeka Organizasyon" },
+    body:"Merhaba {isim},\n\n{etkinlik_türü} organizasyonunuz için rezervasyonunuz alındı!\n\nTarih: {tarih}\nSaat: {saat}\nLokasyon: {lokasyon}\n\nEkibimiz sizinle iletişime gececektir.\n\nBeka Davet" },
   { id:2, name:"Randevu Hatırlatma",  icon:"\uD83D\uDCC5", trigger:"Otomatik - 24 saat önce",      cat:"hatırlatma",
-    body:"Merhaba {isim},\n\nYarın saat {saat}'de {lokasyon} adresinde görüşmemiz var.\n\nGörüşmek üze!\nBeka Organizasyon" },
+    body:"Merhaba {isim},\n\nYarın saat {saat}'de {lokasyon} adresinde görüşmemiz var.\n\nGörüşmek üze!\nBeka Davet" },
   { id:3, name:"Etkinlik Yaklaşıyor",  icon:"\uD83C\uDF89", trigger:"Otomatik - 3 gün önce",        cat:"hatırlatma",
-    body:"Merhaba {isim}!\n\n{etkinlik_türü} etkinliğinize {gun} gün kaldı!\n\nHazırlıklarınız tamamlanıyor.\n\nBeka Organizasyon" },
+    body:"Merhaba {isim}!\n\n{etkinlik_türü} etkinliğinize {gun} gün kaldı!\n\nHazırlıklarınız tamamlanıyor.\n\nBeka Davet" },
   { id:4, name:"Galeri Paylaşımı",    icon:"\uD83D\uDCF8", trigger:"Manuel - Etkinlik sonrası",    cat:"galeri",
-    body:"Merhaba {isim}!\n\nEtkinliginizin fotoğraflari galerinize yüklendi!\n\n{galeri_link}\n\nBeka Organizasyon" },
+    body:"Merhaba {isim}!\n\nEtkinliginizin fotoğraflari galerinize yüklendi!\n\n{galeri_link}\n\nBeka Davet" },
   { id:5, name:"Ödeme Hatırlatma",    icon:"\uD83D\uDCB3", trigger:"Otomatik - Ödeme gecikmesinde",cat:"odeme",
-    body:"Merhaba {isim},\n\nKalan ödemeniz ({tutar} TL) için hatırlatma.\n\nBeka Organizasyon" },
+    body:"Merhaba {isim},\n\nKalan ödemeniz ({tutar} TL) için hatırlatma.\n\nBeka Davet" },
   { id:6, name:"Davetiye Linki",      icon:"\uD83D\uDC8C", trigger:"Manuel - Davetiye hazırlandiginda", cat:"davetiye",
-    body:"Merhaba {isim}!\n\nDijital davetiyeniz hazır!\n\n{davetiye_link}\n\nBeka Organizasyon" },
+    body:"Merhaba {isim}!\n\nDijital davetiyeniz hazır!\n\n{davetiye_link}\n\nBeka Davet" },
 ];
 
 const NOTIFS_INIT = [
@@ -78,7 +78,7 @@ const NOTIFS_INIT = [
   { id:5, icon:"\uD83D\uDCF8", text:"Kına galerisine 12 yeni foto yüklendi", time:"1 gün önce",  read:true,  page:"gallery"     },
 ];
 
-const EVENT_ICONS = { "Nisan":"\uD83D\uDC8D","Doğum Günü":"\uD83C\uDF82","Kına":"\uD83C\uDF3F","Baby Shower":"\uD83C\uDF7C","Evlilik Teklifi":"\uD83C\uDF39","Söz":"\uD83D\uDC8E","Cinsiyet Partisi":"\uD83C\uDF80","Kurumsal":"\uD83C\uDFE2","Nişan (Eng)":"\uD83D\uDC8D" };
+const EVENT_ICONS = { "Nişan":"\uD83D\uDC8D","Doğum Günü":"\uD83C\uDF82","Kına":"\uD83C\uDF3F","Baby Shower":"\uD83C\uDF7C","Evlilik Teklifi":"\uD83C\uDF39","Söz":"\uD83D\uDC8E","Cinsiyet Partisi":"\uD83C\uDF80","Kurumsal":"\uD83C\uDFE2","Nişan (Eng)":"\uD83D\uDC8D" };
 const getIcon = (type) => {
   if(type && type.includes("Ni")) return "\uD83D\uDC8D";
   if(type && type.includes("Do")) return "\uD83C\uDF82";
@@ -93,7 +93,7 @@ const getIcon = (type) => {
 const EVENT_TYPES = ["Nişan","Doğum Günü","Kına","Baby Shower","Evlilik Teklifi","Söz","Cinsiyet Partisi","Kurumsal"];
 const PAY_COL = { tam:{bg:"bg-emerald-500/15",tx:"text-emerald-400"}, kapora:{bg:"bg-blue-500/15",tx:"text-blue-400"}, bekliyor:{bg:"bg-rose-500/15",tx:"text-rose-400"} };
 const TASK_COL = { devam:{bg:"bg-blue-500/15",tx:"text-blue-400",label:"Devam"}, bekliyor:{bg:"bg-amber-500/15",tx:"text-amber-400",label:"Bekliyor"}, tamamlandı:{bg:"bg-emerald-500/15",tx:"text-emerald-400",label:"Tamam"} };
-const MONTH_NAMES=["Ocak","Şubat","Mart","Nisan","Mayıs","Haziran","Temmuz","Ağustos","Eylül","Ekim","Kasım","Aralık"];
+const MONTH_NAMES=["Ocak","Şubat","Mart","Nişan","Mayıs","Haziran","Temmuz","Ağustos","Eylül","Ekim","Kasım","Aralık"];
 const DAY_NAMES=["Pzt","Sal","Çar","Per","Cum","Cmt","Paz"];
 
 // Dini bayramlar yıllara göre (Hicri takvim tahmini)
@@ -281,7 +281,7 @@ function Dashboard({events,tasks,setPage}) {
       </div>
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         <Card className="lg:col-span-2 overflow-hidden">
-          <SectionHeader title="Yaklasan Etkinlikler" right={<button onClick={()=>setPage("events")} className="text-xs text-white/30 hover:text-white/60 transition-colors">Hepsi</button>}/>
+          <SectionHeader title="Yaklaşan Etkinlikler" right={<button onClick={()=>setPage("events")} className="text-xs text-white/30 hover:text-white/60 transition-colors">Hepsi</button>}/>
           <div className="divide-y divide-white/5">
             {events.slice(0,5).map(ev=>(
               <div key={ev.id} className="flex items-center gap-3 px-5 py-3 hover:bg-white/[0.02] transition-colors cursor-pointer" onClick={()=>setPage("events")}>
@@ -307,7 +307,7 @@ function Dashboard({events,tasks,setPage}) {
           </div>
         </Card>
         <Card className="overflow-hidden">
-          <SectionHeader title="Acik Gorevler" right={<button onClick={()=>setPage("tasks")} className="text-xs text-white/30 hover:text-white/60 transition-colors">Hepsi</button>}/>
+          <SectionHeader title="Açık Görevler" right={<button onClick={()=>setPage("tasks")} className="text-xs text-white/30 hover:text-white/60 transition-colors">Hepsi</button>}/>
           <div className="divide-y divide-white/5">
             {openTasks.slice(0,6).map(t=>{
               const ev=events.find(e=>e.id===t.eventId);
@@ -400,16 +400,16 @@ function Dashboard({events,tasks,setPage}) {
 /* ── EVENTS ─────────────────────────────────────── */
 function EventsPage({events,setEvents}) {
   const [search,setSearch]=useState("");
-  const [filter,setFilter]=useState("Tümu");
-  const [statusF,setStatusF]=useState("Tümu");
+  const [filter,setFilter]=useState("Tümü");
+  const [statusF,setStatusF]=useState("Tümü");
   const [drawer,setDrawer]=useState(null);
   const [editModal,setEditModal]=useState(null);
   const [editForm,setEditForm]=useState({});
 
   const filtered=events.filter(e=>{
     const ms=e.client.toLowerCase().includes(search.toLowerCase())||e.type.toLowerCase().includes(search.toLowerCase())||e.location.toLowerCase().includes(search.toLowerCase());
-    const mf=filter==="Tümu"||e.type===filter;
-    const ms2=statusF==="Tümu"||(statusF==="Onaylandı"&&e.status==="confirmed")||(statusF==="Bekliyor"&&e.status==="pending");
+    const mf=filter==="Tümü"||e.type===filter;
+    const ms2=statusF==="Tümü"||(statusF==="Onaylandı"&&e.status==="confirmed")||(statusF==="Bekliyor"&&e.status==="pending");
     return ms&&mf&&ms2;
   });
 
@@ -428,23 +428,24 @@ function EventsPage({events,setEvents}) {
         <input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Müşteri, tur veya lokasyon ara..."
           className="flex-1 min-w-[200px] max-w-xs px-4 py-2 rounded-xl text-sm text-white/80 placeholder-white/25 outline-none border border-white/3 bg-white/3 focus:border-purple-500/40 transition-colors"/>
         <div className="flex gap-1.5 flex-wrap">
-          {["Tümu","Nisan","Kına","Doğum Günü","Kurumsal"].map(f=>(
+          {["Tümü","Nişan","Kına","Doğum Günü","Kurumsal"].map(f=>(
             <button key={f} onClick={()=>setFilter(f)} className={`px-2.5 py-1.5 rounded-xl text-xs transition-all ${filter===f?"bg-purple-500/20 text-purple-300 border border-purple-500/30":"text-white/40 border border-white/3 hover:text-white/70"}`}>{f}</button>
           ))}
         </div>
         <div className="flex gap-1.5">
-          {["Tümu","Onaylandı","Bekliyor"].map(s=>(
+          {["Tümü","Onaylandı","Bekliyor"].map(s=>(
             <button key={s} onClick={()=>setStatusF(s)} className={`px-2.5 py-1.5 rounded-xl text-xs transition-all ${statusF===s?"bg-white/10 text-white/80 border border-white/20":"text-white/35 border border-white/3 hover:text-white/60"}`}>{s}</button>
           ))}
         </div>
         <span className="ml-auto text-xs text-white/25">{filtered.length} etkinlik</span>
       </div>
-      <Card className="overflow-hidden">
+      {/* Desktop table */}
+      <Card className="overflow-hidden hidden md:block">
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
               <tr className="border-b border-white/3">
-                {["Etkinlik","Tarih","Lokasyon","Misafir","Butce","Ödeme","Durum","Gorevler",""].map(h=>(
+                {["Etkinlik","Tarih","Lokasyon","Misafir","Bütçe","Ödeme","Durum","Görevler",""].map(h=>(
                   <th key={h} className="px-4 py-3 text-left text-[10px] text-white/30 font-medium uppercase tracking-wider whitespace-nowrap">{h}</th>
                 ))}
               </tr>
@@ -452,32 +453,15 @@ function EventsPage({events,setEvents}) {
             <tbody className="divide-y divide-white/5">
               {filtered.map(ev=>(
                 <tr key={ev.id} onClick={()=>setDrawer(ev)} className="hover:bg-white/[0.015] transition-colors cursor-pointer group">
-                  <td className="px-4 py-3">
-                    <div className="flex items-center gap-2.5">
-                      <span className="text-xl">{getIcon(ev.type)}</span>
-                      <div>
-                        <div className="text-sm font-medium text-white/85 whitespace-nowrap">{ev.client}</div>
-                        <div className="text-[10px] text-white/35">{ev.type}</div>
-                      </div>
-                    </div>
-                  </td>
+                  <td className="px-4 py-3"><div className="flex items-center gap-2.5"><span className="text-xl">{getIcon(ev.type)}</span><div><div className="text-sm font-medium text-white/85 whitespace-nowrap">{ev.client}</div><div className="text-[10px] text-white/35">{ev.type}</div></div></div></td>
                   <td className="px-4 py-3 text-xs text-white/50 whitespace-nowrap">{ev.date}<br/><span className="text-white/30">{ev.time}</span></td>
                   <td className="px-4 py-3 text-xs text-white/50 max-w-[140px]"><div className="truncate">{ev.location}</div></td>
                   <td className="px-4 py-3 text-xs text-white/60 text-center">{ev.guests}</td>
                   <td className="px-4 py-3 text-xs font-medium text-white/70 whitespace-nowrap">{ev.budget.toLocaleString()} TL</td>
                   <td className="px-4 py-3"><span className={`text-[10px] px-2 py-0.5 rounded-full font-medium ${PAY_COL[ev.payment]?.bg||""} ${PAY_COL[ev.payment]?.tx||""}`}>{ev.payment}</span></td>
                   <td className="px-4 py-3"><Badge color={ev.status==="confirmed"?"green":"amber"}>{ev.status==="confirmed"?"Onaylandı":"Bekliyor"}</Badge></td>
-                  <td className="px-4 py-3">
-                    <div className="flex items-center gap-2">
-                      <div className="w-14 h-1.5 rounded-full bg-white/10">
-                        <div className="h-1.5 rounded-full" style={{width:`${(ev.done/ev.tasks)*100}%`,background:ev.done===ev.tasks?"#34d399":"#8b5cf6"}}/>
-                      </div>
-                      <span className="text-[10px] text-white/30">{ev.done}/{ev.tasks}</span>
-                    </div>
-                  </td>
-                  <td className="px-4 py-3">
-                    <button onClick={e=>{e.stopPropagation();openEdit(ev);}} className="opacity-0 group-hover:opacity-100 text-[10px] px-2 py-1 rounded-lg text-white/50 hover:text-white border border-white/3 hover:border-white/20 transition-all whitespace-nowrap">Duzenle</button>
-                  </td>
+                  <td className="px-4 py-3"><div className="flex items-center gap-2"><div className="w-14 h-1.5 rounded-full bg-white/10"><div className="h-1.5 rounded-full" style={{width:`${(ev.done/ev.tasks)*100}%`,background:ev.done===ev.tasks?"#34d399":"#8b5cf6"}}/></div><span className="text-[10px] text-white/30">{ev.done}/{ev.tasks}</span></div></td>
+                  <td className="px-4 py-3"><button onClick={e=>{e.stopPropagation();openEdit(ev);}} className="opacity-0 group-hover:opacity-100 text-[10px] px-2 py-1 rounded-lg text-white/50 hover:text-white border border-white/3 hover:border-white/20 transition-all whitespace-nowrap">Düzenle</button></td>
                 </tr>
               ))}
               {filtered.length===0&&<tr><td colSpan={9} className="px-4 py-10 text-center text-xs text-white/25">Etkinlik bulunamadı</td></tr>}
@@ -485,8 +469,36 @@ function EventsPage({events,setEvents}) {
           </table>
         </div>
       </Card>
+      {/* Mobile cards */}
+      <div className="md:hidden space-y-2">
+        {filtered.map(ev=>(
+          <Card key={ev.id} onClick={()=>setDrawer(ev)} className="p-4">
+            <div className="flex items-center gap-3 mb-3">
+              <span className="text-2xl">{getIcon(ev.type)}</span>
+              <div className="flex-1 min-w-0">
+                <div className="text-sm font-semibold text-white/90 truncate">{ev.client}</div>
+                <div className="text-[10px] text-white/40">{ev.type}</div>
+              </div>
+              <Badge color={ev.status==="confirmed"?"green":"amber"}>{ev.status==="confirmed"?"Onay":"Bekliyor"}</Badge>
+            </div>
+            <div className="grid grid-cols-2 gap-2 text-[11px]">
+              <div className="text-white/40">📅 {ev.date}</div>
+              <div className="text-white/40">📍 <span className="truncate inline-block max-w-[100px] align-bottom">{ev.location}</span></div>
+              <div className="text-white/40">👥 {ev.guests} kişi</div>
+              <div className="text-white/60 font-medium">💰 {ev.budget.toLocaleString()} TL</div>
+            </div>
+            <div className="mt-3 flex items-center gap-2">
+              <div className="flex-1 h-1.5 rounded-full bg-white/10">
+                <div className="h-1.5 rounded-full" style={{width:`${(ev.done/ev.tasks)*100}%`,background:ev.done===ev.tasks?"#34d399":"#8b5cf6"}}/>
+              </div>
+              <span className="text-[10px] text-white/30">{ev.done}/{ev.tasks}</span>
+            </div>
+          </Card>
+        ))}
+        {filtered.length===0&&<div className="text-center py-10 text-xs text-white/25">Etkinlik bulunamadı</div>}
+      </div>
 
-      <Drawer open={!!drawer} onClose={()=>setDrawer(null)} title="Etkinlik Detayi">
+      <Drawer open={!!drawer} onClose={()=>setDrawer(null)} title="Etkinlik Detayı">
         {drawer&&(
           <>
             <div className="text-center pb-5 border-b border-white/3 mb-5">
@@ -495,7 +507,7 @@ function EventsPage({events,setEvents}) {
               <div className="text-xs text-white/40 mt-1">{drawer.type}</div>
             </div>
             <div className="space-y-0 mb-5">
-              {[["Tarih",drawer.date],["Saat",drawer.time],["Lokasyon",drawer.location],["Misafir",`${drawer.guests} kisi`],["Butce",`${(drawer.budget||0).toLocaleString()} TL`],["Odenen",`${(drawer.paid||0).toLocaleString()} TL`],["Kalan",`${((drawer.budget||0)-(drawer.paid||0)).toLocaleString()} TL`],["Telefon",drawer.phone]].map(([k,v])=>(
+              {[["Tarih",drawer.date],["Saat",drawer.time],["Lokasyon",drawer.location],["Misafir",`${drawer.guests} kisi`],["Bütçe",`${(drawer.budget||0).toLocaleString()} TL`],["Ödenen",`${(drawer.paid||0).toLocaleString()} TL`],["Kalan",`${((drawer.budget||0)-(drawer.paid||0)).toLocaleString()} TL`],["Telefon",drawer.phone]].map(([k,v])=>(
                 <div key={k} className="flex justify-between py-2.5 border-b border-white/3">
                   <span className="text-xs text-white/35">{k}</span>
                   <span className="text-xs text-white/75">{v}</span>
@@ -532,7 +544,7 @@ function EventsPage({events,setEvents}) {
         </div>
         <FieldInput label="Notlar" value={editForm.notes||""} onChange={e=>setEditForm(p=>({...p,notes:e.target.value}))} placeholder="Ozel istekler..." rows={2}/>
         <div className="flex justify-end gap-2 mt-5">
-          <GlassBtn onClick={()=>setEditModal(null)}>Iptal</GlassBtn>
+          <GlassBtn onClick={()=>setEditModal(null)}>İptal</GlassBtn>
           <button onClick={saveEdit} className="px-5 py-2 rounded-xl text-xs font-semibold text-white" style={{background:"linear-gradient(135deg,#8b5cf6,#6366f1)"}}>Kaydet</button>
         </div>
       </Modal>
@@ -646,7 +658,7 @@ function CalendarPage({events}) {
 function TasksPage({tasks,setTasks,events}) {
   const [addOpen,setAddOpen]=useState(false);
   const [newTask,setNewTask]=useState({task:"",eventId:"",assignee:"",priority:"orta"});
-  const [filterEv,setFilterEv]=useState("Tümu");
+  const [filterEv,setFilterEv]=useState("Tümü");
   const cols=["bekliyor","devam","tamamlandı"];
   const move=(id,status)=>setTasks(prev=>prev.map(t=>t.id===id?{...t,status}:t));
   const del=(id)=>setTasks(prev=>prev.filter(t=>t.id!==id));
@@ -655,7 +667,7 @@ function TasksPage({tasks,setTasks,events}) {
     setTasks(prev=>[...prev,{id:Date.now(),eventId:parseInt(newTask.eventId)||0,task:newTask.task.trim(),status:"bekliyor",assignee:newTask.assignee||"—",priority:newTask.priority}]);
     setNewTask({task:"",eventId:"",assignee:"",priority:"orta"});setAddOpen(false);
   };
-  const filt=filterEv==="Tümu"?tasks:tasks.filter(t=>t.eventId===parseInt(filterEv));
+  const filt=filterEv==="Tümü"?tasks:tasks.filter(t=>t.eventId===parseInt(filterEv));
   return (
     <div className="space-y-4">
       <div className="flex items-center gap-3 flex-wrap">
@@ -668,7 +680,7 @@ function TasksPage({tasks,setTasks,events}) {
         </div>
         <select value={filterEv} onChange={e=>setFilterEv(e.target.value)}
           className="px-3 py-1.5 rounded-xl text-xs text-white/60 bg-white/3 border border-white/3 outline-none bg-[#0f0f1c]">
-          <option value="Tümu">Tüm etkinlikler</option>
+          <option value="Tümü">Tüm etkinlikler</option>
           {events.map(e=><option key={e.id} value={e.id}>{e.client}</option>)}
         </select>
         <button onClick={()=>setAddOpen(true)} className="ml-auto px-3 py-1.5 rounded-xl text-xs text-purple-300 border border-purple-500/25 hover:bg-purple-500/10 transition-colors">+ Gorev Ekle</button>
@@ -720,7 +732,7 @@ function TasksPage({tasks,setTasks,events}) {
           <FieldSelect label="Oncelik" value={newTask.priority} onChange={e=>setNewTask(p=>({...p,priority:e.target.value}))} options={["dusuk","orta","yuksek"]}/>
         </div>
         <div className="flex justify-end gap-2 mt-5">
-          <GlassBtn onClick={()=>setAddOpen(false)}>Iptal</GlassBtn>
+          <GlassBtn onClick={()=>setAddOpen(false)}>İptal</GlassBtn>
           <button onClick={addTask} className="px-5 py-2 rounded-xl text-xs font-semibold text-white" style={{background:"linear-gradient(135deg,#8b5cf6,#6366f1)"}}>Ekle</button>
         </div>
       </Modal>
@@ -767,7 +779,7 @@ function InvitationsPage({events,guests}) {
             <p className="text-xs text-white/35 mt-0.5">{activeEv?.type} - {activeEv?.date} - {activeEv?.location}</p>
           </div>
           <div className="flex gap-2 flex-shrink-0">
-            <GlassBtn onClick={()=>setPreview(true)}>Onizle</GlassBtn>
+            <GlassBtn onClick={()=>setPreview(true)}>Önizle</GlassBtn>
             <button className="px-3 py-2 rounded-xl text-xs font-medium text-white" style={{background:"linear-gradient(135deg,#8b5cf6,#6366f1)"}}>Olustur & Paylas</button>
           </div>
         </div>
@@ -786,7 +798,7 @@ function InvitationsPage({events,guests}) {
         <div>
           <p className="text-xs text-white/40 mb-3">RSVP Özeti</p>
           <div className="grid grid-cols-3 gap-2">
-            {[{label:"Katiliyor",count:evGuests.filter(g=>g.response==="katılıyor").length,color:"#34d399"},{label:"Belki",count:evGuests.filter(g=>g.response==="belki").length,color:"#fbbf24"},{label:"Katilamyor",count:evGuests.filter(g=>g.response==="katılamıyor").length,color:"#f87171"}].map(s=>(
+            {[{label:"Katılıyor",count:evGuests.filter(g=>g.response==="katılıyor").length,color:"#34d399"},{label:"Belki",count:evGuests.filter(g=>g.response==="belki").length,color:"#fbbf24"},{label:"Katılamıyor",count:evGuests.filter(g=>g.response==="katılamıyor").length,color:"#f87171"}].map(s=>(
               <div key={s.label} className="p-3 rounded-xl border border-white/3 text-center" style={{background:"rgba(255,255,255,0.03)"}}>
                 <div className="text-2xl font-bold" style={{color:s.color}}>{s.count}</div>
                 <div className="text-[10px] text-white/40 mt-0.5">{s.label}</div>
@@ -797,10 +809,11 @@ function InvitationsPage({events,guests}) {
         {evGuests.length>0&&(
           <div>
             <p className="text-xs text-white/40 mb-3">Misafir Listesi ({evGuests.length})</p>
-            <div className="rounded-xl overflow-hidden border border-white/3">
+            {/* Desktop table */}
+            <div className="rounded-xl overflow-hidden border border-white/3 hidden md:block">
               <table className="w-full">
                 <thead><tr className="border-b border-white/3 bg-white/[0.015]">
-                  {["Ad Soyad","Telefon","+Kisi","Cocuk","Yemek","Cevap"].map(h=><th key={h} className="px-3 py-2 text-left text-[10px] text-white/30 uppercase tracking-wider">{h}</th>)}
+                  {["Ad Soyad","Telefon","+Kişi","Çocuk","Yemek","Cevap"].map(h=><th key={h} className="px-3 py-2 text-left text-[10px] text-white/30 uppercase tracking-wider">{h}</th>)}
                 </tr></thead>
                 <tbody className="divide-y divide-white/5">
                   {evGuests.map(g=>(
@@ -816,6 +829,23 @@ function InvitationsPage({events,guests}) {
                 </tbody>
               </table>
             </div>
+            {/* Mobile cards */}
+            <div className="md:hidden space-y-2">
+              {evGuests.map(g=>(
+                <div key={g.id} className="p-3 rounded-xl border border-white/3 bg-white/[0.02]">
+                  <div className="flex items-center justify-between mb-2">
+                    <div className="text-sm font-medium text-white/80">{g.name}</div>
+                    <Badge color={g.response==="katılıyor"?"green":g.response==="belki"?"amber":"red"}>{g.response}</Badge>
+                  </div>
+                  <div className="grid grid-cols-2 gap-1 text-[11px] text-white/40">
+                    <div>📞 {g.phone}</div>
+                    <div>🍽️ {g.food}</div>
+                    {g.plus>0&&<div>👥 +{g.plus} kişi</div>}
+                    {g.children>0&&<div>👶 {g.children} çocuk</div>}
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         )}
         <div className="p-3 rounded-xl border border-white/3 bg-white/[0.015] flex items-center gap-3">
@@ -827,7 +857,7 @@ function InvitationsPage({events,guests}) {
           <GlassBtn>QR</GlassBtn>
         </div>
       </Card>
-      <Modal open={preview} onClose={()=>setPreview(false)} title="Davetiye Onizlemesi">
+      <Modal open={preview} onClose={()=>setPreview(false)} title="Davetiye Önizlemesi">
         <div className="flex justify-center">
           <div className="w-72 rounded-3xl overflow-hidden" style={{background:`linear-gradient(160deg,${th.dark} 0%,#0d0d18 100%)`,border:"1px solid rgba(139,92,246,0.2)"}}>
             <div className="relative overflow-hidden h-44 flex items-center justify-center" style={{background:`linear-gradient(135deg,${th.from},${th.to})`}}>
@@ -847,8 +877,8 @@ function InvitationsPage({events,guests}) {
                 <div className="text-white/60 text-sm">&#128205; {activeEv?.location}</div>
               </div>
               <div className="flex gap-2">
-                <button className="flex-1 py-2.5 rounded-xl text-xs font-semibold text-white" style={{background:`linear-gradient(135deg,${th.from},${th.to})`}}>Katiliyorum</button>
-                <button className="flex-1 py-2.5 rounded-xl text-xs text-white/60 border border-white/15">Katilamyorum</button>
+                <button className="flex-1 py-2.5 rounded-xl text-xs font-semibold text-white" style={{background:`linear-gradient(135deg,${th.from},${th.to})`}}>Katılıyorum</button>
+                <button className="flex-1 py-2.5 rounded-xl text-xs text-white/60 border border-white/15">Katılamıyorum</button>
               </div>
               <p className="text-[9px] text-white/20">BekaOS - beka.io/i/{activeEv?.id}</p>
             </div>
@@ -968,11 +998,12 @@ function PaymentsPage({events}) {
         <StatBox label="Bekleyen"     value={`${(totalRem/1000).toFixed(0)}k TL`} sub="Tahsilat bekliyor" icon="&#9680;" color="#fb923c"/>
       </div>
       <Card className="overflow-hidden">
-        <SectionHeader title="Ödeme Detaylari"/>
-        <div className="overflow-x-auto">
+        <SectionHeader title="Ödeme Detayları"/>
+        {/* Desktop table */}
+        <div className="overflow-x-auto hidden md:block">
           <table className="w-full">
             <thead><tr className="border-b border-white/3">
-              {["Müşteri","Etkinlik","Tarih","Toplam","Odenen","Kalan","%","Durum",""].map(h=>(
+              {["Müşteri","Etkinlik","Tarih","Toplam","Ödenen","Kalan","%","Durum",""].map(h=>(
                 <th key={h} className="px-4 py-3 text-left text-[10px] text-white/30 font-medium uppercase tracking-wider whitespace-nowrap">{h}</th>
               ))}
             </tr></thead>
@@ -988,12 +1019,7 @@ function PaymentsPage({events}) {
                     <td className="px-4 py-3 text-xs font-medium text-white/75 whitespace-nowrap">{ev.budget.toLocaleString()}</td>
                     <td className="px-4 py-3 text-xs font-medium text-emerald-400 whitespace-nowrap">{ev.paid.toLocaleString()}</td>
                     <td className="px-4 py-3 text-xs font-medium text-rose-400 whitespace-nowrap">{rem.toLocaleString()}</td>
-                    <td className="px-4 py-3">
-                      <div className="flex items-center gap-2">
-                        <div className="w-12 h-1.5 rounded-full bg-white/10"><div className="h-1.5 rounded-full" style={{width:`${pct}%`,background:pct===100?"#34d399":"linear-gradient(90deg,#8b5cf6,#6366f1)"}}/></div>
-                        <span className="text-[10px] text-white/40">{pct}%</span>
-                      </div>
-                    </td>
+                    <td className="px-4 py-3"><div className="flex items-center gap-2"><div className="w-12 h-1.5 rounded-full bg-white/10"><div className="h-1.5 rounded-full" style={{width:`${pct}%`,background:pct===100?"#34d399":"linear-gradient(90deg,#8b5cf6,#6366f1)"}}/></div><span className="text-[10px] text-white/40">{pct}%</span></div></td>
                     <td className="px-4 py-3"><span className={`text-[10px] px-2 py-0.5 rounded-full font-medium ${PAY_COL[ev.payment]?.bg||""} ${PAY_COL[ev.payment]?.tx||""}`}>{ev.payment}</span></td>
                     <td className="px-4 py-3">{rem>0&&<button className="text-[10px] px-2.5 py-1 rounded-lg text-white/50 hover:text-white border border-white/3 hover:border-white/20 transition-colors whitespace-nowrap">Tahsil Et</button>}</td>
                   </tr>
@@ -1001,6 +1027,30 @@ function PaymentsPage({events}) {
               })}
             </tbody>
           </table>
+        </div>
+        {/* Mobile cards */}
+        <div className="md:hidden divide-y divide-white/5">
+          {events.map(ev=>{
+            const rem=ev.budget-ev.paid;
+            const pct=ev.budget>0?Math.round((ev.paid/ev.budget)*100):0;
+            return (
+              <div key={ev.id} className="p-4">
+                <div className="flex items-center justify-between mb-2">
+                  <div className="text-sm font-medium text-white/80">{ev.client}</div>
+                  <span className={`text-[10px] px-2 py-0.5 rounded-full font-medium ${PAY_COL[ev.payment]?.bg||""} ${PAY_COL[ev.payment]?.tx||""}`}>{ev.payment}</span>
+                </div>
+                <div className="grid grid-cols-3 gap-2 text-[11px] mb-2">
+                  <div><div className="text-white/30">Toplam</div><div className="text-white/70 font-medium">{ev.budget.toLocaleString()}</div></div>
+                  <div><div className="text-white/30">Ödenen</div><div className="text-emerald-400 font-medium">{ev.paid.toLocaleString()}</div></div>
+                  <div><div className="text-white/30">Kalan</div><div className="text-rose-400 font-medium">{rem.toLocaleString()}</div></div>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="flex-1 h-1.5 rounded-full bg-white/10"><div className="h-1.5 rounded-full" style={{width:`${pct}%`,background:pct===100?"#34d399":"linear-gradient(90deg,#8b5cf6,#6366f1)"}}/></div>
+                  <span className="text-[10px] text-white/40">{pct}%</span>
+                </div>
+              </div>
+            );
+          })}
         </div>
       </Card>
       <Card className="p-5">
@@ -1050,7 +1100,7 @@ function ReservationPage() {
       <h2 className="text-xl font-bold text-white mb-2">Rezervasyon Alindi!</h2>
       <p className="text-white/50 text-sm mb-6">Ekibimiz en kisa surede <span className="text-purple-400">{form.phone||"sizi"}</span> arayacak.</p>
       <div className="p-4 rounded-2xl border border-white/3 bg-white/[0.02] text-left space-y-2 mb-6">
-        {[["Etkinlik",form.type],["Tarih",`${form.date} ${form.time}`],["Kisi",`${form.guests} kisi`],["Lokasyon",form.location],["Tahmini",`${total.toLocaleString()} TL`]].map(([k,v])=>(
+        {[["Etkinlik",form.type],["Tarih",`${form.date} ${form.time}`],["Kişi",`${form.guests} kisi`],["Lokasyon",form.location],["Tahmini",`${total.toLocaleString()} TL`]].map(([k,v])=>(
           <div key={k} className="flex justify-between text-xs"><span className="text-white/35">{k}</span><span className="text-white/75">{v||"—"}</span></div>
         ))}
       </div>
@@ -1163,7 +1213,7 @@ function ReservationPage() {
           <div className="space-y-4">
             <h3 className="text-sm font-semibold text-white/85 mb-4">Özet & Onay</h3>
             <div className="p-4 rounded-xl bg-white/[0.04] space-y-2">
-              {[["Etkinlik",form.type||"—"],["Tarih",form.date||"—"],["Saat",form.time||"—"],["Kisi",form.guests?`${form.guests} kisi`:"—"],["Lokasyon",form.location||"—"],["Konsept",form.cöncept||"—"],["Ad Soyad",form.name||"—"],["Telefon",form.phone||"—"]].map(([k,v])=>(
+              {[["Etkinlik",form.type||"—"],["Tarih",form.date||"—"],["Saat",form.time||"—"],["Kişi",form.guests?`${form.guests} kisi`:"—"],["Lokasyon",form.location||"—"],["Konsept",form.cöncept||"—"],["Ad Soyad",form.name||"—"],["Telefon",form.phone||"—"]].map(([k,v])=>(
                 <div key={k} className="flex justify-between py-1.5 border-b border-white/3">
                   <span className="text-xs text-white/35">{k}</span><span className="text-xs text-white/75">{v}</span>
                 </div>
@@ -1225,7 +1275,7 @@ function WhatsAppPage({events}) {
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
       <Card className="overflow-hidden">
-        <SectionHeader title="Sablonlar"/>
+        <SectionHeader title="Şablonlar"/>
         <div className="divide-y divide-white/5">
           {WA_TEMPLATES.map(tmpl=>(
             <div key={tmpl.id} onClick={()=>{setActive(tmpl);setEditBody(tmpl.body);setEditing(false);}}
@@ -1249,8 +1299,8 @@ function WhatsAppPage({events}) {
             <p className="text-xs text-white/35 mt-0.5">{active?.trigger}</p>
           </div>
           <div className="flex gap-2 flex-shrink-0">
-            <GlassBtn onClick={()=>setPreview(true)}>Onizle</GlassBtn>
-            <GlassBtn onClick={()=>setEditing(!editing)}>{editing?"Iptal":"Duzenle"}</GlassBtn>
+            <GlassBtn onClick={()=>setPreview(true)}>Önizle</GlassBtn>
+            <GlassBtn onClick={()=>setEditing(!editing)}>{editing?"İptal":"Düzenle"}</GlassBtn>
           </div>
         </div>
         {editing?(
@@ -1303,11 +1353,11 @@ function WhatsAppPage({events}) {
           </div>
         )}
       </Card>
-      <Modal open={preview} onClose={()=>setPreview(false)} title="WhatsApp Onizlemesi">
+      <Modal open={preview} onClose={()=>setPreview(false)} title="WhatsApp Önizlemesi">
         <div className="rounded-2xl overflow-hidden" style={{background:"#111b21"}}>
           <div className="p-4 flex items-center gap-3 border-b border-white/3">
             <div className="w-10 h-10 rounded-full bg-green-500/20 flex items-center justify-center text-green-400 text-xl">&#128172;</div>
-            <div><div className="text-sm font-semibold text-white">Beka Organizasyon</div><div className="text-[10px] text-white/40">WhatsApp Business</div></div>
+            <div><div className="text-sm font-semibold text-white">Beka Davet</div><div className="text-[10px] text-white/40">WhatsApp Business</div></div>
           </div>
           <div className="p-4 min-h-40" style={{background:"#0b141a"}}>
             <div className="max-w-[88%] p-3 rounded-2xl rounded-tl-sm text-sm text-white leading-relaxed" style={{background:"#202c33",whiteSpace:"pre-wrap"}}>
@@ -1340,8 +1390,8 @@ function StaffPage({events}) {
       <div className="flex items-start justify-between flex-wrap gap-4">
         <div className="flex gap-3">
           <StatBox label="Toplam" value={staff.length} sub="personel" icon="&#9676;" color="#8b5cf6"/>
-          <StatBox label="Aktif"  value={staff.filter(s=>s.status==="aktif").length} sub="calisiyor" icon="&#9689;" color="#34d399"/>
-          <StatBox label="Pasif"  value={staff.filter(s=>s.status==="pasif").length} sub="disarida"  icon="&#9680;" color="#fb923c"/>
+          <StatBox label="Aktif"  value={staff.filter(s=>s.status==="aktif").length} sub="çalışıyor" icon="&#9689;" color="#34d399"/>
+          <StatBox label="Pasif"  value={staff.filter(s=>s.status==="pasif").length} sub="dışarıda"  icon="&#9680;" color="#fb923c"/>
         </div>
         <button onClick={()=>setAddOpen(true)} className="px-4 py-2.5 rounded-xl text-sm font-medium text-white" style={{background:"linear-gradient(135deg,#8b5cf6,#6366f1)"}}>+ Personel Ekle</button>
       </div>
@@ -1365,14 +1415,14 @@ function StaffPage({events}) {
             </div>
             <div className="flex gap-2">
               <button className="flex-1 py-1.5 rounded-xl text-[10px] text-white/50 border border-white/3 hover:border-white/20 transition-colors">Mesaj</button>
-              <button className="flex-1 py-1.5 rounded-xl text-[10px] text-white/50 border border-white/3 hover:border-white/20 transition-colors">Gorevler</button>
+              <button className="flex-1 py-1.5 rounded-xl text-[10px] text-white/50 border border-white/3 hover:border-white/20 transition-colors">Görevler</button>
               <button onClick={()=>del(s.id)} className="py-1.5 px-2 rounded-xl text-[10px] text-rose-400/50 border border-rose-500/10 hover:border-rose-500/30 hover:text-rose-400 transition-colors">x</button>
             </div>
           </Card>
         ))}
       </div>
       <Card className="overflow-hidden">
-        <SectionHeader title="Etkinlik Atamalari"/>
+        <SectionHeader title="Etkinlik Atamaları"/>
         <div className="p-5 overflow-x-auto">
           <table className="w-full">
             <thead><tr className="border-b border-white/3">
@@ -1397,13 +1447,13 @@ function StaffPage({events}) {
       </Card>
       <Modal open={addOpen} onClose={()=>setAddOpen(false)} title="Yeni Personel Ekle">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <FieldInput label="Ad Soyad" value={form.name} onChange={upd("name")} placeholder="Adi soyadi"/>
-          <FieldInput label="Gorev" value={form.role} onChange={upd("role")} placeholder="Dekorasyon, Fotoğrafçı..."/>
+          <FieldInput label="Ad Soyad" value={form.name} onChange={upd("name")} placeholder="Adı soyadı"/>
+          <FieldInput label="Görev" value={form.role} onChange={upd("role")} placeholder="Dekorasyon, Fotoğrafçı..."/>
           <FieldInput label="Telefon" value={form.phone} onChange={upd("phone")} placeholder="0532 XXX XXXX"/>
           <FieldInput label="E-posta" value={form.email} onChange={upd("email")} placeholder="mail@firma.com"/>
         </div>
         <div className="flex justify-end gap-2 mt-5">
-          <GlassBtn onClick={()=>setAddOpen(false)}>Iptal</GlassBtn>
+          <GlassBtn onClick={()=>setAddOpen(false)}>İptal</GlassBtn>
           <button onClick={add} className="px-5 py-2 rounded-xl text-xs font-semibold text-white" style={{background:"linear-gradient(135deg,#8b5cf6,#6366f1)"}}>Kaydet</button>
         </div>
       </Modal>
@@ -1442,7 +1492,7 @@ function CRMPage({events}) {
             ))}
           </div>
         </Card>
-        <Card className="col-span-2 p-5">
+        <Card className="md:col-span-2 p-5">
           {selected?(
             <>
               <div className="flex items-start gap-4 pb-5 border-b border-white/3 mb-5">
@@ -1463,7 +1513,7 @@ function CRMPage({events}) {
                 </div>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-5">
-                {[["Telefon",selected.phone],["Etkinlik",selected.type],["Tarih",selected.date],["Butce",`${selected.budget.toLocaleString()} TL`],["Odenen",`${selected.paid.toLocaleString()} TL`],["Kalan",`${(selected.budget-selected.paid).toLocaleString()} TL`]].map(([k,v])=>(
+                {[["Telefon",selected.phone],["Etkinlik",selected.type],["Tarih",selected.date],["Bütçe",`${selected.budget.toLocaleString()} TL`],["Ödenen",`${selected.paid.toLocaleString()} TL`],["Kalan",`${(selected.budget-selected.paid).toLocaleString()} TL`]].map(([k,v])=>(
                   <div key={k} className="p-3 rounded-xl bg-white/[0.02] border border-white/3">
                     <div className="text-[10px] text-white/35 mb-1">{k}</div>
                     <div className="text-sm text-white/80 font-medium">{v}</div>
@@ -1495,7 +1545,7 @@ function CRMPage({events}) {
           ):(
             <div className="flex flex-col items-center justify-center h-64 text-center">
               <div className="text-5xl mb-4 opacity-20">&#128101;</div>
-              <div className="text-white/30 text-sm">Detaylari gormek için bir musteri secin</div>
+              <div className="text-white/30 text-sm">Detaylari gormek için bir musteri seçin</div>
             </div>
           )}
         </Card>
@@ -1627,18 +1677,18 @@ function AnalyticsPage({events, tasks}) {
 function AIPage() {
   const [mode,setMode]=useState("offer");
   const [input,setInput]=useState("");
-  const [msgs,setMsgs]=useState([{role:"assistant",text:"Merhaba! Ben BekaOS AI asistaniyim.\n\nTeklif olusturma, konsept onerisi veya genel sorularinizda yardimci olabilirim. Asagidaki hazır sorulardan birini secin veya kendiniz yazin."}]);
+  const [msgs,setMsgs]=useState([{role:"assistant",text:"Merhaba! Ben BekaOS AI asistanıyım.\n\nTeklif oluşturma, konsept önerisi veya genel sorularinizda yardımcı olabilirim. Aşağıdaki hazır sorulardan birini seçin veya kendiniz yazin."}]);
   const [loading,setLoading]=useState(false);
   const endRef=useRef(null);
   const SYSTEMS={
-    offer:"Sen BekaOS için calisan bir Turk organizasyon sirketinin teklif asistanisin. Kullanici etkinlik bilgisi verdiginde TL cinsinden fiyat araliklari, dahil hizmetler, notlar ve konsept onerileri iceren profesyonel Turkce teklifler hazırla. Net, sicak ve ozlu ol.",
-    cöncept:"Sen BekaOS için bir Turk organizasyon firmasinin kreatif direktorusunsun. Kullaniçinin belirttigi tema ve etkinlik türüne gore Turkce olarak renk paleti, dekor fikirleri, cicek secimi, masa duzeni, isiklandirma onerileri sun.",
-    chat:"Sen BekaOS organizasyon platformunun Turkce konusan AI asistanisin. Etkinlik planlamasi, organizasyon ipuclari ve platform kullanimi hakkinda kisa, samimi ve pratik cevaplar ver."
+    offer:"Sen BekaOS için çalışan bir Turk organizasyon şirketinin teklif asistanısın. Kullanici etkinlik bilgisi verdiğinde TL cinsinden fiyat aralıkları, dahil hizmetler, notlar ve konsept onerileri içeren profesyonel Turkce teklifler hazırla. Net, sıcak ve özlü ol.",
+    cöncept:"Sen BekaOS için bir Turk organizasyon firmasinin kreatif direktörüsün. Kullaniçinin belirttigi tema ve etkinlik türüne gore Turkce olarak renk paleti, dekor fikirleri, cicek secimi, masa duzeni, isiklandirma onerileri sun.",
+    chat:"Sen BekaOS organizasyon platformunun Turkce konusan AI asistanısın. Etkinlik planlamasi, organizasyon ipuçları ve platform kullanımı hakkında kisa, samimi ve pratik cevaplar ver."
   };
   const PROMPTS={
-    offer:["50 kisilik nisan teklifi","120 kisi kina butcesi","Kurumsal yilsonu yemeği"],
-    cöncept:["Boho tarzinda romantik nisan","Pembe & altin baby shower","Siyah & beyaz modern gece"],
-    chat:["En populer etkinlik trendleri","QR galeri nasil calisir?","Organizasyon planlamasi ipuclari"]
+    offer:["50 kişilik nisan teklifi","120 kisi kina bütçesi","Kurumsal yilsonu yemeği"],
+    cöncept:["Boho tarzında romantik nisan","Pembe & altin baby shower","Siyah & beyaz modern gece"],
+    chat:["En popüler etkinlik trendleri","QR galeri nasıl çalışır?","Organizasyon planlamasi ipuçları"]
   };
   const MODES=[{id:"offer",icon:"&#128203;",label:"Teklif Olustur"},{id:"cöncept",icon:"&#127912;",label:"Konsept Oner"},{id:"chat",icon:"&#128172;",label:"Genel Asistan"}];
   const send=async()=>{
@@ -1656,7 +1706,7 @@ function AIPage() {
       const data=await res.json();
       setMsgs(p=>[...p,{role:"assistant",text:data.content?.[0]?.text||"Bir hata olustu."}]);
     }catch{
-      setMsgs(p=>[...p,{role:"assistant",text:"Baglanti hatasi. Lutfen tekrar deneyin."}]);
+      setMsgs(p=>[...p,{role:"assistant",text:"Baglanti hatasi. Lütfen tekrar deneyin."}]);
     }
     setLoading(false);
     setTimeout(()=>endRef.current?.scrollIntoView({behavior:"smooth"}),100);
@@ -1714,26 +1764,42 @@ function AIPage() {
 function SettingsPage() {
   const [saved,setSaved]=useState(false);
   const [notifs,setNotifs]=useState({rsvp:true,payment:true,task:true,gallery:false,reminder:true});
-  const [profile,setProfile]=useState({company:"Beka Organizasyon",email:"info@beka.com",phone:"0212 555 0000",city:"İstanbul",currency:"TRY",whatsapp:"0212 555 0001"});
+  const [profile,setProfile]=useState({company:"Beka Davet",email:"",phone:"0535 033 0645",address:"Yunusemre, Arpacılar Sk Arpacılar Sitesi No:4/BA, 16270 Yıldırım/Bursa",city:"Bursa",currency:"TRY",whatsapp:""});
   const upd=k=>e=>setProfile(p=>({...p,[k]:e.target.value}));
   const save=()=>{setSaved(true);setTimeout(()=>setSaved(false),2500);};
   return (
     <div className="max-w-2xl space-y-5">
       <Card className="p-5 space-y-4">
         <h2 className="text-sm font-semibold text-white/80">Firma Profili</h2>
-        <div className="grid grid-cols-2 gap-4">
-          <FieldInput label="Firma Adi"          value={profile.company}  onChange={upd("company")}  placeholder="Firma adi"/>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <FieldInput label="Firma Adı"          value={profile.company}  onChange={upd("company")}  placeholder="Firma adı"/>
           <FieldInput label="E-posta"             value={profile.email}    onChange={upd("email")}    placeholder="info@firma.com"/>
           <FieldInput label="Telefon"             value={profile.phone}    onChange={upd("phone")}    placeholder="0212 XXX XXXX"/>
-          <FieldInput label="WhatsApp Is Hatti"   value={profile.whatsapp} onChange={upd("whatsapp")} placeholder="0212 XXX XXXX"/>
-          <FieldInput label="Sehir"               value={profile.city}     onChange={upd("city")}     placeholder="İstanbul"/>
+          <FieldInput label="WhatsApp İş Hattı"   value={profile.whatsapp} onChange={upd("whatsapp")} placeholder="0212 XXX XXXX"/>
+          <div className="sm:col-span-2">
+            <FieldInput label="Adres"              value={profile.address}  onChange={upd("address")}  placeholder="Firma adresi"/>
+          </div>
+          <FieldInput label="Şehir"               value={profile.city}     onChange={upd("city")}     placeholder="Bursa"/>
           <FieldSelect label="Para Birimi"        value={profile.currency} onChange={upd("currency")} options={["TRY","USD","EUR"]}/>
+        </div>
+      </Card>
+      <Card className="p-5">
+        <h2 className="text-sm font-semibold text-white/80 mb-4">Sosyal Medya</h2>
+        <div className="space-y-3">
+          <a href="https://www.instagram.com/beka_davet" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 p-3 rounded-xl border border-white/3 hover:border-white/10 transition-all" style={{background:"rgba(255,255,255,0.02)"}}>
+            <span className="text-xl">📸</span>
+            <div className="flex-1">
+              <div className="text-sm text-white/80">Instagram</div>
+              <div className="text-xs text-white/40">@beka_davet</div>
+            </div>
+            <span className="text-xs text-white/30">→</span>
+          </a>
         </div>
       </Card>
       <Card className="p-5">
         <h2 className="text-sm font-semibold text-white/80 mb-4">Bildirim Tercihleri</h2>
         <div className="space-y-3">
-          {[{k:"rsvp",l:"RSVP Bildirimleri",s:"Yeni davetiye cevabı"},{k:"payment",l:"Ödeme Hatırlatmalari",s:"Bekleyen odemelerde"},{k:"task",l:"Gorev Güncellemeleri",s:"Durum değişiminde"},{k:"gallery",l:"Galeri Yüklemeleri",s:"Yeni fotoğraf yüklendiğinde"},{k:"reminder",l:"Etkinlik Hatırlatmalari",s:"24 saat önceden"}].map(n=>(
+          {[{k:"rsvp",l:"RSVP Bildirimleri",s:"Yeni davetiye cevabı"},{k:"payment",l:"Ödeme Hatırlatmaları",s:"Bekleyen ödemelerde"},{k:"task",l:"Görev Güncellemeleri",s:"Durum değişiminde"},{k:"gallery",l:"Galeri Yüklemeleri",s:"Yeni fotoğraf yüklendiğinde"},{k:"reminder",l:"Etkinlik Hatırlatmaları",s:"24 saat önceden"}].map(n=>(
             <div key={n.k} className="flex items-center justify-between py-2 border-b border-white/3 last:border-0">
               <div>
                 <div className="text-sm text-white/75">{n.l}</div>
@@ -1750,7 +1816,7 @@ function SettingsPage() {
       <Card className="p-5">
         <h2 className="text-sm font-semibold text-white/80 mb-4">Sistem Durumu</h2>
         <div className="space-y-2">
-          {[["WhatsApp Business API","0212 555 0001 bagli"],["QR Sistemi","Dynamic - Token bazlı"],["Cloudflare R2","2.4 GB / 10 GB"],["Otomatik Yedekleme","Günlük - Son: Bugun 03:00"],["SSL Sertifikasi","beka.io - Geçerli"]].map(([k,v])=>(
+          {[["WhatsApp Business API","Bağlantı bekleniyor"],["QR Sistemi","Dynamic - Token bazlı"],["Depolama","Yerel"],["Otomatik Yedekleme","Günlük - Son: Bugün 03:00"],["SSL Sertifikası","Aktif"]].map(([k,v])=>(
             <div key={k} className="flex items-center justify-between py-2 border-b border-white/3 last:border-0">
               <div>
                 <div className="text-sm text-white/70">{k}</div>
@@ -1815,7 +1881,7 @@ const NAV=[
   {id:"dashboard",   icon:"&#11041;", label:"Dashboard"   },
   {id:"events",      icon:"&#10680;", label:"Etkinlikler" },
   {id:"calendar",    icon:"&#9638;",  label:"Takvim"      },
-  {id:"tasks",       icon:"&#10687;", label:"Gorevler"    },
+  {id:"tasks",       icon:"&#10687;", label:"Görevler"    },
   {id:"invitations", icon:"&#9676;",  label:"Davetiyeler" },
   {id:"gallery",     icon:"&#9681;",  label:"Galeri"      },
   {id:"payments",    icon:"&#9680;",  label:"Ödemeler"    },
@@ -1944,7 +2010,7 @@ export default function BekaOS() {
             {sidebar && (
               <div className="min-w-0">
                 <div className="text-xs font-medium text-white/70 truncate">Admin</div>
-                <div className="text-[10px] text-white/30 truncate">Beka Organizasyon</div>
+                <div className="text-[10px] text-white/30 truncate">Beka Davet</div>
               </div>
             )}
           </div>
