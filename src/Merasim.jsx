@@ -559,10 +559,11 @@ function EventsPage({events,setEvents}) {
 
 
 /* ── CALENDAR ───────────────────────────────────── */
-function CalendarPage({events}) {
-  const [month,setMonth]=useState(5);
-  const [year,setYear]=useState(2026);
+function CalendarPage({events,setPage,setPrefillDate}) {
+  const [month,setMonth]=useState(new Date().getMonth());
+  const [year,setYear]=useState(new Date().getFullYear());
   const [selected,setSelected]=useState(null);
+  const [quickBook,setQuickBook]=useState(null); // {day, month, year} - hızlı rezervasyon modalı
   const firstDay=new Date(year,month,1).getDay();
   const daysInMonth=new Date(year,month+1,0).getDate();
   const offset=firstDay===0?6:firstDay-1;
@@ -638,8 +639,9 @@ function CalendarPage({events}) {
             ))}
           </div>
         )}
-        {selected&&(selected.evs.length>0?(
-          <div className="space-y-3">
+        {selected&&selected.evs.length>0&&(
+          <div className="space-y-3 mb-4">
+            <div className="text-xs text-white/40 font-medium uppercase tracking-wider">Mevcut Etkinlikler</div>
             {selected.evs.map(ev=>(
               <div key={ev.id} className="p-4 rounded-xl border border-white/3 bg-white/[0.02]">
                 <div className="flex items-center gap-3 mb-2">
@@ -647,13 +649,29 @@ function CalendarPage({events}) {
                   <div><div className="text-sm font-semibold text-white/85">{ev.client}</div><div className="text-xs text-white/40">{ev.time} - {ev.location}</div></div>
                   <Badge className="ml-auto" color={ev.status==="confirmed"?"green":"amber"}>{ev.status==="confirmed"?"Onaylandı":"Bekliyor"}</Badge>
                 </div>
-                <div className="text-xs text-white/50">{ev.guests} misafir - {ev.budget.toLocaleString()} TL butce</div>
+                <div className="text-xs text-white/50">{ev.guests} misafir - {ev.budget.toLocaleString()} TL bütçe</div>
               </div>
             ))}
           </div>
-        ):(
-          <div className="text-center py-6 text-sm text-white/35">Bu günde etkinlik yok</div>
-        ))}
+        )}
+        {/* Yeni Etkinlik Oluştur */}
+        <div className="mt-2">
+          <div className="text-xs text-white/40 font-medium uppercase tracking-wider mb-3">Yeni Etkinlik Oluştur</div>
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+            {EVENT_TYPES.map(type=>(
+              <button key={type} onClick={()=>{
+                const dateStr=`${year}-${String(month+1).padStart(2,"0")}-${String(selected.day).padStart(2,"0")}`;
+                setPrefillDate({date:dateStr,type});
+                setSelected(null);
+                setPage("reservation");
+              }}
+                className="p-3 rounded-xl border border-white/5 hover:border-purple-500/30 bg-white/[0.02] hover:bg-purple-500/5 transition-all flex flex-col items-center gap-2 cursor-pointer">
+                <span className="text-2xl">{getIcon(type)}</span>
+                <span className="text-xs text-white/60 font-medium">{type}</span>
+              </button>
+            ))}
+          </div>
+        </div>
       </Modal>
     </div>
   );
@@ -1227,9 +1245,13 @@ function PaymentsPage({events}) {
 
 
 /* ── RESERVATION ────────────────────────────────── */
-function ReservationPage({events,setEvents}) {
-  const [step,setStep]=useState(1);
-  const [form,setForm]=useState({type:"",date:"",time:"",guests:"",location:"",cöncept:"",services:[],name:"",phone:"",email:"",notes:""});
+function ReservationPage({events,setEvents,prefillDate,setPrefillDate}) {
+  const [step,setStep]=useState(prefillDate?2:1);
+  const [form,setForm]=useState({
+    type:prefillDate?.type||"",
+    date:prefillDate?.date||"",
+    time:"",guests:"",location:"",cöncept:"",services:[],name:"",phone:"",email:"",notes:""
+  });
   const [kvkk,setKvkk]=useState(false);
   const upd=(k,v)=>setForm(p=>({...p,[k]:v}));
   const [done,setDone]=useState(false);
@@ -1937,12 +1959,36 @@ function AIPage() {
 }
 
 /* ── SETTINGS ───────────────────────────────────── */
-function SettingsPage() {
+function SettingsPage({company,setPage}) {
   const [saved,setSaved]=useState(false);
   const [notifs,setNotifs]=useState({rsvp:true,payment:true,task:true,gallery:false,reminder:true});
-  const [profile,setProfile]=useState({company:"Merasim",email:"",phone:"0535 033 0645",address:"Yunusemre, Arpacılar Sk Arpacılar Sitesi No:4/BA, 16270 Yıldırım/Bursa",city:"Bursa",currency:"TRY",whatsapp:""});
+  const [profile,setProfile]=useState({
+    company:company?.name||"",
+    email:company?.email||"",
+    phone:company?.phone||"",
+    address:company?.address||"",
+    city:company?.city||"",
+    currency:company?.currency||"TRY",
+    whatsapp:company?.whatsapp||"",
+    instagram:"",
+    facebook:"",
+    website:""
+  });
   const upd=k=>e=>setProfile(p=>({...p,[k]:e.target.value}));
-  const save=()=>{setSaved(true);setTimeout(()=>setSaved(false),2500);};
+  const save=async()=>{
+    if(company?.id){
+      await supabase.from('companies').update({
+        name:profile.company,
+        email:profile.email,
+        phone:profile.phone,
+        address:profile.address,
+        city:profile.city,
+        currency:profile.currency,
+        whatsapp:profile.whatsapp,
+      }).eq('id',company.id);
+    }
+    setSaved(true);setTimeout(()=>setSaved(false),2500);
+  };
   return (
     <div className="max-w-2xl space-y-5">
       <Card className="p-5 space-y-4">
@@ -1962,14 +2008,9 @@ function SettingsPage() {
       <Card className="p-5">
         <h2 className="text-sm font-semibold text-white/80 mb-4">Sosyal Medya</h2>
         <div className="space-y-3">
-          <a href="https://www.instagram.com/beka_davet" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 p-3 rounded-xl border border-white/3 hover:border-white/10 transition-all" style={{background:"rgba(255,255,255,0.04)"}}>
-            <span className="text-xl">📸</span>
-            <div className="flex-1">
-              <div className="text-sm text-white/80">Instagram</div>
-              <div className="text-xs text-white/40">@beka_davet</div>
-            </div>
-            <span className="text-xs text-white/40">→</span>
-          </a>
+          <FieldInput label="📸 Instagram" value={profile.instagram} onChange={upd("instagram")} placeholder="https://instagram.com/kullaniciadi"/>
+          <FieldInput label="📘 Facebook" value={profile.facebook} onChange={upd("facebook")} placeholder="https://facebook.com/sayfaadi"/>
+          <FieldInput label="🌐 Web Sitesi" value={profile.website} onChange={upd("website")} placeholder="https://ornek.com"/>
         </div>
       </Card>
       <Card className="p-5">
@@ -2117,6 +2158,7 @@ function Dashboard() {
   const [sidebar,setSidebar]=useState(false);
   const [notifOpen,setNotifOpen]=useState(false);
   const [searchOpen,setSearchOpen]=useState(false);
+  const [prefillDate,setPrefillDate]=useState(null);
   const unread=notifs.filter(n=>!n.read).length;
 
   // Detect mobile
@@ -2190,18 +2232,18 @@ function Dashboard() {
   const PAGES={
     dashboard:<DashboardPage events={events} tasks={tasks} setPage={navigate}/>,
     events:<EventsPage events={events} setEvents={setEvents}/>,
-    calendar:<CalendarPage events={events}/>,
+    calendar:<CalendarPage events={events} setPage={navigate} setPrefillDate={setPrefillDate}/>,
     tasks:<TasksPage tasks={tasks} setTasks={setTasks} events={events}/>,
     invitations:<InvitationsPage events={events} guests={initGuests}/>,
     gallery:<GalleryPage events={events} gallery={gallery} setGallery={setGallery}/>,
     payments:<PaymentsPage events={events}/>,
-    reservation:<ReservationPage events={events} setEvents={setEvents}/>,
+    reservation:<ReservationPage events={events} setEvents={setEvents} prefillDate={prefillDate} setPrefillDate={setPrefillDate}/>,
     whatsapp:<WhatsAppPage events={events}/>,
     staff:<StaffPage events={events} tasks={tasks}/>,
     crm:<CRMPage events={events}/>,
     analytics:<AnalyticsPage events={events} tasks={tasks}/>,
     ai:<AIPage/>,
-    settings:<SettingsPage/>,
+    settings:<SettingsPage company={company} setPage={navigate}/>,
   };
 
   const currentNav = NAV.find(n=>n.id===page);
