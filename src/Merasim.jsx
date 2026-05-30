@@ -1,5 +1,5 @@
 /* 
-  BekaOS — PWA & Mobile Ready
+  Merasim — PWA & Mobile Ready
   Add to HTML <head>:
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -7,6 +7,9 @@
 */
 import { useState, useRef, useEffect } from "react";
 import { QRCodeSVG } from "qrcode.react";
+import LandingPage from "./pages/Landing";
+import AuthPage from "./pages/Auth";
+import { useAuth } from "./lib/AuthContext";
 
 const initEvents = [
   { id:1, type:"Nişan",            client:"Ayşe & Mehmet",  date:"2026-06-02", time:"18:00", guests:80,  status:"confirmed", payment:"kapora",  location:"Bahçelievler Salonu", tasks:12, done:8,  budget:15000, paid:5000,  phone:"0532 111 2233", notes:"Kırmızı & altın tema, canlı müzik." },
@@ -58,17 +61,17 @@ const initStaff = [
 
 const WA_TEMPLATES = [
   { id:1, name:"Rezervasyon Onayı",   icon:"\u2705", trigger:"Otomatik - Rezervasyon sonrası", cat:"rezervasyon",
-    body:"Merhaba {isim},\n\n{etkinlik_türü} organizasyonunuz için rezervasyonunuz alındı!\n\nTarih: {tarih}\nSaat: {saat}\nLokasyon: {lokasyon}\n\nEkibimiz sizinle iletişime gececektir.\n\nBeka Davet" },
+    body:"Merhaba {isim},\n\n{etkinlik_türü} organizasyonunuz için rezervasyonunuz alındı!\n\nTarih: {tarih}\nSaat: {saat}\nLokasyon: {lokasyon}\n\nEkibimiz sizinle iletişime gececektir.\n\nMerasim" },
   { id:2, name:"Randevu Hatırlatma",  icon:"\uD83D\uDCC5", trigger:"Otomatik - 24 saat önce",      cat:"hatırlatma",
-    body:"Merhaba {isim},\n\nYarın saat {saat}'de {lokasyon} adresinde görüşmemiz var.\n\nGörüşmek üze!\nBeka Davet" },
+    body:"Merhaba {isim},\n\nYarın saat {saat}'de {lokasyon} adresinde görüşmemiz var.\n\nGörüşmek üze!\nMerasim" },
   { id:3, name:"Etkinlik Yaklaşıyor",  icon:"\uD83C\uDF89", trigger:"Otomatik - 3 gün önce",        cat:"hatırlatma",
-    body:"Merhaba {isim}!\n\n{etkinlik_türü} etkinliğinize {gun} gün kaldı!\n\nHazırlıklarınız tamamlanıyor.\n\nBeka Davet" },
+    body:"Merhaba {isim}!\n\n{etkinlik_türü} etkinliğinize {gun} gün kaldı!\n\nHazırlıklarınız tamamlanıyor.\n\nMerasim" },
   { id:4, name:"Galeri Paylaşımı",    icon:"\uD83D\uDCF8", trigger:"Manuel - Etkinlik sonrası",    cat:"galeri",
-    body:"Merhaba {isim}!\n\nEtkinliginizin fotoğraflari galerinize yüklendi!\n\n{galeri_link}\n\nBeka Davet" },
+    body:"Merhaba {isim}!\n\nEtkinliginizin fotoğraflari galerinize yüklendi!\n\n{galeri_link}\n\nMerasim" },
   { id:5, name:"Ödeme Hatırlatma",    icon:"\uD83D\uDCB3", trigger:"Otomatik - Ödeme gecikmesinde",cat:"odeme",
-    body:"Merhaba {isim},\n\nKalan ödemeniz ({tutar} TL) için hatırlatma.\n\nBeka Davet" },
+    body:"Merhaba {isim},\n\nKalan ödemeniz ({tutar} TL) için hatırlatma.\n\nMerasim" },
   { id:6, name:"Davetiye Linki",      icon:"\uD83D\uDC8C", trigger:"Manuel - Davetiye hazırlandiginda", cat:"davetiye",
-    body:"Merhaba {isim}!\n\nDijital davetiyeniz hazır!\n\n{davetiye_link}\n\nBeka Davet" },
+    body:"Merhaba {isim}!\n\nDijital davetiyeniz hazır!\n\n{davetiye_link}\n\nMerasim" },
 ];
 
 const NOTIFS_INIT = [
@@ -263,7 +266,7 @@ function GlobalSearch({events,setPage,onClose}) {
 }
 
 /* ── DASHBOARD ─────────────────────────────────── */
-function Dashboard({events,tasks,setPage}) {
+function DashboardPage({events,tasks,setPage}) {
   const total=events.length, conf=events.filter(e=>e.status==="confirmed").length;
   const pendPay=events.filter(e=>e.payment==="bekliyor").length;
   const guests=events.reduce((s,e)=>s+e.guests,0);
@@ -854,9 +857,9 @@ function InvitationsPage({events,guests}) {
         <div className="p-3 rounded-xl border border-white/3 bg-white/[0.015] flex items-center gap-3">
           <div className="flex-1 min-w-0">
             <div className="text-[10px] text-white/45 mb-0.5">Davetiye Linki</div>
-            <div className="text-xs font-mono text-purple-400">beka.io/i/{activeEv?.id}</div>
+            <div className="text-xs font-mono text-purple-400">merasim.app/i/{activeEv?.id}</div>
           </div>
-          <GlassBtn onClick={()=>navigator.clipboard?.writeText(`https://beka.io/i/${activeEv?.id}`)}>Kopyala</GlassBtn>
+          <GlassBtn onClick={()=>navigator.clipboard?.writeText(`https://merasim.app/i/${activeEv?.id}`)}>Kopyala</GlassBtn>
           <GlassBtn onClick={()=>setQrOpen(true)}>QR Oluştur</GlassBtn>
           <GlassBtn onClick={()=>setContractOpen(true)}>Sözleşme</GlassBtn>
         </div>
@@ -884,7 +887,7 @@ function InvitationsPage({events,guests}) {
                 <button className="flex-1 py-2.5 rounded-xl text-xs font-semibold text-white" style={{background:`linear-gradient(135deg,${th.from},${th.to})`}}>Katılıyorum</button>
                 <button className="flex-1 py-2.5 rounded-xl text-xs text-white/60 border border-white/15">Katılamıyorum</button>
               </div>
-              <p className="text-[9px] text-white/30">BekaOS - beka.io/i/{activeEv?.id}</p>
+              <p className="text-[9px] text-white/30">Merasim - merasim.app/i/{activeEv?.id}</p>
             </div>
           </div>
         </div>
@@ -892,7 +895,7 @@ function InvitationsPage({events,guests}) {
       <Modal open={qrOpen} onClose={()=>setQrOpen(false)} title="QR Kod">
         <div className="flex flex-col items-center gap-4 py-4 qr-modal">
           <div className="p-4 bg-white rounded-2xl">
-            <QRCodeSVG value={`https://beka.io/i/${activeEv?.id}`} size={200} level="H"/>
+            <QRCodeSVG value={`https://merasim.app/i/${activeEv?.id}`} size={200} level="H"/>
           </div>
           <div className="text-center">
             <div className="text-sm font-semibold text-white/85">{activeEv?.client}</div>
@@ -900,7 +903,7 @@ function InvitationsPage({events,guests}) {
           </div>
           <div className="p-3 rounded-xl border border-white/3 bg-white/[0.02] w-full">
             <div className="text-[10px] text-white/45 mb-1">Davetiye Linki</div>
-            <div className="text-xs font-mono text-purple-400">https://beka.io/i/{activeEv?.id}</div>
+            <div className="text-xs font-mono text-purple-400">https://merasim.app/i/{activeEv?.id}</div>
           </div>
           <div className="p-3 rounded-xl border border-white/3 bg-white/[0.02] w-full">
             <div className="text-[10px] text-white/45 mb-1">Konum</div>
@@ -911,7 +914,7 @@ function InvitationsPage({events,guests}) {
               const svg=document.querySelector('.qr-modal svg');
               if(svg){const svgData=new XMLSerializer().serializeToString(svg);const canvas=document.createElement('canvas');canvas.width=256;canvas.height=256;const ctx=canvas.getContext('2d');const img=new Image();img.onload=()=>{ctx.drawImage(img,0,0);const a=document.createElement('a');a.download=`qr-${activeEv?.id}.png`;a.href=canvas.toDataURL();a.click();};img.src='data:image/svg+xml;base64,'+btoa(svgData);}
             }}>İndir</GlassBtn>
-            <GlassBtn className="flex-1 justify-center" onClick={()=>navigator.clipboard?.writeText(`https://beka.io/i/${activeEv?.id}`)}>Linki Kopyala</GlassBtn>
+            <GlassBtn className="flex-1 justify-center" onClick={()=>navigator.clipboard?.writeText(`https://merasim.app/i/${activeEv?.id}`)}>Linki Kopyala</GlassBtn>
           </div>
         </div>
       </Modal>
@@ -931,7 +934,7 @@ MİSAFİR SAYISI: ${activeEv?.guests || '—'}
 TOPLAM ÜCRET: ${(activeEv?.budget || 0).toLocaleString()} TL
 
 MADDE 1 - HİZMET KAPSAMI
-Beka Davet, yukarıda belirtilen etkinlik için organizasyon hizmeti sunmayı taahhüt eder.
+Merasim, yukarıda belirtilen etkinlik için organizasyon hizmeti sunmayı taahhüt eder.
 
 MADDE 2 - ÖDEME
 Toplam ücret ${(activeEv?.budget || 0).toLocaleString()} TL olup, %50 kapora ödemesi rezervasyon sırasında alınır. Kalan tutar etkinlik tarihinden 3 gün önce ödenir.
@@ -943,14 +946,14 @@ MADDE 4 - VERİ SAKLAMA
 Müşteri bilgileri ve etkinlik fotoğrafları 6698 sayılı KVKK kapsamında 30 gün süreyle saklanır, ardından otomatik olarak silinir.
 
 MADDE 5 - SORUMLULUK
-Beka Davet, etkinlik planlama ve koordinasyonundan sorumludur. Üçüncü taraf hizmet sağlayıcıların hatalarından sorumlu değildir.
+Merasim, etkinlik planlama ve koordinasyonundan sorumludur. Üçüncü taraf hizmet sağlayıcıların hatalarından sorumlu değildir.
 
-Beka Davet | Yıldırım/Bursa
+Merasim | Yıldırım/Bursa
 İletişim: 0535 033 0645
 Instagram: @beka_davet`}
           </div>
           <div className="flex gap-2">
-            <GlassBtn className="flex-1 justify-center" onClick={()=>navigator.clipboard?.writeText(`ETKİNLİK ORGANİZASYON SÖZLEŞMESİ\n\nMÜŞTERİ: ${activeEv?.client}\nETKİNLİK: ${activeEv?.type}\nTARİH: ${activeEv?.date}\nTOPLAM: ${(activeEv?.budget||0).toLocaleString()} TL\n\nBeka Davet | Yıldırım/Bursa | 0535 033 0645`)}>Sözleşmeyi Kopyala</GlassBtn>
+            <GlassBtn className="flex-1 justify-center" onClick={()=>navigator.clipboard?.writeText(`ETKİNLİK ORGANİZASYON SÖZLEŞMESİ\n\nMÜŞTERİ: ${activeEv?.client}\nETKİNLİK: ${activeEv?.type}\nTARİH: ${activeEv?.date}\nTOPLAM: ${(activeEv?.budget||0).toLocaleString()} TL\n\nMerasim | Yıldırım/Bursa | 0535 033 0645`)}>Sözleşmeyi Kopyala</GlassBtn>
             <GlassBtn className="flex-1 justify-center" onClick={()=>window.print()}>Yazdır</GlassBtn>
           </div>
         </div>
@@ -993,7 +996,7 @@ function GalleryPage({events,gallery,setGallery}) {
         <div className="flex items-center justify-between mb-4">
           <div>
             <h3 className="text-sm font-semibold text-white/85">{activeEv?.client}</h3>
-            <p className="text-xs text-white/45 mt-0.5">{photos.length} medya - QR: <span className="text-purple-400 font-mono text-[10px]">beka.io/g/{activeEv?.id}</span></p>
+            <p className="text-xs text-white/45 mt-0.5">{photos.length} medya - QR: <span className="text-purple-400 font-mono text-[10px]">merasim.app/g/{activeEv?.id}</span></p>
           </div>
           <div className="flex gap-2">
             <GlassBtn onClick={()=>setGalleryQr(true)}>QR İndir</GlassBtn>
@@ -1056,7 +1059,7 @@ function GalleryPage({events,gallery,setGallery}) {
       <Modal open={galleryQr} onClose={()=>setGalleryQr(false)} title="Galeri QR Kod">
         <div className="flex flex-col items-center gap-4 py-4 gallery-qr-modal">
           <div className="p-4 bg-white rounded-2xl">
-            <QRCodeSVG value={`https://beka.io/g/${activeEv?.id}`} size={200} level="H"/>
+            <QRCodeSVG value={`https://merasim.app/g/${activeEv?.id}`} size={200} level="H"/>
           </div>
           <div className="text-center">
             <div className="text-sm font-semibold text-white/85">{activeEv?.client}</div>
@@ -1064,7 +1067,7 @@ function GalleryPage({events,gallery,setGallery}) {
           </div>
           <div className="p-3 rounded-xl border border-white/3 bg-white/[0.02] w-full">
             <div className="text-[10px] text-white/45 mb-1">Galeri Linki</div>
-            <div className="text-xs font-mono text-purple-400">https://beka.io/g/{activeEv?.id}</div>
+            <div className="text-xs font-mono text-purple-400">https://merasim.app/g/{activeEv?.id}</div>
           </div>
           <GlassBtn className="w-full justify-center" onClick={()=>{
             const svg=document.querySelector('.gallery-qr-modal svg');
@@ -1383,7 +1386,7 @@ function ReservationPage({events,setEvents}) {
                 <input type="checkbox" checked={kvkk} onChange={e=>setKvkk(e.target.checked)} className="mt-1 w-4 h-4 rounded accent-purple-500 flex-shrink-0"/>
                 <div className="text-xs text-white/60 leading-relaxed">
                   <span className="text-white/80 font-medium">KVKK Aydınlatma Metni ve Açık Rıza</span><br/>
-                  Kişisel verileriniz (ad, soyad, telefon, e-posta, etkinlik bilgileri), 6698 sayılı Kişisel Verilerin Korunması Kanunu kapsamında Beka Davet tarafından hizmet sunumu, rezervasyon yönetimi ve müşteri iletişimi amacıyla işlenecektir. Verileriniz, etkinlik tarihinden itibaren <span className="text-purple-400 font-medium">30 gün</span> süreyle saklanacak, ardından otomatik olarak silinecektir. Galeri fotoğraflarınız da aynı süre sonunda kaldırılacaktır. Dilediğiniz zaman verilerinizin silinmesini talep edebilirsiniz.<br/>
+                  Kişisel verileriniz (ad, soyad, telefon, e-posta, etkinlik bilgileri), 6698 sayılı Kişisel Verilerin Korunması Kanunu kapsamında Merasim tarafından hizmet sunumu, rezervasyon yönetimi ve müşteri iletişimi amacıyla işlenecektir. Verileriniz, etkinlik tarihinden itibaren <span className="text-purple-400 font-medium">30 gün</span> süreyle saklanacak, ardından otomatik olarak silinecektir. Galeri fotoğraflarınız da aynı süre sonunda kaldırılacaktır. Dilediğiniz zaman verilerinizin silinmesini talep edebilirsiniz.<br/>
                   <span className="text-white/40 mt-1 block">Bu kutucuğu işaretleyerek yukarıdaki koşulları okuduğunuzu ve kabul ettiğinizi onaylıyorsunuz.</span>
                 </div>
               </label>
@@ -1426,8 +1429,8 @@ function WhatsAppPage({events}) {
     .replace(/\{etkinlik_türü\}/g,ev.type)
     .replace(/\{tarih\}/g,ev.date).replace(/\{saat\}/g,ev.time)
     .replace(/\{lokasyon\}/g,ev.location).replace(/\{gun\}/g,"3")
-    .replace(/\{galeri_link\}/g,`beka.io/g/${ev.id}`)
-    .replace(/\{davetiye_link\}/g,`beka.io/i/${ev.id}`)
+    .replace(/\{galeri_link\}/g,`merasim.app/g/${ev.id}`)
+    .replace(/\{davetiye_link\}/g,`merasim.app/i/${ev.id}`)
     .replace(/\{tutar\}/g,(ev.budget-ev.paid).toLocaleString());
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -1514,7 +1517,7 @@ function WhatsAppPage({events}) {
         <div className="rounded-2xl overflow-hidden" style={{background:"#111b21"}}>
           <div className="p-4 flex items-center gap-3 border-b border-white/3">
             <div className="w-10 h-10 rounded-full bg-green-500/20 flex items-center justify-center text-green-400 text-xl">&#128172;</div>
-            <div><div className="text-sm font-semibold text-white">Beka Davet</div><div className="text-[10px] text-white/40">WhatsApp Business</div></div>
+            <div><div className="text-sm font-semibold text-white">Merasim</div><div className="text-[10px] text-white/40">WhatsApp Business</div></div>
           </div>
           <div className="p-4 min-h-40" style={{background:"#0b141a"}}>
             <div className="max-w-[88%] p-3 rounded-2xl rounded-tl-sm text-sm text-white leading-relaxed" style={{background:"#202c33",whiteSpace:"pre-wrap"}}>
@@ -1834,13 +1837,13 @@ function AnalyticsPage({events, tasks}) {
 function AIPage() {
   const [mode,setMode]=useState("offer");
   const [input,setInput]=useState("");
-  const [msgs,setMsgs]=useState([{role:"assistant",text:"Merhaba! Ben BekaOS AI asistanıyım.\n\nTeklif oluşturma, konsept önerisi veya genel sorularinizda yardımcı olabilirim. Aşağıdaki hazır sorulardan birini seçin veya kendiniz yazin."}]);
+  const [msgs,setMsgs]=useState([{role:"assistant",text:"Merhaba! Ben Merasim AI asistanıyım.\n\nTeklif oluşturma, konsept önerisi veya genel sorularinizda yardımcı olabilirim. Aşağıdaki hazır sorulardan birini seçin veya kendiniz yazin."}]);
   const [loading,setLoading]=useState(false);
   const endRef=useRef(null);
   const SYSTEMS={
-    offer:"Sen BekaOS için çalışan bir Turk organizasyon şirketinin teklif asistanısın. Kullanici etkinlik bilgisi verdiğinde TL cinsinden fiyat aralıkları, dahil hizmetler, notlar ve konsept onerileri içeren profesyonel Turkce teklifler hazırla. Net, sıcak ve özlü ol.",
-    cöncept:"Sen BekaOS için bir Turk organizasyon firmasinin kreatif direktörüsün. Kullaniçinin belirttigi tema ve etkinlik türüne gore Turkce olarak renk paleti, dekor fikirleri, cicek secimi, masa duzeni, isiklandirma onerileri sun.",
-    chat:"Sen BekaOS organizasyon platformunun Turkce konusan AI asistanısın. Etkinlik planlamasi, organizasyon ipuçları ve platform kullanımı hakkında kisa, samimi ve pratik cevaplar ver."
+    offer:"Sen Merasim için çalışan bir Turk organizasyon şirketinin teklif asistanısın. Kullanici etkinlik bilgisi verdiğinde TL cinsinden fiyat aralıkları, dahil hizmetler, notlar ve konsept onerileri içeren profesyonel Turkce teklifler hazırla. Net, sıcak ve özlü ol.",
+    cöncept:"Sen Merasim için bir Turk organizasyon firmasinin kreatif direktörüsün. Kullaniçinin belirttigi tema ve etkinlik türüne gore Turkce olarak renk paleti, dekor fikirleri, cicek secimi, masa duzeni, isiklandirma onerileri sun.",
+    chat:"Sen Merasim organizasyon platformunun Turkce konusan AI asistanısın. Etkinlik planlamasi, organizasyon ipuçları ve platform kullanımı hakkında kisa, samimi ve pratik cevaplar ver."
   };
   const PROMPTS={
     offer:["50 kişilik nisan teklifi","120 kisi kina bütçesi","Kurumsal yilsonu yemeği"],
@@ -1860,7 +1863,7 @@ function AIPage() {
         const fallbackResponses={
           offer:"📋 **Teklif Taslağı**\n\nSeçtiğiniz etkinlik için tahmini fiyat aralığı:\n\n• **50 kişi:** 8.000 - 15.000 TL\n• **100 kişi:** 15.000 - 28.000 TL\n• **200 kişi:** 28.000 - 50.000 TL\n\nFiyata dahil: Mekan, dekorasyon, catering, DJ\n\n*Not: Kesin fiyat görüşme sonrası belirlenir.*\n\n🔑 AI asistanı tam kapasite kullanmak için Ayarlar > API Key bölümünden Anthropic API anahtarınızı girin.",
           cöncept:"🎨 **Konsept Önerisi**\n\n**Renk Paleti:** Pastel pembe, altın, krem\n\n**Dekorasyon:**\n• Çiçek aranjmanları (güller, lilyumlar)\n• Altın çerçeveli aynalar\n• Mum ışığı aydınlatma\n• Tül drapeler\n\n**Masa Düzeni:**\n• Yuvarlak masalar, altın runner\n• Kristal suplalar\n• Şamdanlar\n\n🔑 AI asistanı tam kapasite kullanmak için Ayarlar > API Key bölümünden Anthropic API anahtarınızı girin.",
-          chat:"💬 **BekaOS AI Asistan**\n\nSize nasıl yardımcı olabilirim?\n\n• Etkinlik planlaması\n• Bütçe hesaplama\n• Konsept önerileri\n• Davetiye tasarımı\n• Misafir yönetimi\n\n🔑 AI asistanı tam kapasite kullanmak için Ayarlar > API Key bölümünden Anthropic API anahtarınızı girin."
+          chat:"💬 **Merasim AI Asistan**\n\nSize nasıl yardımcı olabilirim?\n\n• Etkinlik planlaması\n• Bütçe hesaplama\n• Konsept önerileri\n• Davetiye tasarımı\n• Misafir yönetimi\n\n🔑 AI asistanı tam kapasite kullanmak için Ayarlar > API Key bölümünden Anthropic API anahtarınızı girin."
         };
         const response=fallbackResponses[mode]||fallbackResponses.chat;
         setTimeout(()=>{
@@ -1899,7 +1902,7 @@ function AIPage() {
             <div key={i} className={`flex ${msg.role==="user"?"justify-end":"justify-start"}`}>
               <div className={`max-w-[82%] rounded-2xl px-4 py-3 text-sm leading-relaxed ${msg.role==="user"?"text-white":"text-white/80 border border-white/3"}`}
                 style={{background:msg.role==="user"?"linear-gradient(135deg,#8b5cf6,#6366f1)":"rgba(255,255,255,0.05)"}}>
-                {msg.role==="assistant"&&<div className="text-[10px] text-purple-400 font-medium mb-1.5">&#10022; BekaOS AI</div>}
+                {msg.role==="assistant"&&<div className="text-[10px] text-purple-400 font-medium mb-1.5">&#10022; Merasim AI</div>}
                 <div style={{whiteSpace:"pre-wrap"}}>{msg.text}</div>
               </div>
             </div>
@@ -1936,7 +1939,7 @@ function AIPage() {
 function SettingsPage() {
   const [saved,setSaved]=useState(false);
   const [notifs,setNotifs]=useState({rsvp:true,payment:true,task:true,gallery:false,reminder:true});
-  const [profile,setProfile]=useState({company:"Beka Davet",email:"",phone:"0535 033 0645",address:"Yunusemre, Arpacılar Sk Arpacılar Sitesi No:4/BA, 16270 Yıldırım/Bursa",city:"Bursa",currency:"TRY",whatsapp:""});
+  const [profile,setProfile]=useState({company:"Merasim",email:"",phone:"0535 033 0645",address:"Yunusemre, Arpacılar Sk Arpacılar Sitesi No:4/BA, 16270 Yıldırım/Bursa",city:"Bursa",currency:"TRY",whatsapp:""});
   const upd=k=>e=>setProfile(p=>({...p,[k]:e.target.value}));
   const save=()=>{setSaved(true);setTimeout(()=>setSaved(false),2500);};
   return (
@@ -2065,7 +2068,34 @@ const NAV=[
   {id:"settings",    icon:"&#9711;",  label:"Ayarlar"     },
 ];
 
-export default function BekaOS() {
+function MerasimApp() {
+  const { user, loading } = useAuth()
+  const [route, setRoute] = useState('landing') // landing | auth | dashboard
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center" style={{background:"#111827"}}>
+        <div className="flex flex-col items-center gap-3">
+          <div className="w-10 h-10 rounded-xl flex items-center justify-center animate-pulse" style={{background:"linear-gradient(135deg,#8b5cf6,#6366f1)"}}>
+            <span className="text-white font-bold">M</span>
+          </div>
+          <span className="text-xs text-white/30">Yükleniyor...</span>
+        </div>
+      </div>
+    )
+  }
+
+  if (route === 'landing') return <LandingPage onNavigate={setRoute} />
+  if (route === 'auth') return <AuthPage />
+  return <Dashboard />
+}
+
+export default function Merasim() {
+  return <MerasimApp />
+}
+
+function Dashboard() {
+  const { user, company } = useAuth()
   const [page,setPage]=useState("dashboard");
   const [sidebar,setSidebar]=useState(false); // default closed on mobile
   const [notifOpen,setNotifOpen]=useState(false);
@@ -2145,7 +2175,7 @@ export default function BekaOS() {
   };
 
   const PAGES={
-    dashboard:<Dashboard events={events} tasks={tasks} setPage={navigate}/>,
+    dashboard:<DashboardPage events={events} tasks={tasks} setPage={navigate}/>,
     events:<EventsPage events={events} setEvents={setEvents}/>,
     calendar:<CalendarPage events={events}/>,
     tasks:<TasksPage tasks={tasks} setTasks={setTasks} events={events}/>,
@@ -2193,7 +2223,7 @@ export default function BekaOS() {
           </div>
           {(sidebar) && (
             <div className="min-w-0">
-              <div className="text-sm font-bold tracking-wide text-white whitespace-nowrap">BekaOS</div>
+              <div className="text-sm font-bold tracking-wide text-white whitespace-nowrap">Merasim</div>
               <div className="text-[10px] text-white/35 tracking-widest uppercase whitespace-nowrap">Organizasyon</div>
             </div>
           )}
@@ -2230,7 +2260,7 @@ export default function BekaOS() {
             {sidebar && (
               <div className="min-w-0">
                 <div className="text-xs font-medium text-white/70 truncate">Admin</div>
-                <div className="text-[10px] text-white/40 truncate">Beka Davet</div>
+                <div className="text-[10px] text-white/40 truncate">Merasim</div>
               </div>
             )}
           </div>

@@ -11,8 +11,8 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.svg'],
       manifest: {
-        name: 'BekaOS - Etkinlik Yönetimi',
-        short_name: 'BekaOS',
+        name: 'Merasim - Etkinlik Yönetimi',
+        short_name: 'Merasim',
         description: 'Düğün, nişan, doğum günü ve kurumsal etkinlik yönetim platformu',
         theme_color: '#111827',
         background_color: '#111827',
