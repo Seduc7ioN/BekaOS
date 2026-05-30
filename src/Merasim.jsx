@@ -693,20 +693,21 @@ function CalendarPage({events,setPage,setPrefillDate}) {
             <div key={d} className="py-2 text-center text-[10px] text-white/25 font-medium uppercase tracking-wider">{d}</div>
           ))}
           {cells.map((day,i)=>{
-            if(!day)return<div key={`e${i}`} style={{background:"rgba(17,24,39,0.7)",opacity:0.5}}/>;
-            const now=new Date();
-            const isToday=day===now.getDate()&&month===now.getMonth()&&year===now.getFullYear();
+            if(!day)return<div key={`e${i}`} className="min-h-24" style={{opacity:0.3}}/>;
+            const isToday=day===today.getDate()&&month===today.getMonth()&&year===today.getFullYear();
             const evs=dayEvs(day);
             const holidays=getHoliday(year,month,day);
             const hasHoliday=holidays.length>0;
-            const bgColor=hasHoliday?"rgba(251,191,36,0.06)":isToday?"rgba(139,92,246,0.05)":"#080810";
+            const bgColor=hasHoliday?"rgba(251,191,36,0.05)":isToday?"rgba(139,92,246,0.05)":"transparent";
+            const borderColor=isToday?"rgba(139,92,246,0.3)":"rgba(255,255,255,0.04)";
             return (
               <div key={day} onClick={()=>setSelected({day,evs,holidays})}
-                className="min-h-24 p-2 flex flex-col gap-1 cursor-pointer hover:bg-white/[0.015] transition-colors"
-                style={{background:bgColor}}>
+                className="min-h-24 p-2 flex flex-col gap-1 cursor-pointer hover:bg-white/[0.02] transition-all rounded-lg"
+                style={{background:bgColor,border:`1px solid ${borderColor}`}}>
                 <div className="flex items-center justify-between mb-0.5">
-                  <span className={`text-xs w-6 h-6 flex items-center justify-center rounded-full flex-shrink-0 ${isToday?"bg-purple-500 text-white font-bold":"text-white/55"}`}>{day}</span>
-                  {hasHoliday&&<span className="text-[10px]" title={holidays[0].name}>{holidays[0].icon}</span>}
+                  <span className={`text-xs w-7 h-7 flex items-center justify-center rounded-lg flex-shrink-0 font-medium ${isToday?"text-white":"text-white/50"}`}
+                    style={isToday?{background:"linear-gradient(135deg,#8b5cf6,#6366f1)"}:{}}>{day}</span>
+                  {hasHoliday&&<span className="text-sm" title={holidays[0].name}>{holidays[0].icon}</span>}
                 </div>
                 {holidays.map((h,idx)=>(
                   <div key={idx} className="text-[9px] px-1.5 py-0.5 rounded-md truncate font-medium" style={{background:"rgba(251,191,36,0.15)",color:"#fbbf24"}}>
