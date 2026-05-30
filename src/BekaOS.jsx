@@ -8,34 +8,34 @@
 import { useState, useRef, useEffect } from "react";
 
 const initEvents = [
-  { id:1, type:"Nişan",            client:"Ayşe & Mehmet",  date:"2026-06-02", time:"18:00", guests:80,  status:"confirmed", payment:"kapora",  location:"Bahçelievler Salonu", tasks:12, done:8,  budget:15000, paid:5000,  phone:"0532 111 2233", notes:"Kırmızı & altın tema, canlı müzik." },
+  { id:1, type:"Nisan",            client:"Ayşe & Mehmet",  date:"2026-06-02", time:"18:00", guests:80,  status:"confirmed", payment:"kapora",  location:"Bahçelievler Salonu", tasks:12, done:8,  budget:15000, paid:5000,  phone:"0532 111 2233", notes:"Kırmızı & altın tema, canlı müzik." },
   { id:2, type:"Doğum Günü",       client:"Zeynep Kaya",    date:"2026-06-05", time:"15:00", guests:35,  status:"pending",   payment:"bekliyor", location:"Ev / Bahçe",          tasks:7,  done:3,  budget:8000,  paid:0,     phone:"0541 333 4455", notes:"Unicorn teması, pasta özel sipariş." },
   { id:3, type:"Kına",             client:"Fatma Demir",    date:"2026-06-08", time:"20:00", guests:120, status:"confirmed", payment:"tam",      location:"Grand Hall",          tasks:15, done:15, budget:22000, paid:22000, phone:"0505 666 7788", notes:"Tüm görevler tamamlandı." },
   { id:4, type:"Baby Shower",      client:"Selin Arslan",   date:"2026-06-12", time:"14:00", guests:25,  status:"confirmed", payment:"kapora",   location:"Cafe Bloom",          tasks:9,  done:5,  budget:6000,  paid:2000,  phone:"0533 999 0011", notes:"Pembe & beyaz, kız bebek." },
   { id:5, type:"Evlilik Teklifi",  client:"Ali Yıldız",     date:"2026-06-15", time:"21:00", guests:2,   status:"pending",   payment:"bekliyor", location:"Boğaz Teknesi",       tasks:6,  done:1,  budget:12000, paid:0,     phone:"0551 222 3344", notes:"Sürpriz - gizlilik kritik." },
   { id:6, type:"Cinsiyet Partisi", client:"Ece & Burak",    date:"2026-06-18", time:"16:00", guests:45,  status:"confirmed", payment:"kapora",   location:"Pembe Villa",         tasks:10, done:6,  budget:9000,  paid:3000,  phone:"0542 555 6677", notes:"Konfeti patlama anı istiyor." },
-  { id:7, type:"Kurumsal",         client:"TechCorp A.S.",  date:"2026-06-22", time:"10:00", guests:200, status:"confirmed", payment:"tam",      location:"Istanbul Congress",   tasks:20, done:20, budget:45000, paid:45000, phone:"0212 444 5566", notes:"Yillik toplanti + gala yemegi." },
+  { id:7, type:"Kurumsal",         client:"TechCorp A.Ş.",  date:"2026-06-22", time:"10:00", guests:200, status:"confirmed", payment:"tam",      location:"İstanbul Congress",   tasks:20, done:20, budget:45000, paid:45000, phone:"0212 444 5566", notes:"Yıllık toplantı + gala yemeği." },
 ];
 
 const initTasks = [
-  { id:1, eventId:1, task:"Cicek yerlesimi",       status:"devam",       assignee:"Elif H.",  priority:"yuksek" },
-  { id:2, eventId:1, task:"Ses sistemi kontrolu",  status:"bekliyor",    assignee:"Murat K.", priority:"orta"   },
-  { id:3, eventId:1, task:"Masa kurulumu",          status:"tamamlandi",  assignee:"Selin T.", priority:"yuksek" },
-  { id:4, eventId:1, task:"Karsilama panosu",       status:"bekliyor",    assignee:"Derya C.", priority:"orta"   },
+  { id:1, eventId:1, task:"Çiçek yerleşimi",       status:"devam",       assignee:"Elif H.",  priority:"yuksek" },
+  { id:2, eventId:1, task:"Ses sistemi kontrolü",  status:"bekliyor",    assignee:"Murat K.", priority:"orta"   },
+  { id:3, eventId:1, task:"Masa kurulumu",          status:"tamamlandı",  assignee:"Selin T.", priority:"yuksek" },
+  { id:4, eventId:1, task:"Karşılama panosu",       status:"bekliyor",    assignee:"Derya C.", priority:"orta"   },
   { id:5, eventId:2, task:"Pasta teslimi",          status:"bekliyor",    assignee:"Selin T.", priority:"yuksek" },
   { id:6, eventId:2, task:"Balon dekorasyonu",      status:"devam",       assignee:"Elif H.",  priority:"orta"   },
   { id:7, eventId:4, task:"Pembe balon kemeri",     status:"devam",       assignee:"Elif H.",  priority:"orta"   },
-  { id:8, eventId:5, task:"Lokasyon kesfi",         status:"bekliyor",    assignee:"Murat K.", priority:"yuksek" },
-  { id:9, eventId:5, task:"Gul yapraklari siparis", status:"bekliyor",    assignee:"Selin T.", priority:"orta"   },
-  { id:10,eventId:6, task:"Konfeti top hazirligi",  status:"devam",       assignee:"Derya C.", priority:"yuksek" },
+  { id:8, eventId:5, task:"Lokasyon keşfi",         status:"bekliyor",    assignee:"Murat K.", priority:"yuksek" },
+  { id:9, eventId:5, task:"Gül yaprakları sipariş", status:"bekliyor",    assignee:"Selin T.", priority:"orta"   },
+  { id:10,eventId:6, task:"Konfeti top hazırlığı",  status:"devam",       assignee:"Derya C.", priority:"yuksek" },
 ];
 
 const initGuests = [
-  { id:1, eventId:1, name:"Hasan Kara",    phone:"0532 100 1111", response:"katiliyor",   plus:1, children:0, food:"normal"     },
-  { id:2, eventId:1, name:"Nermin Celik",  phone:"0541 200 2222", response:"katilamyor",  plus:0, children:0, food:"-"          },
-  { id:3, eventId:1, name:"Bulent Yavuz",  phone:"0505 300 3333", response:"belki",       plus:2, children:1, food:"vejeteryan"  },
-  { id:4, eventId:1, name:"Derya Sahin",   phone:"0533 400 4444", response:"katiliyor",   plus:1, children:2, food:"normal"     },
-  { id:5, eventId:1, name:"Orhan Aslan",   phone:"0551 500 5555", response:"katiliyor",   plus:0, children:0, food:"vegan"      },
+  { id:1, eventId:1, name:"Hasan Kara",    phone:"0532 100 1111", response:"katılıyor",   plus:1, children:0, food:"normal"     },
+  { id:2, eventId:1, name:"Nermin Çelik",  phone:"0541 200 2222", response:"katılamıyor",  plus:0, children:0, food:"-"          },
+  { id:3, eventId:1, name:"Bülent Yavuz",  phone:"0505 300 3333", response:"belki",       plus:2, children:1, food:"vejeteryan"  },
+  { id:4, eventId:1, name:"Derya Şahin",   phone:"0533 400 4444", response:"katılıyor",   plus:1, children:2, food:"normal"     },
+  { id:5, eventId:1, name:"Orhan Aslan",   phone:"0551 500 5555", response:"katılıyor",   plus:0, children:0, food:"vegan"      },
 ];
 
 const initGallery = [
@@ -48,37 +48,37 @@ const initGallery = [
 ];
 
 const initStaff = [
-  { id:1, name:"Elif Hanim",   role:"Dekorasyon",     phone:"0532 100 0001", email:"elif@beka.com",  status:"aktif", events:4, avatar:"E", color:"#c084fc" },
+  { id:1, name:"Elif Hanım",   role:"Dekorasyon",     phone:"0532 100 0001", email:"elif@beka.com",  status:"aktif", events:4, avatar:"E", color:"#c084fc" },
   { id:2, name:"Murat Kaya",   role:"Teknik & Ses",   phone:"0541 200 0002", email:"murat@beka.com", status:"aktif", events:3, avatar:"M", color:"#60a5fa" },
-  { id:3, name:"Selin Tas",    role:"Koordinator",    phone:"0505 300 0003", email:"selin@beka.com", status:"aktif", events:5, avatar:"S", color:"#34d399" },
-  { id:4, name:"Ahmet Yilmaz", role:"Fotografci",     phone:"0533 400 0004", email:"ahmet@beka.com", status:"pasif", events:2, avatar:"A", color:"#fb923c" },
-  { id:5, name:"Derya Can",    role:"Misafir Kars.",  phone:"0551 500 0005", email:"derya@beka.com", status:"aktif", events:3, avatar:"D", color:"#f472b6" },
+  { id:3, name:"Selin Taş",    role:"Koordinator",    phone:"0505 300 0003", email:"selin@beka.com", status:"aktif", events:5, avatar:"S", color:"#34d399" },
+  { id:4, name:"Ahmet Yılmaz", role:"Fotoğrafçı",     phone:"0533 400 0004", email:"ahmet@beka.com", status:"pasif", events:2, avatar:"A", color:"#fb923c" },
+  { id:5, name:"Derya Can",    role:"Misafir Karş.",  phone:"0551 500 0005", email:"derya@beka.com", status:"aktif", events:3, avatar:"D", color:"#f472b6" },
 ];
 
 const WA_TEMPLATES = [
-  { id:1, name:"Rezervasyon Onayi",   icon:"\u2705", trigger:"Otomatik - Rezervasyon sonrasi", cat:"rezervasyon",
-    body:"Merhaba {isim},\n\n{etkinlik_turu} organizasyonunuz icin rezervasyonunuz alindi!\n\nTarih: {tarih}\nSaat: {saat}\nLokasyon: {lokasyon}\n\nEkibimiz sizinle iletisime gececektir.\n\nBeka Organizasyon" },
-  { id:2, name:"Randevu Hatirlatma",  icon:"\uD83D\uDCC5", trigger:"Otomatik - 24 saat once",      cat:"hatirlatma",
-    body:"Merhaba {isim},\n\nYarin saat {saat}'de {lokasyon} adresinde gorusmemiz var.\n\nGorusmek uzere!\nBeka Organizasyon" },
-  { id:3, name:"Etkinlik Yaklasyor",  icon:"\uD83C\uDF89", trigger:"Otomatik - 3 gun once",        cat:"hatirlatma",
-    body:"Merhaba {isim}!\n\n{etkinlik_turu} etkinliginize {gun} gun kaldi!\n\nHazirliklariniz tamamlaniyor.\n\nBeka Organizasyon" },
-  { id:4, name:"Galeri Paylasimi",    icon:"\uD83D\uDCF8", trigger:"Manuel - Etkinlik sonrasi",    cat:"galeri",
-    body:"Merhaba {isim}!\n\nEtkinliginizin fotograflari galerinize yuklendi!\n\n{galeri_link}\n\nBeka Organizasyon" },
-  { id:5, name:"Odeme Hatirlatma",    icon:"\uD83D\uDCB3", trigger:"Otomatik - Odeme gecikmesinde",cat:"odeme",
-    body:"Merhaba {isim},\n\nKalan odemeniz ({tutar} TL) icin hatirlatma.\n\nBeka Organizasyon" },
-  { id:6, name:"Davetiye Linki",      icon:"\uD83D\uDC8C", trigger:"Manuel - Davetiye hazirlandiginda", cat:"davetiye",
-    body:"Merhaba {isim}!\n\nDijital davetiyeniz hazir!\n\n{davetiye_link}\n\nBeka Organizasyon" },
+  { id:1, name:"Rezervasyon Onayı",   icon:"\u2705", trigger:"Otomatik - Rezervasyon sonrası", cat:"rezervasyon",
+    body:"Merhaba {isim},\n\n{etkinlik_türü} organizasyonunuz için rezervasyonunuz alındı!\n\nTarih: {tarih}\nSaat: {saat}\nLokasyon: {lokasyon}\n\nEkibimiz sizinle iletişime gececektir.\n\nBeka Organizasyon" },
+  { id:2, name:"Randevu Hatırlatma",  icon:"\uD83D\uDCC5", trigger:"Otomatik - 24 saat önce",      cat:"hatırlatma",
+    body:"Merhaba {isim},\n\nYarın saat {saat}'de {lokasyon} adresinde görüşmemiz var.\n\nGörüşmek üze!\nBeka Organizasyon" },
+  { id:3, name:"Etkinlik Yaklaşıyor",  icon:"\uD83C\uDF89", trigger:"Otomatik - 3 gün önce",        cat:"hatırlatma",
+    body:"Merhaba {isim}!\n\n{etkinlik_türü} etkinliğinize {gun} gün kaldı!\n\nHazırlıklarınız tamamlanıyor.\n\nBeka Organizasyon" },
+  { id:4, name:"Galeri Paylaşımı",    icon:"\uD83D\uDCF8", trigger:"Manuel - Etkinlik sonrası",    cat:"galeri",
+    body:"Merhaba {isim}!\n\nEtkinliginizin fotoğraflari galerinize yüklendi!\n\n{galeri_link}\n\nBeka Organizasyon" },
+  { id:5, name:"Ödeme Hatırlatma",    icon:"\uD83D\uDCB3", trigger:"Otomatik - Ödeme gecikmesinde",cat:"odeme",
+    body:"Merhaba {isim},\n\nKalan ödemeniz ({tutar} TL) için hatırlatma.\n\nBeka Organizasyon" },
+  { id:6, name:"Davetiye Linki",      icon:"\uD83D\uDC8C", trigger:"Manuel - Davetiye hazırlandiginda", cat:"davetiye",
+    body:"Merhaba {isim}!\n\nDijital davetiyeniz hazır!\n\n{davetiye_link}\n\nBeka Organizasyon" },
 ];
 
 const NOTIFS_INIT = [
-  { id:1, icon:"\uD83D\uDCB3", text:"Zeynep Kaya'nin odemesi bekliyor",       time:"2 saat once", read:false, page:"payments"    },
-  { id:2, icon:"\u2705",       text:"Fatma Demir - Tum gorevler tamamlandi",  time:"4 saat once", read:false, page:"tasks"       },
-  { id:3, icon:"\uD83D\uDCE9", text:"Nisan davetiyesine 3 yeni RSVP geldi",  time:"6 saat once", read:true,  page:"invitations" },
-  { id:4, icon:"\uD83D\uDCC5", text:"Ali Yildiz rezervasyonu onay bekliyor",  time:"1 gun once",  read:true,  page:"events"      },
-  { id:5, icon:"\uD83D\uDCF8", text:"Kina galerisine 12 yeni foto yuklendi", time:"1 gun once",  read:true,  page:"gallery"     },
+  { id:1, icon:"\uD83D\uDCB3", text:"Zeynep Kaya'nın odemesi bekliyor",       time:"2 saat önce", read:false, page:"payments"    },
+  { id:2, icon:"\u2705",       text:"Fatma Demir - Tüm görevler tamamlandı",  time:"4 saat önce", read:false, page:"tasks"       },
+  { id:3, icon:"\uD83D\uDCE9", text:"Nişan davetiyesine 3 yeni RSVP geldi",  time:"6 saat önce", read:true,  page:"invitations" },
+  { id:4, icon:"\uD83D\uDCC5", text:"Ali Yıldız rezervasyonu onay bekliyor",  time:"1 gün önce",  read:true,  page:"events"      },
+  { id:5, icon:"\uD83D\uDCF8", text:"Kına galerisine 12 yeni foto yüklendi", time:"1 gün önce",  read:true,  page:"gallery"     },
 ];
 
-const EVENT_ICONS = { "Nisan":"\uD83D\uDC8D","Dogum Gunu":"\uD83C\uDF82","Kina":"\uD83C\uDF3F","Baby Shower":"\uD83C\uDF7C","Evlilik Teklifi":"\uD83C\uDF39","Soz":"\uD83D\uDC8E","Cinsiyet Partisi":"\uD83C\uDF80","Kurumsal":"\uD83C\uDFE2","Nisan (Eng)":"\uD83D\uDC8D" };
+const EVENT_ICONS = { "Nisan":"\uD83D\uDC8D","Doğum Günü":"\uD83C\uDF82","Kına":"\uD83C\uDF3F","Baby Shower":"\uD83C\uDF7C","Evlilik Teklifi":"\uD83C\uDF39","Söz":"\uD83D\uDC8E","Cinsiyet Partisi":"\uD83C\uDF80","Kurumsal":"\uD83C\uDFE2","Nişan (Eng)":"\uD83D\uDC8D" };
 const getIcon = (type) => {
   if(type && type.includes("Ni")) return "\uD83D\uDC8D";
   if(type && type.includes("Do")) return "\uD83C\uDF82";
@@ -90,11 +90,35 @@ const getIcon = (type) => {
   if(type && type.includes("Kurum")) return "\uD83C\uDFE2";
   return "\uD83C\uDF89";
 };
-const EVENT_TYPES = ["Nisan","Dogum Gunu","Kina","Baby Shower","Evlilik Teklifi","Soz","Cinsiyet Partisi","Kurumsal"];
+const EVENT_TYPES = ["Nişan","Doğum Günü","Kına","Baby Shower","Evlilik Teklifi","Söz","Cinsiyet Partisi","Kurumsal"];
 const PAY_COL = { tam:{bg:"bg-emerald-500/15",tx:"text-emerald-400"}, kapora:{bg:"bg-blue-500/15",tx:"text-blue-400"}, bekliyor:{bg:"bg-rose-500/15",tx:"text-rose-400"} };
-const TASK_COL = { devam:{bg:"bg-blue-500/15",tx:"text-blue-400",label:"Devam"}, bekliyor:{bg:"bg-amber-500/15",tx:"text-amber-400",label:"Bekliyor"}, tamamlandi:{bg:"bg-emerald-500/15",tx:"text-emerald-400",label:"Tamam"} };
-const MONTH_NAMES=["Ocak","Subat","Mart","Nisan","Mayis","Haziran","Temmuz","Agustos","Eylul","Ekim","Kasim","Aralik"];
-const DAY_NAMES=["Pzt","Sal","Car","Per","Cum","Cmt","Paz"];
+const TASK_COL = { devam:{bg:"bg-blue-500/15",tx:"text-blue-400",label:"Devam"}, bekliyor:{bg:"bg-amber-500/15",tx:"text-amber-400",label:"Bekliyor"}, tamamlandı:{bg:"bg-emerald-500/15",tx:"text-emerald-400",label:"Tamam"} };
+const MONTH_NAMES=["Ocak","Şubat","Mart","Nisan","Mayıs","Haziran","Temmuz","Ağustos","Eylül","Ekim","Kasım","Aralık"];
+const DAY_NAMES=["Pzt","Sal","Çar","Per","Cum","Cmt","Paz"];
+
+const HOLIDAYS = [
+  { month:0,  day:1,  name:"Yılbaşı",                        icon:"🎆", type:"resmi" },
+  { month:1,  day:14, name:"Sevgililer Günü",                 icon:"❤️",  type:"ozel" },
+  { month:3,  day:23, name:"Ulusal Egemenlik ve Çocuk Bayramı", icon:"🇹🇷", type:"resmi" },
+  { month:4,  day:1,  name:"Emek ve Dayanışma Günü",          icon:"⚒️",  type:"resmi" },
+  { month:4,  day:19, name:"Atatürk'ü Anma, Gençlik ve Spor Bayramı", icon:"🏃", type:"resmi" },
+  { month:4,  day:2,  name:"Anneler Günü (2026)",             icon:"👩", type:"ozel" },
+  { month:5,  day:21, name:"Babalar Günü (2026)",             icon:"👨", type:"ozel" },
+  { month:5,  day:15, name:"Ramazan Bayramı 1. Gün (2026)",  icon:"🌙", type:"bayram" },
+  { month:5,  day:16, name:"Ramazan Bayramı 2. Gün (2026)",  icon:"🌙", type:"bayram" },
+  { month:5,  day:17, name:"Ramazan Bayramı 3. Gün (2026)",  icon:"🌙", type:"bayram" },
+  { month:6,  day:15, name:"Demokrasi ve Millî Birlik Günü",  icon:"🇹🇷", type:"resmi" },
+  { month:6,  day:20, name:"Kurban Bayramı 1. Gün (2026)",   icon:"🐑", type:"bayram" },
+  { month:6,  day:21, name:"Kurban Bayramı 2. Gün (2026)",   icon:"🐑", type:"bayram" },
+  { month:6,  day:22, name:"Kurban Bayramı 3. Gün (2026)",   icon:"🐑", type:"bayram" },
+  { month:6,  day:23, name:"Kurban Bayramı 4. Gün (2026)",   icon:"🐑", type:"bayram" },
+  { month:7,  day:30, name:"Zafer Bayramı",                   icon:"🏆", type:"resmi" },
+  { month:9,  day:29, name:"Cumhuriyet Bayramı",              icon:"🇹🇷", type:"resmi" },
+  { month:10, day:10, name:"Atatürk'ü Anma Günü",            icon:"🕯️",  type:"ozel" },
+  { month:10, day:24, name:"Öğretmenler Günü",                icon:"📚", type:"ozel" },
+  { month:11, day:31, name:"Yılbaşı Arifesi",                 icon:"🎉", type:"ozel" },
+];
+const getHoliday=(m,d)=>HOLIDAYS.filter(h=>h.month===m&&h.day===d);
 
 /* ── SHARED UI ─────────────────────────────────── */
 function Badge({ children, color="purple", className="" }) {
@@ -193,7 +217,7 @@ function GlobalSearch({events,setPage,onClose}) {
         <div className="flex items-center gap-3 px-4 py-3 border-b border-white/8">
           <span className="text-white/40">&#128269;</span>
           <input ref={ref} value={q} onChange={e=>setQ(e.target.value)}
-            placeholder="Musteri, etkinlik turu veya lokasyon ara..."
+            placeholder="Müşteri, etkinlik türü veya lokasyon ara..."
             className="flex-1 bg-transparent text-white/85 placeholder-white/25 outline-none text-sm"/>
           <button onClick={onClose} className="text-white/30 hover:text-white text-xs">ESC</button>
         </div>
@@ -207,14 +231,14 @@ function GlobalSearch({events,setPage,onClose}) {
                   <div className="text-sm text-white/80">{ev.client}</div>
                   <div className="text-[10px] text-white/35">{ev.type} - {ev.date} - {ev.location}</div>
                 </div>
-                <Badge className="ml-auto" color={ev.status==="confirmed"?"green":"amber"}>{ev.status==="confirmed"?"Onaydi":"Bekliyor"}</Badge>
+                <Badge className="ml-auto" color={ev.status==="confirmed"?"green":"amber"}>{ev.status==="confirmed"?"Onaylandı":"Bekliyor"}</Badge>
               </div>
             ))}
           </div>
         ):q.length>1?(
-          <div className="px-4 py-6 text-center text-sm text-white/25">Sonuc bulunamadi</div>
+          <div className="px-4 py-6 text-center text-sm text-white/25">Sonuç bulunamadı</div>
         ):(
-          <div className="px-4 py-4 text-xs text-white/30">Aramak icin yazmaya baslayin...</div>
+          <div className="px-4 py-4 text-xs text-white/30">Aramak için yazmaya baslayin...</div>
         )}
       </div>
     </div>
@@ -227,20 +251,20 @@ function Dashboard({events,tasks,setPage}) {
   const pendPay=events.filter(e=>e.payment==="bekliyor").length;
   const guests=events.reduce((s,e)=>s+e.guests,0);
   const revenue=events.reduce((s,e)=>s+e.paid,0);
-  const openTasks=tasks.filter(t=>t.status!=="tamamlandi");
+  const openTasks=tasks.filter(t=>t.status!=="tamamlandı");
   const monthlyVals=[32,28,45,51,60,77,0,0,0,0,0,0];
   const maxVal=Math.max(...monthlyVals,1);
   return (
     <div className="space-y-5">
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
         <StatBox label="Etkinlik"       value={total}    sub="Bu ay"            icon="&#9672;" color="#c084fc"/>
-        <StatBox label="Onaydi"         value={conf}     sub={`${total-conf} bekliyor`} icon="&#9689;" color="#34d399"/>
-        <StatBox label="Odeme Bekliyor" value={pendPay}  sub="etkinlik"         icon="&#9680;" color="#fb923c"/>
+        <StatBox label="Onaylandı"         value={conf}     sub={`${total-conf} bekliyor`} icon="&#9689;" color="#34d399"/>
+        <StatBox label="Ödeme Bekliyor" value={pendPay}  sub="etkinlik"         icon="&#9680;" color="#fb923c"/>
         <StatBox label="Misafir"        value={guests}   sub="Bu ay"            icon="&#9676;" color="#60a5fa"/>
         <StatBox label="Tahsilat"       value={`${(revenue/1000).toFixed(0)}k`} sub="Bu ay" icon="&#9677;" color="#f472b6"/>
       </div>
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-        <Card className="lg:col-span-2 overflow-hidden">
+        <Çard className="lg:col-span-2 overflow-hidden">
           <SectionHeader title="Yaklasan Etkinlikler" right={<button onClick={()=>setPage("events")} className="text-xs text-white/30 hover:text-white/60 transition-colors">Hepsi</button>}/>
           <div className="divide-y divide-white/5">
             {events.slice(0,5).map(ev=>(
@@ -254,7 +278,7 @@ function Dashboard({events,tasks,setPage}) {
                 </div>
                 <div className="flex items-center gap-2 flex-shrink-0">
                   <Badge color={ev.payment==="tam"?"green":ev.payment==="kapora"?"blue":"red"}>{ev.payment}</Badge>
-                  <Badge color={ev.status==="confirmed"?"green":"amber"}>{ev.status==="confirmed"?"Onaydi":"Bekliyor"}</Badge>
+                  <Badge color={ev.status==="confirmed"?"green":"amber"}>{ev.status==="confirmed"?"Onaylandı":"Bekliyor"}</Badge>
                 </div>
                 <div className="flex items-center gap-2 w-20 flex-shrink-0">
                   <div className="flex-1 h-1 rounded-full bg-white/10">
@@ -265,8 +289,8 @@ function Dashboard({events,tasks,setPage}) {
               </div>
             ))}
           </div>
-        </Card>
-        <Card className="overflow-hidden">
+        </Çard>
+        <Çard className="overflow-hidden">
           <SectionHeader title="Acik Gorevler" right={<button onClick={()=>setPage("tasks")} className="text-xs text-white/30 hover:text-white/60 transition-colors">Hepsi</button>}/>
           <div className="divide-y divide-white/5">
             {openTasks.slice(0,6).map(t=>{
@@ -284,12 +308,12 @@ function Dashboard({events,tasks,setPage}) {
                 </div>
               );
             })}
-            {openTasks.length===0&&<div className="px-5 py-8 text-center text-xs text-white/20">Tum gorevler tamamlandi!</div>}
+            {openTasks.length===0&&<div className="px-5 py-8 text-center text-xs text-white/20">Tüm görevler tamamlandı!</div>}
           </div>
-        </Card>
+        </Çard>
       </div>
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-        <Card className="lg:col-span-2 p-5">
+        <Çard className="lg:col-span-2 p-5">
           <h2 className="text-sm font-semibold text-white/70 mb-4">Haziran 2026</h2>
           <div className="grid grid-cols-7 gap-1 text-center mb-1">
             {DAY_NAMES.map(d=><div key={d} className="text-[10px] text-white/25 pb-1">{d}</div>)}
@@ -311,11 +335,11 @@ function Dashboard({events,tasks,setPage}) {
               );
             })}
           </div>
-        </Card>
-        <Card className="p-5">
+        </Çard>
+        <Çard className="p-5">
           <h2 className="text-sm font-semibold text-white/70 mb-4">Hizli Islemler</h2>
           <div className="space-y-2">
-            {[{icon:"&#128203;",label:"Rezervasyon Al",page:"reservation"},{icon:"&#128140;",label:"Davetiye Olustur",page:"invitations"},{icon:"&#128248;",label:"Galeri & QR",page:"gallery"},{icon:"&#128179;",label:"Odeme Takibi",page:"payments"},{icon:"&#128101;",label:"Musteri CRM",page:"crm"},{icon:"\u2726",label:"AI Asistan",page:"ai"}].map((a,i)=>(
+            {[{icon:"&#128203;",label:"Rezervasyon Al",page:"reservation"},{icon:"&#128140;",label:"Davetiye Olustur",page:"invitations"},{icon:"&#128248;",label:"Galeri & QR",page:"gallery"},{icon:"&#128179;",label:"Ödeme Takibi",page:"payments"},{icon:"&#128101;",label:"Müşteri CRM",page:"crm"},{icon:"\u2726",label:"AI Asistan",page:"ai"}].map((a,i)=>(
               <button key={i} onClick={()=>setPage(a.page)}
                 className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-left hover:bg-white/5 transition-all border border-white/5 hover:border-white/10">
                 <span className="text-base" dangerouslySetInnerHTML={{__html:a.icon}}/>
@@ -324,11 +348,11 @@ function Dashboard({events,tasks,setPage}) {
               </button>
             ))}
           </div>
-        </Card>
+        </Çard>
       </div>
-      <Card className="p-5">
+      <Çard className="p-5">
         <div className="flex items-center justify-between mb-5">
-          <h2 className="text-sm font-semibold text-white/70">Aylik Gelir Dagilimi</h2>
+          <h2 className="text-sm font-semibold text-white/70">Aylık Gelir Dagilimi</h2>
           <span className="text-xs text-white/30">{(revenue/1000).toFixed(0)}k TL tahsilat</span>
         </div>
         <div className="flex items-end gap-2 h-28">
@@ -350,7 +374,7 @@ function Dashboard({events,tasks,setPage}) {
             );
           })}
         </div>
-      </Card>
+      </Çard>
     </div>
   );
 }
@@ -358,16 +382,16 @@ function Dashboard({events,tasks,setPage}) {
 /* ── EVENTS ─────────────────────────────────────── */
 function EventsPage({events,setEvents}) {
   const [search,setSearch]=useState("");
-  const [filter,setFilter]=useState("Tumu");
-  const [statusF,setStatusF]=useState("Tumu");
+  const [filter,setFilter]=useState("Tümu");
+  const [statusF,setStatusF]=useState("Tümu");
   const [drawer,setDrawer]=useState(null);
   const [editModal,setEditModal]=useState(null);
   const [editForm,setEditForm]=useState({});
 
   const filtered=events.filter(e=>{
     const ms=e.client.toLowerCase().includes(search.toLowerCase())||e.type.toLowerCase().includes(search.toLowerCase())||e.location.toLowerCase().includes(search.toLowerCase());
-    const mf=filter==="Tumu"||e.type===filter;
-    const ms2=statusF==="Tumu"||(statusF==="Onaydi"&&e.status==="confirmed")||(statusF==="Bekliyor"&&e.status==="pending");
+    const mf=filter==="Tümu"||e.type===filter;
+    const ms2=statusF==="Tümu"||(statusF==="Onaylandı"&&e.status==="confirmed")||(statusF==="Bekliyor"&&e.status==="pending");
     return ms&&mf&&ms2;
   });
 
@@ -383,26 +407,26 @@ function EventsPage({events,setEvents}) {
   return (
     <div className="space-y-4">
       <div className="flex items-center gap-2 flex-wrap">
-        <input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Musteri, tur veya lokasyon ara..."
+        <input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Müşteri, tur veya lokasyon ara..."
           className="flex-1 min-w-[200px] max-w-xs px-4 py-2 rounded-xl text-sm text-white/80 placeholder-white/25 outline-none border border-white/8 bg-white/5 focus:border-purple-500/40 transition-colors"/>
         <div className="flex gap-1.5 flex-wrap">
-          {["Tumu","Nisan","Kina","Dogum Gunu","Kurumsal"].map(f=>(
+          {["Tümu","Nisan","Kına","Doğum Günü","Kurumsal"].map(f=>(
             <button key={f} onClick={()=>setFilter(f)} className={`px-2.5 py-1.5 rounded-xl text-xs transition-all ${filter===f?"bg-purple-500/20 text-purple-300 border border-purple-500/30":"text-white/40 border border-white/8 hover:text-white/70"}`}>{f}</button>
           ))}
         </div>
         <div className="flex gap-1.5">
-          {["Tumu","Onaydi","Bekliyor"].map(s=>(
+          {["Tümu","Onaylandı","Bekliyor"].map(s=>(
             <button key={s} onClick={()=>setStatusF(s)} className={`px-2.5 py-1.5 rounded-xl text-xs transition-all ${statusF===s?"bg-white/10 text-white/80 border border-white/20":"text-white/35 border border-white/8 hover:text-white/60"}`}>{s}</button>
           ))}
         </div>
         <span className="ml-auto text-xs text-white/25">{filtered.length} etkinlik</span>
       </div>
-      <Card className="overflow-hidden">
+      <Çard className="overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
               <tr className="border-b border-white/5">
-                {["Etkinlik","Tarih","Lokasyon","Misafir","Butce","Odeme","Durum","Gorevler",""].map(h=>(
+                {["Etkinlik","Tarih","Lokasyon","Misafir","Butce","Ödeme","Durum","Gorevler",""].map(h=>(
                   <th key={h} className="px-4 py-3 text-left text-[10px] text-white/30 font-medium uppercase tracking-wider whitespace-nowrap">{h}</th>
                 ))}
               </tr>
@@ -424,7 +448,7 @@ function EventsPage({events,setEvents}) {
                   <td className="px-4 py-3 text-xs text-white/60 text-center">{ev.guests}</td>
                   <td className="px-4 py-3 text-xs font-medium text-white/70 whitespace-nowrap">{ev.budget.toLocaleString()} TL</td>
                   <td className="px-4 py-3"><span className={`text-[10px] px-2 py-0.5 rounded-full font-medium ${PAY_COL[ev.payment]?.bg||""} ${PAY_COL[ev.payment]?.tx||""}`}>{ev.payment}</span></td>
-                  <td className="px-4 py-3"><Badge color={ev.status==="confirmed"?"green":"amber"}>{ev.status==="confirmed"?"Onaydi":"Bekliyor"}</Badge></td>
+                  <td className="px-4 py-3"><Badge color={ev.status==="confirmed"?"green":"amber"}>{ev.status==="confirmed"?"Onaylandı":"Bekliyor"}</Badge></td>
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-2">
                       <div className="w-14 h-1.5 rounded-full bg-white/10">
@@ -438,11 +462,11 @@ function EventsPage({events,setEvents}) {
                   </td>
                 </tr>
               ))}
-              {filtered.length===0&&<tr><td colSpan={9} className="px-4 py-10 text-center text-xs text-white/25">Etkinlik bulunamadi</td></tr>}
+              {filtered.length===0&&<tr><td colSpan={9} className="px-4 py-10 text-center text-xs text-white/25">Etkinlik bulunamadı</td></tr>}
             </tbody>
           </table>
         </div>
-      </Card>
+      </Çard>
 
       <Drawer open={!!drawer} onClose={()=>setDrawer(null)} title="Etkinlik Detayi">
         {drawer&&(
@@ -477,7 +501,7 @@ function EventsPage({events,setEvents}) {
 
       <Modal open={!!editModal} onClose={()=>setEditModal(null)} title="Etkinligi Duzenle" width="max-w-2xl">
         <div className="grid grid-cols-2 gap-4 mb-4">
-          <FieldInput label="Musteri Adi" value={editForm.client||""} onChange={e=>setEditForm(p=>({...p,client:e.target.value}))} placeholder="Ad soyad"/>
+          <FieldInput label="Müşteri Adi" value={editForm.client||""} onChange={e=>setEditForm(p=>({...p,client:e.target.value}))} placeholder="Ad soyad"/>
           <FieldSelect label="Etkinlik Turu" value={editForm.type||""} onChange={e=>setEditForm(p=>({...p,type:e.target.value}))} options={EVENT_TYPES}/>
           <FieldInput label="Tarih" type="date" value={editForm.date||""} onChange={e=>setEditForm(p=>({...p,date:e.target.value}))}/>
           <FieldInput label="Saat" type="time" value={editForm.time||""} onChange={e=>setEditForm(p=>({...p,time:e.target.value}))}/>
@@ -485,8 +509,8 @@ function EventsPage({events,setEvents}) {
           <FieldInput label="Misafir Sayisi" type="number" value={editForm.guests||""} onChange={e=>setEditForm(p=>({...p,guests:Math.max(0,parseInt(e.target.value)||0)}))}/>
           <FieldInput label="Toplam Butce (TL)" type="number" value={editForm.budget||""} onChange={e=>setEditForm(p=>({...p,budget:Math.max(0,parseInt(e.target.value)||0)}))}/>
           <FieldInput label="Odenen (TL)" type="number" value={editForm.paid||""} onChange={e=>setEditForm(p=>({...p,paid:Math.max(0,parseInt(e.target.value)||0)}))}/>
-          <FieldSelect label="Durum" value={editForm.status||""} onChange={e=>setEditForm(p=>({...p,status:e.target.value}))} options={[{value:"confirmed",label:"Onaydi"},{value:"pending",label:"Bekliyor"}]}/>
-          <FieldSelect label="Odeme" value={editForm.payment||""} onChange={e=>setEditForm(p=>({...p,payment:e.target.value}))} options={["tam","kapora","bekliyor"]}/>
+          <FieldSelect label="Durum" value={editForm.status||""} onChange={e=>setEditForm(p=>({...p,status:e.target.value}))} options={[{value:"confirmed",label:"Onaylandı"},{value:"pending",label:"Bekliyor"}]}/>
+          <FieldSelect label="Ödeme" value={editForm.payment||""} onChange={e=>setEditForm(p=>({...p,payment:e.target.value}))} options={["tam","kapora","bekliyor"]}/>
         </div>
         <FieldInput label="Notlar" value={editForm.notes||""} onChange={e=>setEditForm(p=>({...p,notes:e.target.value}))} placeholder="Ozel istekler..." rows={2}/>
         <div className="flex justify-end gap-2 mt-5">
@@ -513,7 +537,7 @@ function CalendarPage({events}) {
   const dayEvs=(day)=>events.filter(e=>{const d=new Date(e.date);return d.getFullYear()===year&&d.getMonth()===month&&d.getDate()===day;});
   return (
     <div className="space-y-4">
-      <Card className="p-6">
+      <Çard className="p-6">
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-3">
             <button onClick={prev} className="px-3 py-1.5 rounded-xl text-xs text-white/50 hover:text-white border border-white/8 hover:border-white/20 transition-colors">Onceki</button>
@@ -530,11 +554,22 @@ function CalendarPage({events}) {
             const now=new Date();
             const isToday=day===now.getDate()&&month===now.getMonth()&&year===now.getFullYear();
             const evs=dayEvs(day);
+            const holidays=getHoliday(month,day);
+            const hasHoliday=holidays.length>0;
+            const bgColor=hasHoliday?"rgba(251,191,36,0.06)":isToday?"rgba(192,132,252,0.05)":"#080810";
             return (
-              <div key={day} onClick={()=>setSelected({day,evs})}
+              <div key={day} onClick={()=>setSelected({day,evs,holidays})}
                 className="min-h-24 p-2 flex flex-col gap-1 cursor-pointer hover:bg-white/[0.025] transition-colors"
-                style={{background:isToday?"rgba(192,132,252,0.05)":"#080810"}}>
-                <span className={`text-xs w-6 h-6 flex items-center justify-center rounded-full mb-0.5 flex-shrink-0 ${isToday?"bg-purple-500 text-white font-bold":"text-white/45"}`}>{day}</span>
+                style={{background:bgColor}}>
+                <div className="flex items-center justify-between mb-0.5">
+                  <span className={`text-xs w-6 h-6 flex items-center justify-center rounded-full flex-shrink-0 ${isToday?"bg-purple-500 text-white font-bold":"text-white/45"}`}>{day}</span>
+                  {hasHoliday&&<span className="text-[10px]" title={holidays[0].name}>{holidays[0].icon}</span>}
+                </div>
+                {holidays.map((h,idx)=>(
+                  <div key={idx} className="text-[9px] px-1.5 py-0.5 rounded-md truncate font-medium" style={{background:"rgba(251,191,36,0.15)",color:"#fbbf24"}}>
+                    {h.icon} {h.name.length>15?h.name.slice(0,15)+"…":h.name}
+                  </div>
+                ))}
                 {evs.map(e=>(
                   <div key={e.id} className="text-[10px] px-1.5 py-0.5 rounded-md truncate" style={{background:"rgba(192,132,252,0.2)",color:"#d8b4fe"}}>
                     {getIcon(e.type)} {e.client.split("&")[0].trim().split(" ")[0]}
@@ -549,12 +584,25 @@ function CalendarPage({events}) {
             <div key={e.id} className="flex items-center gap-2 px-3 py-1.5 rounded-xl border border-white/8 bg-white/[0.025] text-xs text-white/50">
               <span>{getIcon(e.type)}</span>
               <span className="whitespace-nowrap">{e.date.split("-")[2]} {MONTH_NAMES[parseInt(e.date.split("-")[1])-1]?.slice(0,3)} - {e.client.split("&")[0].trim()}</span>
-              <Badge color={e.status==="confirmed"?"green":"amber"}>{e.status==="confirmed"?"Onaydi":"Bekliyor"}</Badge>
+              <Badge color={e.status==="confirmed"?"green":"amber"}>{e.status==="confirmed"?"Onaylandı":"Bekliyor"}</Badge>
             </div>
           ))}
         </div>
-      </Card>
+      </Çard>
       <Modal open={!!selected} onClose={()=>setSelected(null)} title={selected?`${selected.day} ${MONTH_NAMES[month]} ${year}`:""}>
+        {selected&&selected.holidays&&selected.holidays.length>0&&(
+          <div className="mb-4 space-y-2">
+            {selected.holidays.map((h,idx)=>(
+              <div key={idx} className="p-3 rounded-xl border border-amber-500/20 bg-amber-500/5 flex items-center gap-3">
+                <span className="text-2xl">{h.icon}</span>
+                <div>
+                  <div className="text-sm font-semibold text-amber-300">{h.name}</div>
+                  <div className="text-[10px] text-amber-400/50">{h.type==="resmi"?"Resmi Tatil":h.type==="bayram"?"Bayram":"Özel Gün"}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
         {selected&&(selected.evs.length>0?(
           <div className="space-y-3">
             {selected.evs.map(ev=>(
@@ -562,14 +610,14 @@ function CalendarPage({events}) {
                 <div className="flex items-center gap-3 mb-2">
                   <span className="text-2xl">{getIcon(ev.type)}</span>
                   <div><div className="text-sm font-semibold text-white/85">{ev.client}</div><div className="text-xs text-white/40">{ev.time} - {ev.location}</div></div>
-                  <Badge className="ml-auto" color={ev.status==="confirmed"?"green":"amber"}>{ev.status==="confirmed"?"Onaydi":"Bekliyor"}</Badge>
+                  <Badge className="ml-auto" color={ev.status==="confirmed"?"green":"amber"}>{ev.status==="confirmed"?"Onaylandı":"Bekliyor"}</Badge>
                 </div>
                 <div className="text-xs text-white/50">{ev.guests} misafir - {ev.budget.toLocaleString()} TL butce</div>
               </div>
             ))}
           </div>
         ):(
-          <div className="text-center py-6 text-sm text-white/25">Bu gunde etkinlik yok</div>
+          <div className="text-center py-6 text-sm text-white/25">Bu günde etkinlik yok</div>
         ))}
       </Modal>
     </div>
@@ -580,8 +628,8 @@ function CalendarPage({events}) {
 function TasksPage({tasks,setTasks,events}) {
   const [addOpen,setAddOpen]=useState(false);
   const [newTask,setNewTask]=useState({task:"",eventId:"",assignee:"",priority:"orta"});
-  const [filterEv,setFilterEv]=useState("Tumu");
-  const cols=["bekliyor","devam","tamamlandi"];
+  const [filterEv,setFilterEv]=useState("Tümu");
+  const cols=["bekliyor","devam","tamamlandı"];
   const move=(id,status)=>setTasks(prev=>prev.map(t=>t.id===id?{...t,status}:t));
   const del=(id)=>setTasks(prev=>prev.filter(t=>t.id!==id));
   const addTask=()=>{
@@ -589,7 +637,7 @@ function TasksPage({tasks,setTasks,events}) {
     setTasks(prev=>[...prev,{id:Date.now(),eventId:parseInt(newTask.eventId)||0,task:newTask.task.trim(),status:"bekliyor",assignee:newTask.assignee||"—",priority:newTask.priority}]);
     setNewTask({task:"",eventId:"",assignee:"",priority:"orta"});setAddOpen(false);
   };
-  const filt=filterEv==="Tumu"?tasks:tasks.filter(t=>t.eventId===parseInt(filterEv));
+  const filt=filterEv==="Tümu"?tasks:tasks.filter(t=>t.eventId===parseInt(filterEv));
   return (
     <div className="space-y-4">
       <div className="flex items-center gap-3 flex-wrap">
@@ -602,7 +650,7 @@ function TasksPage({tasks,setTasks,events}) {
         </div>
         <select value={filterEv} onChange={e=>setFilterEv(e.target.value)}
           className="px-3 py-1.5 rounded-xl text-xs text-white/60 bg-white/5 border border-white/8 outline-none bg-[#0f0f1c]">
-          <option value="Tumu">Tum etkinlikler</option>
+          <option value="Tümu">Tüm etkinlikler</option>
           {events.map(e=><option key={e.id} value={e.id}>{e.client}</option>)}
         </select>
         <button onClick={()=>setAddOpen(true)} className="ml-auto px-3 py-1.5 rounded-xl text-xs text-purple-300 border border-purple-500/25 hover:bg-purple-500/10 transition-colors">+ Gorev Ekle</button>
@@ -669,7 +717,7 @@ function InvitationsPage({events,guests}) {
   const [themeIdx,setThemeIdx]=useState(0);
   const themes=[
     {name:"Klasik Gold",from:"#b8943f",to:"#d4af37",dark:"#1a1200"},
-    {name:"Gul Pembe",from:"#c2185b",to:"#ff6b9d",dark:"#1a0010"},
+    {name:"Gül Pembe",from:"#c2185b",to:"#ff6b9d",dark:"#1a0010"},
     {name:"Lacivert",from:"#1a237e",to:"#3f51b5",dark:"#000820"},
     {name:"Dogal Yesil",from:"#2e7d32",to:"#66bb6a",dark:"#001a02"},
     {name:"Mor Dus",from:"#6a1b9a",to:"#ab47bc",dark:"#0d0018"},
@@ -678,7 +726,7 @@ function InvitationsPage({events,guests}) {
   const evGuests=activeEv ? guests.filter(g=>g.eventId===activeEv.id) : [];
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-      <Card className="overflow-hidden">
+      <Çard className="overflow-hidden">
         <SectionHeader title="Etkinlikler"/>
         <div className="divide-y divide-white/5">
           {events.map(ev=>(
@@ -693,8 +741,8 @@ function InvitationsPage({events,guests}) {
             </div>
           ))}
         </div>
-      </Card>
-      <Card className="md:col-span-2 p-5 space-y-5 overflow-auto">
+      </Çard>
+      <Çard className="md:col-span-2 p-5 space-y-5 overflow-auto">
         <div className="flex items-start justify-between gap-4">
           <div>
             <h3 className="text-sm font-semibold text-white/85">{activeEv?.client}</h3>
@@ -718,9 +766,9 @@ function InvitationsPage({events,guests}) {
           </div>
         </div>
         <div>
-          <p className="text-xs text-white/40 mb-3">RSVP Ozeti</p>
+          <p className="text-xs text-white/40 mb-3">RSVP Özeti</p>
           <div className="grid grid-cols-3 gap-2">
-            {[{label:"Katiliyor",count:evGuests.filter(g=>g.response==="katiliyor").length,color:"#34d399"},{label:"Belki",count:evGuests.filter(g=>g.response==="belki").length,color:"#fbbf24"},{label:"Katilamyor",count:evGuests.filter(g=>g.response==="katilamyor").length,color:"#f87171"}].map(s=>(
+            {[{label:"Katiliyor",count:evGuests.filter(g=>g.response==="katılıyor").length,color:"#34d399"},{label:"Belki",count:evGuests.filter(g=>g.response==="belki").length,color:"#fbbf24"},{label:"Katilamyor",count:evGuests.filter(g=>g.response==="katılamıyor").length,color:"#f87171"}].map(s=>(
               <div key={s.label} className="p-3 rounded-xl border border-white/5 text-center" style={{background:"rgba(255,255,255,0.03)"}}>
                 <div className="text-2xl font-bold" style={{color:s.color}}>{s.count}</div>
                 <div className="text-[10px] text-white/40 mt-0.5">{s.label}</div>
@@ -744,7 +792,7 @@ function InvitationsPage({events,guests}) {
                       <td className="px-3 py-2 text-xs text-white/50 text-center">{g.plus}</td>
                       <td className="px-3 py-2 text-xs text-white/50 text-center">{g.children}</td>
                       <td className="px-3 py-2 text-xs text-white/50">{g.food}</td>
-                      <td className="px-3 py-2"><Badge color={g.response==="katiliyor"?"green":g.response==="belki"?"amber":"red"}>{g.response}</Badge></td>
+                      <td className="px-3 py-2"><Badge color={g.response==="katılıyor"?"green":g.response==="belki"?"amber":"red"}>{g.response}</Badge></td>
                     </tr>
                   ))}
                 </tbody>
@@ -760,7 +808,7 @@ function InvitationsPage({events,guests}) {
           <GlassBtn>Kopyala</GlassBtn>
           <GlassBtn>QR</GlassBtn>
         </div>
-      </Card>
+      </Çard>
       <Modal open={preview} onClose={()=>setPreview(false)} title="Davetiye Onizlemesi">
         <div className="flex justify-center">
           <div className="w-72 rounded-3xl overflow-hidden" style={{background:`linear-gradient(160deg,${th.dark} 0%,#0d0d18 100%)`,border:"1px solid rgba(192,132,252,0.2)"}}>
@@ -803,7 +851,7 @@ function GalleryPage({events,gallery,setGallery}) {
   const remove=(id)=>{setGallery(prev=>prev.filter(g=>g.id!==id));if(lightbox?.id===id)setLightbox(null);};
   return (
     <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-      <Card className="overflow-hidden">
+      <Çard className="overflow-hidden">
         <SectionHeader title="Etkinlikler"/>
         <div className="divide-y divide-white/5">
           {events.map(ev=>{
@@ -821,8 +869,8 @@ function GalleryPage({events,gallery,setGallery}) {
             );
           })}
         </div>
-      </Card>
-      <Card className="md:col-span-3 p-5">
+      </Çard>
+      <Çard className="md:col-span-3 p-5">
         <div className="flex items-center justify-between mb-4">
           <div>
             <h3 className="text-sm font-semibold text-white/85">{activeEv?.client}</h3>
@@ -835,7 +883,7 @@ function GalleryPage({events,gallery,setGallery}) {
           </div>
         </div>
         <div className="grid grid-cols-3 gap-3 mb-4">
-          {[{label:"Toplam",val:photos.length,c:"#c084fc"},{label:"Onaydi",val:photos.filter(p=>p.approved).length,c:"#34d399"},{label:"Bekliyor",val:photos.filter(p=>!p.approved).length,c:"#fbbf24"}].map(s=>(
+          {[{label:"Toplam",val:photos.length,c:"#c084fc"},{label:"Onaylandı",val:photos.filter(p=>p.approved).length,c:"#34d399"},{label:"Bekliyor",val:photos.filter(p=>!p.approved).length,c:"#fbbf24"}].map(s=>(
             <div key={s.label} className="p-3 rounded-xl border border-white/5 bg-white/[0.02] text-center">
               <div className="text-xl font-bold" style={{color:s.c}}>{s.val}</div>
               <div className="text-[10px] text-white/35">{s.label}</div>
@@ -868,16 +916,16 @@ function GalleryPage({events,gallery,setGallery}) {
         ):(
           <div className="text-center py-16 border-2 border-dashed border-white/8 rounded-2xl">
             <div className="text-5xl mb-3 opacity-20">&#128248;</div>
-            <div className="text-white/30 text-sm">Bu etkinlik icin henuz medya yok</div>
+            <div className="text-white/30 text-sm">Bu etkinlik için henuz medya yok</div>
           </div>
         )}
-      </Card>
+      </Çard>
       {lightbox&&(
         <div className="fixed inset-0 z-50 flex items-center justify-center" style={{background:"rgba(0,0,0,0.92)"}} onClick={()=>setLightbox(null)}>
           <div className="max-w-2xl w-full mx-4 rounded-2xl overflow-hidden" onClick={e=>e.stopPropagation()}>
             <img src={lightbox.url} alt="" className="w-full object-cover"/>
             <div className="flex items-center gap-3 p-4" style={{background:"#0f0f1a"}}>
-              <span className="text-xs text-white/50 flex-1">{lightbox.approved?"Onaydi":"Onay Bekliyor"}</span>
+              <span className="text-xs text-white/50 flex-1">{lightbox.approved?"Onaylandı":"Onay Bekliyor"}</span>
               {!lightbox.approved&&<button onClick={()=>{approve(lightbox.id);setLightbox(p=>({...p,approved:true}));}} className="text-xs px-3 py-1.5 rounded-xl bg-emerald-500/20 text-emerald-400">Onayla</button>}
               <button onClick={()=>remove(lightbox.id)} className="text-xs px-3 py-1.5 rounded-xl bg-rose-500/15 text-rose-400">Sil</button>
               <button onClick={()=>setLightbox(null)} className="text-white/30 hover:text-white ml-2 transition-colors text-xl leading-none">x</button>
@@ -897,16 +945,16 @@ function PaymentsPage({events}) {
   return (
     <div className="space-y-5">
       <div className="grid grid-cols-3 gap-4">
-        <StatBox label="Toplam Butce" value={`${(totalRev/1000).toFixed(0)}k TL`} sub="Tum etkinlikler" icon="&#9672;" color="#c084fc"/>
-        <StatBox label="Tahsilat"     value={`${(totalPaid/1000).toFixed(0)}k TL`} sub={`%${totalRev>0?((totalPaid/totalRev)*100).toFixed(0):0} tamamlandi`} icon="&#9689;" color="#34d399"/>
+        <StatBox label="Toplam Butce" value={`${(totalRev/1000).toFixed(0)}k TL`} sub="Tüm etkinlikler" icon="&#9672;" color="#c084fc"/>
+        <StatBox label="Tahsilat"     value={`${(totalPaid/1000).toFixed(0)}k TL`} sub={`%${totalRev>0?((totalPaid/totalRev)*100).toFixed(0):0} tamamlandı`} icon="&#9689;" color="#34d399"/>
         <StatBox label="Bekleyen"     value={`${(totalRem/1000).toFixed(0)}k TL`} sub="Tahsilat bekliyor" icon="&#9680;" color="#fb923c"/>
       </div>
-      <Card className="overflow-hidden">
-        <SectionHeader title="Odeme Detaylari"/>
+      <Çard className="overflow-hidden">
+        <SectionHeader title="Ödeme Detaylari"/>
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead><tr className="border-b border-white/5">
-              {["Musteri","Etkinlik","Tarih","Toplam","Odenen","Kalan","%","Durum",""].map(h=>(
+              {["Müşteri","Etkinlik","Tarih","Toplam","Odenen","Kalan","%","Durum",""].map(h=>(
                 <th key={h} className="px-4 py-3 text-left text-[10px] text-white/30 font-medium uppercase tracking-wider whitespace-nowrap">{h}</th>
               ))}
             </tr></thead>
@@ -936,8 +984,8 @@ function PaymentsPage({events}) {
             </tbody>
           </table>
         </div>
-      </Card>
-      <Card className="p-5">
+      </Çard>
+      <Çard className="p-5">
         <h2 className="text-sm font-semibold text-white/70 mb-5">Tahsilat Oranlari</h2>
         <div className="space-y-3">
           {events.map(ev=>{
@@ -959,7 +1007,7 @@ function PaymentsPage({events}) {
             );
           })}
         </div>
-      </Card>
+      </Çard>
     </div>
   );
 }
@@ -968,15 +1016,15 @@ function PaymentsPage({events}) {
 /* ── RESERVATION ────────────────────────────────── */
 function ReservationPage() {
   const [step,setStep]=useState(1);
-  const [form,setForm]=useState({type:"",date:"",time:"",guests:"",location:"",concept:"",services:[],name:"",phone:"",email:"",notes:""});
+  const [form,setForm]=useState({type:"",date:"",time:"",guests:"",location:"",cöncept:"",services:[],name:"",phone:"",email:"",notes:""});
   const upd=(k,v)=>setForm(p=>({...p,[k]:v}));
   const [done,setDone]=useState(false);
-  const concepts=["Boho & Dogal","Klasik Romantik","Tropical Cenneti","Vintage & Rustik","Modern Minimal","Pembe Masallar","Siyah & Altin","Mavi Ruya"];
-  const services=[["Fotografci",2500],["Video Cekimi",3000],["Pasta",800],["Cicek Duzenlemesi",1500],["DJ / Muzik",2000],["MC",1500],["Ulasim",500],["Misafir Agirl.",1000]];
+  const cöncepts=["Boho & Dogal","Klasik Romantik","Tropical Cenneti","Vintage & Rustik","Modern Minimal","Pembe Masallar","Siyah & Altin","Mavi Ruya"];
+  const services=[["Fotoğrafçı",2500],["Video Cekimi",3000],["Pasta",800],["Çiçek Duzenlemesi",1500],["DJ / Muzik",2000],["MC",1500],["Ulasim",500],["Misafir Agirl.",1000]];
   const base=form.guests?parseInt(form.guests)*80:0;
   const servicesPrice=services.filter(([n])=>form.services.includes(n)).reduce((s,[,p])=>s+p,0);
   const total=base+servicesPrice;
-  const steps=["Etkinlik Turu","Tarih & Kisi","Konsept","Ek Hizmetler","Iletisim","Ozet"];
+  const steps=["Etkinlik Turu","Tarih & Kisi","Konsept","Ek Hizmetler","İletişim","Özet"];
 
   if(done)return(
     <div className="max-w-md mx-auto text-center py-20">
@@ -988,7 +1036,7 @@ function ReservationPage() {
           <div key={k} className="flex justify-between text-xs"><span className="text-white/35">{k}</span><span className="text-white/75">{v||"—"}</span></div>
         ))}
       </div>
-      <button onClick={()=>{setDone(false);setStep(1);setForm({type:"",date:"",time:"",guests:"",location:"",concept:"",services:[],name:"",phone:"",email:"",notes:""});}}
+      <button onClick={()=>{setDone(false);setStep(1);setForm({type:"",date:"",time:"",guests:"",location:"",cöncept:"",services:[],name:"",phone:"",email:"",notes:""});}}
         className="px-6 py-3 rounded-xl text-sm font-medium text-white" style={{background:"linear-gradient(135deg,#c084fc,#818cf8)"}}>
         + Yeni Rezervasyon
       </button>
@@ -1011,10 +1059,10 @@ function ReservationPage() {
           </div>
         ))}
       </div>
-      <Card className="p-6">
+      <Çard className="p-6">
         {step===1&&(
           <div>
-            <h3 className="text-sm font-semibold text-white/85 mb-5">Etkinlik Turunu Secin</h3>
+            <h3 className="text-sm font-semibold text-white/85 mb-5">Etkinlik Türünü Seçin</h3>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
               {EVENT_TYPES.map(t=>(
                 <button key={t} onClick={()=>upd("type",t)}
@@ -1039,11 +1087,11 @@ function ReservationPage() {
         )}
         {step===3&&(
           <div>
-            <h3 className="text-sm font-semibold text-white/85 mb-4">Konsept Secin</h3>
+            <h3 className="text-sm font-semibold text-white/85 mb-4">Konsept Seçin</h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              {concepts.map(c=>(
-                <button key={c} onClick={()=>upd("concept",c)}
-                  className={`p-4 rounded-xl border-2 text-left transition-all ${form.concept===c?"border-purple-500 bg-purple-500/15":"border-white/8 hover:border-white/20 bg-white/[0.03]"}`}>
+              {cöncepts.map(c=>(
+                <button key={c} onClick={()=>upd("cöncept",c)}
+                  className={`p-4 rounded-xl border-2 text-left transition-all ${form.cöncept===c?"border-purple-500 bg-purple-500/15":"border-white/8 hover:border-white/20 bg-white/[0.03]"}`}>
                   <span className="text-sm font-medium text-white/80">{c}</span>
                 </button>
               ))}
@@ -1070,7 +1118,7 @@ function ReservationPage() {
         )}
         {step===5&&(
           <div className="space-y-4">
-            <h3 className="text-sm font-semibold text-white/85 mb-4">Iletisim Bilgileri</h3>
+            <h3 className="text-sm font-semibold text-white/85 mb-4">İletişim Bilgileri</h3>
             <div className="grid grid-cols-2 gap-4">
               <FieldInput label="Ad Soyad" value={form.name} onChange={e=>upd("name",e.target.value)} placeholder="Adiniz ve soyadiniz"/>
               <FieldInput label="Telefon" type="tel" value={form.phone} onChange={e=>upd("phone",e.target.value)} placeholder="05XX XXX XXXX"/>
@@ -1081,9 +1129,9 @@ function ReservationPage() {
         )}
         {step===6&&(
           <div className="space-y-4">
-            <h3 className="text-sm font-semibold text-white/85 mb-4">Ozet & Onay</h3>
+            <h3 className="text-sm font-semibold text-white/85 mb-4">Özet & Onay</h3>
             <div className="p-4 rounded-xl bg-white/[0.04] space-y-2">
-              {[["Etkinlik",form.type||"—"],["Tarih",form.date||"—"],["Saat",form.time||"—"],["Kisi",form.guests?`${form.guests} kisi`:"—"],["Lokasyon",form.location||"—"],["Konsept",form.concept||"—"],["Ad Soyad",form.name||"—"],["Telefon",form.phone||"—"]].map(([k,v])=>(
+              {[["Etkinlik",form.type||"—"],["Tarih",form.date||"—"],["Saat",form.time||"—"],["Kisi",form.guests?`${form.guests} kisi`:"—"],["Lokasyon",form.location||"—"],["Konsept",form.cöncept||"—"],["Ad Soyad",form.name||"—"],["Telefon",form.phone||"—"]].map(([k,v])=>(
                 <div key={k} className="flex justify-between py-1.5 border-b border-white/5">
                   <span className="text-xs text-white/35">{k}</span><span className="text-xs text-white/75">{v}</span>
                 </div>
@@ -1103,7 +1151,7 @@ function ReservationPage() {
                 </div>
                 <span className="text-2xl font-bold text-purple-300">{total.toLocaleString()} TL</span>
               </div>
-              <p className="text-[10px] text-white/20 mt-2">* Kesin fiyat gorusme sonrasi belirlenir.</p>
+              <p className="text-[10px] text-white/20 mt-2">* Kesin fiyat gorusme sonrası belirlenir.</p>
             </div>
           </div>
         )}
@@ -1121,22 +1169,22 @@ function ReservationPage() {
             </button>
           )}
         </div>
-      </Card>
+      </Çard>
     </div>
   );
 }
 
-/* ── WHATSAPP ───────────────────────────────────── */
+/* ── WHA.Ş.PP ───────────────────────────────────── */
 function WhatsAppPage({events}) {
   const [active,setActive]=useState(WA_TEMPLATES[0]);
   const [editBody,setEditBody]=useState(WA_TEMPLATES[0].body);
   const [editing,setEditing]=useState(false);
   const [sent,setSent]=useState([]);
   const [preview,setPreview]=useState(false);
-  const catCol={rezervasyon:"blue",hatirlatma:"amber",galeri:"green",odeme:"red",davetiye:"purple"};
+  const catCol={rezervasyon:"blue",hatırlatma:"amber",galeri:"green",odeme:"red",davetiye:"purple"};
   const fill=(body,ev)=>body
     .replace(/\{isim\}/g,ev.client.split("&")[0].trim())
-    .replace(/\{etkinlik_turu\}/g,ev.type)
+    .replace(/\{etkinlik_türü\}/g,ev.type)
     .replace(/\{tarih\}/g,ev.date).replace(/\{saat\}/g,ev.time)
     .replace(/\{lokasyon\}/g,ev.location).replace(/\{gun\}/g,"3")
     .replace(/\{galeri_link\}/g,`beka.io/g/${ev.id}`)
@@ -1144,7 +1192,7 @@ function WhatsAppPage({events}) {
     .replace(/\{tutar\}/g,(ev.budget-ev.paid).toLocaleString());
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-      <Card className="overflow-hidden">
+      <Çard className="overflow-hidden">
         <SectionHeader title="Sablonlar"/>
         <div className="divide-y divide-white/5">
           {WA_TEMPLATES.map(tmpl=>(
@@ -1161,8 +1209,8 @@ function WhatsAppPage({events}) {
             </div>
           ))}
         </div>
-      </Card>
-      <Card className="md:col-span-2 p-5 space-y-4">
+      </Çard>
+      <Çard className="md:col-span-2 p-5 space-y-4">
         <div className="flex items-start justify-between gap-4">
           <div>
             <h3 className="text-sm font-semibold text-white/85">{active?.icon} {active?.name}</h3>
@@ -1185,7 +1233,7 @@ function WhatsAppPage({events}) {
         <div>
           <p className="text-xs text-white/40 mb-2">Degiskenler</p>
           <div className="flex flex-wrap gap-1.5">
-            {["{isim}","{etkinlik_turu}","{tarih}","{saat}","{lokasyon}","{galeri_link}","{davetiye_link}","{tutar}","{gun}"].map(v=>(
+            {["{isim}","{etkinlik_türü}","{tarih}","{saat}","{lokasyon}","{galeri_link}","{davetiye_link}","{tutar}","{gun}"].map(v=>(
               <span key={v} className="text-[10px] px-2 py-1 rounded-full bg-purple-500/10 text-purple-400 border border-purple-500/20 font-mono">{v}</span>
             ))}
           </div>
@@ -1216,13 +1264,13 @@ function WhatsAppPage({events}) {
                 <div key={s.id} className="flex items-center gap-2 px-3 py-2 rounded-xl bg-green-500/8 border border-green-500/15">
                   <span className="text-green-400 text-xs">&#10003;</span>
                   <span className="text-xs text-white/65 flex-1">{s.tmpl} - {s.name}</span>
-                  <span className="text-[10px] text-white/25">Az once</span>
+                  <span className="text-[10px] text-white/25">Az önce</span>
                 </div>
               ))}
             </div>
           </div>
         )}
-      </Card>
+      </Çard>
       <Modal open={preview} onClose={()=>setPreview(false)} title="WhatsApp Onizlemesi">
         <div className="rounded-2xl overflow-hidden" style={{background:"#111b21"}}>
           <div className="p-4 flex items-center gap-3 border-b border-white/8">
@@ -1267,7 +1315,7 @@ function StaffPage({events}) {
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {staff.map(s=>(
-          <Card key={s.id} className="p-5">
+          <Çard key={s.id} className="p-5">
             <div className="flex items-start justify-between mb-4">
               <div className="flex items-center gap-3">
                 <div className="w-12 h-12 rounded-2xl flex items-center justify-center text-xl font-bold flex-shrink-0" style={{background:`linear-gradient(135deg,${s.color},${s.color}88)`}}>{s.avatar}</div>
@@ -1288,10 +1336,10 @@ function StaffPage({events}) {
               <button className="flex-1 py-1.5 rounded-xl text-[10px] text-white/50 border border-white/8 hover:border-white/20 transition-colors">Gorevler</button>
               <button onClick={()=>del(s.id)} className="py-1.5 px-2 rounded-xl text-[10px] text-rose-400/50 border border-rose-500/10 hover:border-rose-500/30 hover:text-rose-400 transition-colors">x</button>
             </div>
-          </Card>
+          </Çard>
         ))}
       </div>
-      <Card className="overflow-hidden">
+      <Çard className="overflow-hidden">
         <SectionHeader title="Etkinlik Atamalari"/>
         <div className="p-5 overflow-x-auto">
           <table className="w-full">
@@ -1314,11 +1362,11 @@ function StaffPage({events}) {
             </tbody>
           </table>
         </div>
-      </Card>
+      </Çard>
       <Modal open={addOpen} onClose={()=>setAddOpen(false)} title="Yeni Personel Ekle">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <FieldInput label="Ad Soyad" value={form.name} onChange={upd("name")} placeholder="Adi soyadi"/>
-          <FieldInput label="Gorev" value={form.role} onChange={upd("role")} placeholder="Dekorasyon, Fotografci..."/>
+          <FieldInput label="Gorev" value={form.role} onChange={upd("role")} placeholder="Dekorasyon, Fotoğrafçı..."/>
           <FieldInput label="Telefon" value={form.phone} onChange={upd("phone")} placeholder="0532 XXX XXXX"/>
           <FieldInput label="E-posta" value={form.email} onChange={upd("email")} placeholder="mail@firma.com"/>
         </div>
@@ -1339,13 +1387,13 @@ function CRMPage({events}) {
   return (
     <div className="space-y-4">
       <div className="flex items-center gap-4">
-        <input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Musteri adi veya telefon ara..."
+        <input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Müşteri adi veya telefon ara..."
           className="flex-1 max-w-sm px-4 py-2 rounded-xl text-sm text-white/80 placeholder-white/25 outline-none border border-white/8 bg-white/5 focus:border-purple-500/40 transition-colors"/>
         <span className="text-xs text-white/30">{clients.length} musteri</span>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <Card className="overflow-hidden">
-          <SectionHeader title="Musteriler"/>
+        <Çard className="overflow-hidden">
+          <SectionHeader title="Müşteriler"/>
           <div className="divide-y divide-white/5 max-h-[600px] overflow-auto">
             {clients.map(c=>(
               <div key={c.id} onClick={()=>setSelected(c)}
@@ -1357,12 +1405,12 @@ function CRMPage({events}) {
                   <div className="text-xs font-medium text-white/80 truncate">{c.client}</div>
                   <div className="text-[10px] text-white/30">{c.phone}</div>
                 </div>
-                <Badge color={c.status==="confirmed"?"green":"amber"}>{c.status==="confirmed"?"Onaydi":"Bekliyor"}</Badge>
+                <Badge color={c.status==="confirmed"?"green":"amber"}>{c.status==="confirmed"?"Onaylandı":"Bekliyor"}</Badge>
               </div>
             ))}
           </div>
-        </Card>
-        <Card className="col-span-2 p-5">
+        </Çard>
+        <Çard className="col-span-2 p-5">
           {selected?(
             <>
               <div className="flex items-start gap-4 pb-5 border-b border-white/8 mb-5">
@@ -1373,7 +1421,7 @@ function CRMPage({events}) {
                   <h3 className="text-lg font-bold text-white">{selected.client}</h3>
                   <p className="text-xs text-white/40 mt-0.5">{selected.type} - {selected.date}</p>
                   <div className="flex gap-2 mt-2">
-                    <Badge color={selected.status==="confirmed"?"green":"amber"}>{selected.status==="confirmed"?"Onaydi":"Bekliyor"}</Badge>
+                    <Badge color={selected.status==="confirmed"?"green":"amber"}>{selected.status==="confirmed"?"Onaylandı":"Bekliyor"}</Badge>
                     <Badge color="purple">{selected.type}</Badge>
                   </div>
                 </div>
@@ -1400,7 +1448,7 @@ function CRMPage({events}) {
                         <div className="text-xs text-white/75">{ev.type}</div>
                         <div className="text-[10px] text-white/35">{ev.date} - {ev.location}</div>
                       </div>
-                      <Badge color={ev.status==="confirmed"?"green":"amber"}>{ev.status==="confirmed"?"Onaydi":"Bekliyor"}</Badge>
+                      <Badge color={ev.status==="confirmed"?"green":"amber"}>{ev.status==="confirmed"?"Onaylandı":"Bekliyor"}</Badge>
                     </div>
                   ))}
                 </div>
@@ -1415,10 +1463,10 @@ function CRMPage({events}) {
           ):(
             <div className="flex flex-col items-center justify-center h-64 text-center">
               <div className="text-5xl mb-4 opacity-20">&#128101;</div>
-              <div className="text-white/30 text-sm">Detaylari gormek icin bir musteri secin</div>
+              <div className="text-white/30 text-sm">Detaylari gormek için bir musteri secin</div>
             </div>
           )}
-        </Card>
+        </Çard>
       </div>
     </div>
   );
@@ -1437,7 +1485,7 @@ function AnalyticsPage({events, tasks}) {
   const monthlyData=[{m:"Oca",r:32,g:28},{m:"Sub",r:28,g:22},{m:"Mar",r:45,g:38},{m:"Nis",r:51,g:44},{m:"May",r:60,g:52},{m:"Haz",r:77,g:77}];
   const maxM=Math.max(...monthlyData.map(d=>d.r),1);
   const localTasks=tasks||initTasks;
-  const taskDone=localTasks.filter(t=>t.status==="tamamlandi").length;
+  const taskDone=localTasks.filter(t=>t.status==="tamamlandı").length;
   const taskPct=Math.round((taskDone/localTasks.length)*100);
   return (
     <div className="space-y-5">
@@ -1448,8 +1496,8 @@ function AnalyticsPage({events, tasks}) {
         <StatBox label="Ort. Butce"     value={`${(avgBudget/1000).toFixed(1)}k TL`}  sub="Etkinlik basi"    icon="&#9672;"   color="#f472b6"/>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <Card className="p-5">
-          <h2 className="text-sm font-semibold text-white/70 mb-5">Aylik Gelir (k TL)</h2>
+        <Çard className="p-5">
+          <h2 className="text-sm font-semibold text-white/70 mb-5">Aylık Gelir (k TL)</h2>
           <div className="flex items-end gap-3 h-36">
             {monthlyData.map((d,i)=>(
               <div key={d.m} className="flex-1 flex flex-col items-center gap-1.5">
@@ -1465,8 +1513,8 @@ function AnalyticsPage({events, tasks}) {
             <div className="flex items-center gap-1.5"><span className="w-3 h-1.5 rounded bg-emerald-400/50 inline-block"/><span className="text-[10px] text-white/35">Tahsilat</span></div>
             <div className="flex items-center gap-1.5"><span className="w-3 h-1.5 rounded bg-purple-400/40 inline-block"/><span className="text-[10px] text-white/35">Kalan</span></div>
           </div>
-        </Card>
-        <Card className="p-5">
+        </Çard>
+        <Çard className="p-5">
           <h2 className="text-sm font-semibold text-white/70 mb-5">Etkinlik Turu Dagilimi</h2>
           <div className="space-y-3">
             {byType.map(item=>(
@@ -1481,13 +1529,13 @@ function AnalyticsPage({events, tasks}) {
               </div>
             ))}
           </div>
-        </Card>
+        </Çard>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <Card className="p-5">
-          <h2 className="text-sm font-semibold text-white/70 mb-4">Odeme Durumu</h2>
+        <Çard className="p-5">
+          <h2 className="text-sm font-semibold text-white/70 mb-4">Ödeme Durumu</h2>
           <div className="space-y-3">
-            {[{label:"Tam Odendi",count:events.filter(e=>e.payment==="tam").length,color:"#34d399"},{label:"Kapora Alindi",count:events.filter(e=>e.payment==="kapora").length,color:"#60a5fa"},{label:"Odeme Bekliyor",count:events.filter(e=>e.payment==="bekliyor").length,color:"#f87171"}].map(s=>(
+            {[{label:"Tam Odendi",count:events.filter(e=>e.payment==="tam").length,color:"#34d399"},{label:"Kapora Alindi",count:events.filter(e=>e.payment==="kapora").length,color:"#60a5fa"},{label:"Ödeme Bekliyor",count:events.filter(e=>e.payment==="bekliyor").length,color:"#f87171"}].map(s=>(
               <div key={s.label} className="flex items-center justify-between">
                 <div className="flex items-center gap-2"><span className="w-2 h-2 rounded-full" style={{background:s.color}}/><span className="text-xs text-white/60">{s.label}</span></div>
                 <div className="flex items-center gap-2">
@@ -1497,8 +1545,8 @@ function AnalyticsPage({events, tasks}) {
               </div>
             ))}
           </div>
-        </Card>
-        <Card className="p-5">
+        </Çard>
+        <Çard className="p-5">
           <h2 className="text-sm font-semibold text-white/70 mb-4">Gorev Tamamlama</h2>
           <div className="flex items-center justify-center py-3">
             <div className="relative w-28 h-28">
@@ -1514,15 +1562,15 @@ function AnalyticsPage({events, tasks}) {
             </div>
           </div>
           <div className="flex justify-center gap-4 mt-1">
-            {["tamamlandi","devam","bekliyor"].map(s=>(
+            {["tamamlandı","devam","bekliyor"].map(s=>(
               <div key={s} className="text-center">
-                <div className="text-sm font-bold" style={{color:s==="tamamlandi"?"#34d399":s==="devam"?"#60a5fa":"#fbbf24"}}>{localTasks.filter(t=>t.status===s).length}</div>
+                <div className="text-sm font-bold" style={{color:s==="tamamlandı"?"#34d399":s==="devam"?"#60a5fa":"#fbbf24"}}>{localTasks.filter(t=>t.status===s).length}</div>
                 <div className="text-[9px] text-white/30">{TASK_COL[s]?.label||s}</div>
               </div>
             ))}
           </div>
-        </Card>
-        <Card className="p-5">
+        </Çard>
+        <Çard className="p-5">
           <h2 className="text-sm font-semibold text-white/70 mb-4">Toplam Misafir</h2>
           <div className="text-3xl font-bold text-white mb-1">{totalGuests.toLocaleString()}</div>
           <div className="text-xs text-white/35 mb-4">Bu ay - {events.length} etkinlik</div>
@@ -1536,7 +1584,7 @@ function AnalyticsPage({events, tasks}) {
               </div>
             ))}
           </div>
-        </Card>
+        </Çard>
       </div>
     </div>
   );
@@ -1547,20 +1595,20 @@ function AnalyticsPage({events, tasks}) {
 function AIPage() {
   const [mode,setMode]=useState("offer");
   const [input,setInput]=useState("");
-  const [msgs,setMsgs]=useState([{role:"assistant",text:"Merhaba! Ben BekaOS AI asistaniyim.\n\nTeklif olusturma, konsept onerisi veya genel sorularinizda yardimci olabilirim. Asagidaki hazir sorulardan birini secin veya kendiniz yazin."}]);
+  const [msgs,setMsgs]=useState([{role:"assistant",text:"Merhaba! Ben BekaOS AI asistaniyim.\n\nTeklif olusturma, konsept onerisi veya genel sorularinizda yardimci olabilirim. Asagidaki hazır sorulardan birini secin veya kendiniz yazin."}]);
   const [loading,setLoading]=useState(false);
   const endRef=useRef(null);
   const SYSTEMS={
-    offer:"Sen BekaOS icin calisan bir Turk organizasyon sirketinin teklif asistanisin. Kullanici etkinlik bilgisi verdiginde TL cinsinden fiyat araliklari, dahil hizmetler, notlar ve konsept onerileri iceren profesyonel Turkce teklifler hazirla. Net, sicak ve ozlu ol.",
-    concept:"Sen BekaOS icin bir Turk organizasyon firmasinin kreatif direktorusunsun. Kullanicinin belirttigi tema ve etkinlik turune gore Turkce olarak renk paleti, dekor fikirleri, cicek secimi, masa duzeni, isiklandirma onerileri sun.",
+    offer:"Sen BekaOS için calisan bir Turk organizasyon sirketinin teklif asistanisin. Kullanici etkinlik bilgisi verdiginde TL cinsinden fiyat araliklari, dahil hizmetler, notlar ve konsept onerileri iceren profesyonel Turkce teklifler hazırla. Net, sicak ve ozlu ol.",
+    cöncept:"Sen BekaOS için bir Turk organizasyon firmasinin kreatif direktorusunsun. Kullaniçinin belirttigi tema ve etkinlik türüne gore Turkce olarak renk paleti, dekor fikirleri, cicek secimi, masa duzeni, isiklandirma onerileri sun.",
     chat:"Sen BekaOS organizasyon platformunun Turkce konusan AI asistanisin. Etkinlik planlamasi, organizasyon ipuclari ve platform kullanimi hakkinda kisa, samimi ve pratik cevaplar ver."
   };
   const PROMPTS={
-    offer:["50 kisilik nisan teklifi","120 kisi kina butcesi","Kurumsal yilsonu yemegi"],
-    concept:["Boho tarzinda romantik nisan","Pembe & altin baby shower","Siyah & beyaz modern gece"],
+    offer:["50 kisilik nisan teklifi","120 kisi kina butcesi","Kurumsal yilsonu yemeği"],
+    cöncept:["Boho tarzinda romantik nisan","Pembe & altin baby shower","Siyah & beyaz modern gece"],
     chat:["En populer etkinlik trendleri","QR galeri nasil calisir?","Organizasyon planlamasi ipuclari"]
   };
-  const MODES=[{id:"offer",icon:"&#128203;",label:"Teklif Olustur"},{id:"concept",icon:"&#127912;",label:"Konsept Oner"},{id:"chat",icon:"&#128172;",label:"Genel Asistan"}];
+  const MODES=[{id:"offer",icon:"&#128203;",label:"Teklif Olustur"},{id:"cöncept",icon:"&#127912;",label:"Konsept Oner"},{id:"chat",icon:"&#128172;",label:"Genel Asistan"}];
   const send=async()=>{
     if(!input.trim()||loading)return;
     const txt=input.trim();setInput("");
@@ -1591,7 +1639,7 @@ function AIPage() {
           </button>
         ))}
       </div>
-      <Card className="flex flex-col" style={{height:"58vh"}}>
+      <Çard className="flex flex-col" style={{height:"58vh"}}>
         <div className="flex-1 overflow-auto p-5 space-y-4">
           {msgs.map((msg,i)=>(
             <div key={i} className={`flex ${msg.role==="user"?"justify-end":"justify-start"}`}>
@@ -1625,7 +1673,7 @@ function AIPage() {
             &#8593;
           </button>
         </div>
-      </Card>
+      </Çard>
     </div>
   );
 }
@@ -1634,26 +1682,26 @@ function AIPage() {
 function SettingsPage() {
   const [saved,setSaved]=useState(false);
   const [notifs,setNotifs]=useState({rsvp:true,payment:true,task:true,gallery:false,reminder:true});
-  const [profile,setProfile]=useState({company:"Beka Organizasyon",email:"info@beka.com",phone:"0212 555 0000",city:"Istanbul",currency:"TRY",whatsapp:"0212 555 0001"});
+  const [profile,setProfile]=useState({company:"Beka Organizasyon",email:"info@beka.com",phone:"0212 555 0000",city:"İstanbul",currency:"TRY",whatsapp:"0212 555 0001"});
   const upd=k=>e=>setProfile(p=>({...p,[k]:e.target.value}));
   const save=()=>{setSaved(true);setTimeout(()=>setSaved(false),2500);};
   return (
     <div className="max-w-2xl space-y-5">
-      <Card className="p-5 space-y-4">
+      <Çard className="p-5 space-y-4">
         <h2 className="text-sm font-semibold text-white/80">Firma Profili</h2>
         <div className="grid grid-cols-2 gap-4">
           <FieldInput label="Firma Adi"          value={profile.company}  onChange={upd("company")}  placeholder="Firma adi"/>
           <FieldInput label="E-posta"             value={profile.email}    onChange={upd("email")}    placeholder="info@firma.com"/>
           <FieldInput label="Telefon"             value={profile.phone}    onChange={upd("phone")}    placeholder="0212 XXX XXXX"/>
           <FieldInput label="WhatsApp Is Hatti"   value={profile.whatsapp} onChange={upd("whatsapp")} placeholder="0212 XXX XXXX"/>
-          <FieldInput label="Sehir"               value={profile.city}     onChange={upd("city")}     placeholder="Istanbul"/>
+          <FieldInput label="Sehir"               value={profile.city}     onChange={upd("city")}     placeholder="İstanbul"/>
           <FieldSelect label="Para Birimi"        value={profile.currency} onChange={upd("currency")} options={["TRY","USD","EUR"]}/>
         </div>
-      </Card>
-      <Card className="p-5">
+      </Çard>
+      <Çard className="p-5">
         <h2 className="text-sm font-semibold text-white/80 mb-4">Bildirim Tercihleri</h2>
         <div className="space-y-3">
-          {[{k:"rsvp",l:"RSVP Bildirimleri",s:"Yeni davetiye cevabi"},{k:"payment",l:"Odeme Hatirlatmalari",s:"Bekleyen odemelerde"},{k:"task",l:"Gorev Guncellemeleri",s:"Durum degisiminde"},{k:"gallery",l:"Galeri Yuklemeleri",s:"Yeni fotograf yuklendiginde"},{k:"reminder",l:"Etkinlik Hatirlatmalari",s:"24 saat onceden"}].map(n=>(
+          {[{k:"rsvp",l:"RSVP Bildirimleri",s:"Yeni davetiye cevabı"},{k:"payment",l:"Ödeme Hatırlatmalari",s:"Bekleyen odemelerde"},{k:"task",l:"Gorev Güncellemeleri",s:"Durum değişiminde"},{k:"gallery",l:"Galeri Yüklemeleri",s:"Yeni fotoğraf yüklendiğinde"},{k:"reminder",l:"Etkinlik Hatırlatmalari",s:"24 saat önceden"}].map(n=>(
             <div key={n.k} className="flex items-center justify-between py-2 border-b border-white/5 last:border-0">
               <div>
                 <div className="text-sm text-white/75">{n.l}</div>
@@ -1666,11 +1714,11 @@ function SettingsPage() {
             </div>
           ))}
         </div>
-      </Card>
-      <Card className="p-5">
+      </Çard>
+      <Çard className="p-5">
         <h2 className="text-sm font-semibold text-white/80 mb-4">Sistem Durumu</h2>
         <div className="space-y-2">
-          {[["WhatsApp Business API","0212 555 0001 bagli"],["QR Sistemi","Dynamic - Token bazli"],["Cloudflare R2","2.4 GB / 10 GB"],["Otomatik Yedekleme","Gunluk - Son: Bugun 03:00"],["SSL Sertifikasi","beka.io - Gecerli"]].map(([k,v])=>(
+          {[["WhatsApp Business API","0212 555 0001 bagli"],["QR Sistemi","Dynamic - Token bazlı"],["Cloudflare R2","2.4 GB / 10 GB"],["Otomatik Yedekleme","Günlük - Son: Bugun 03:00"],["SSL Sertifikasi","beka.io - Geçerli"]].map(([k,v])=>(
             <div key={k} className="flex items-center justify-between py-2 border-b border-white/5 last:border-0">
               <div>
                 <div className="text-sm text-white/70">{k}</div>
@@ -1680,7 +1728,7 @@ function SettingsPage() {
             </div>
           ))}
         </div>
-      </Card>
+      </Çard>
       <div className="flex justify-end">
         <button onClick={save} className="px-6 py-2.5 rounded-xl text-sm font-semibold text-white transition-all hover:opacity-90"
           style={{background:saved?"linear-gradient(135deg,#34d399,#059669)":"linear-gradient(135deg,#c084fc,#818cf8)"}}>
@@ -1738,11 +1786,11 @@ const NAV=[
   {id:"tasks",       icon:"&#10687;", label:"Gorevler"    },
   {id:"invitations", icon:"&#9676;",  label:"Davetiyeler" },
   {id:"gallery",     icon:"&#9681;",  label:"Galeri"      },
-  {id:"payments",    icon:"&#9680;",  label:"Odemeler"    },
+  {id:"payments",    icon:"&#9680;",  label:"Ödemeler"    },
   {id:"reservation", icon:"&#65291;", label:"Rezervasyon" },
   {id:"whatsapp",    icon:"&#128172;",label:"WhatsApp"    },
   {id:"staff",       icon:"&#9689;",  label:"Personel"    },
-  {id:"crm",         icon:"&#128101;",label:"Musteri CRM" },
+  {id:"crm",         icon:"&#128101;",label:"Müşteri CRM" },
   {id:"analytics",   icon:"&#128202;",label:"Analitik"    },
   {id:"ai",          icon:"&#10022;", label:"AI Asistan"  },
   {id:"settings",    icon:"&#9711;",  label:"Ayarlar"     },
@@ -1911,7 +1959,7 @@ export default function BekaOS() {
 
         {/* Page content */}
         <main className="flex-1 overflow-auto" style={{background:"#07070e",padding:isMobile?"12px":"24px"}}>
-          {PAGES[page]||<div className="text-white/25 text-sm text-center py-20">Sayfa bulunamadi</div>}
+          {PAGES[page]||<div className="text-white/25 text-sm text-center py-20">Sayfa bulunamadı</div>}
         </main>
 
         {/* Mobile bottom nav */}
