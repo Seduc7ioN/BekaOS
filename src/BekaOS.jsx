@@ -96,29 +96,45 @@ const TASK_COL = { devam:{bg:"bg-blue-500/15",tx:"text-blue-400",label:"Devam"},
 const MONTH_NAMES=["Ocak","Şubat","Mart","Nisan","Mayıs","Haziran","Temmuz","Ağustos","Eylül","Ekim","Kasım","Aralık"];
 const DAY_NAMES=["Pzt","Sal","Çar","Per","Cum","Cmt","Paz"];
 
-const HOLIDAYS = [
-  { month:0,  day:1,  name:"Yılbaşı",                        icon:"🎆", type:"resmi" },
-  { month:1,  day:14, name:"Sevgililer Günü",                 icon:"❤️",  type:"ozel" },
-  { month:2,  day:20, name:"Ramazan Bayramı 1. Gün (2026)",  icon:"🌙", type:"bayram" },
-  { month:2,  day:21, name:"Ramazan Bayramı 2. Gün (2026)",  icon:"🌙", type:"bayram" },
-  { month:2,  day:22, name:"Ramazan Bayramı 3. Gün (2026)",  icon:"🌙", type:"bayram" },
-  { month:3,  day:23, name:"Ulusal Egemenlik ve Çocuk Bayramı", icon:"🇹🇷", type:"resmi" },
-  { month:4,  day:1,  name:"Emek ve Dayanışma Günü",          icon:"⚒️",  type:"resmi" },
-  { month:4,  day:10, name:"Anneler Günü (2026)",             icon:"👩", type:"ozel" },
-  { month:4,  day:19, name:"Atatürk'ü Anma, Gençlik ve Spor Bayramı", icon:"🏃", type:"resmi" },
-  { month:4,  day:27, name:"Kurban Bayramı 1. Gün (2026)",   icon:"🐑", type:"bayram" },
-  { month:4,  day:28, name:"Kurban Bayramı 2. Gün (2026)",   icon:"🐑", type:"bayram" },
-  { month:4,  day:29, name:"Kurban Bayramı 3. Gün (2026)",   icon:"🐑", type:"bayram" },
-  { month:4,  day:30, name:"Kurban Bayramı 4. Gün (2026)",   icon:"🐑", type:"bayram" },
-  { month:5,  day:15, name:"Demokrasi ve Millî Birlik Günü",  icon:"🇹🇷", type:"resmi" },
-  { month:5,  day:21, name:"Babalar Günü (2026)",             icon:"👨", type:"ozel" },
-  { month:7,  day:30, name:"Zafer Bayramı",                   icon:"🏆", type:"resmi" },
-  { month:9,  day:29, name:"Cumhuriyet Bayramı",              icon:"🇹🇷", type:"resmi" },
-  { month:10, day:10, name:"Atatürk'ü Anma Günü",            icon:"🕯️",  type:"ozel" },
-  { month:10, day:24, name:"Öğretmenler Günü",                icon:"📚", type:"ozel" },
-  { month:11, day:31, name:"Yılbaşı Arifesi",                 icon:"🎉", type:"ozel" },
-];
-const getHoliday=(m,d)=>HOLIDAYS.filter(h=>h.month===m&&h.day===d);
+// Dini bayramlar yıllara göre (Hicri takvim tahmini)
+const BAYRAMLAR = {
+  2026: { ramazan:[[2,20],[2,21],[2,22]], kurban:[[4,27],[4,28],[4,29],[4,30]] },
+  2027: { ramazan:[[2,9],[2,10],[2,11]], kurban:[[4,16],[4,17],[4,18],[4,19]] },
+  2028: { ramazan:[[1,27],[1,28],[1,29]], kurban:[[4,5],[4,6],[4,7],[4,8]] },
+  2029: { ramazan:[[1,14],[1,15],[1,16]], kurban:[[3,24],[3,25],[3,26],[3,27]] },
+  2030: { ramazan:[[1,3],[1,4],[1,5]], kurban:[[4,13],[4,14],[4,15],[4,16]] },
+};
+// Anneler Günü: Mayısın 2. Pazarı, Babalar Günü: Haziranın 3. Pazarı
+const nthSunday=(year,month,n)=>{let d=0,count=0;while(count<n){d++;if(new Date(year,month,d).getDay()===0)count++;}return d;};
+const getMothersDay=y=>nthSunday(y,4,2);
+const getFathersDay=y=>nthSunday(y,5,3);
+
+const getHolidaysForYear=(year)=>{
+  const fixed=[
+    { month:0,  day:1,  name:"Yılbaşı",                        icon:"🎆", type:"resmi" },
+    { month:1,  day:14, name:"Sevgililer Günü",                 icon:"❤️",  type:"ozel" },
+    { month:3,  day:23, name:"Ulusal Egemenlik ve Çocuk Bayramı", icon:"🇹🇷", type:"resmi" },
+    { month:4,  day:1,  name:"Emek ve Dayanışma Günü",          icon:"⚒️",  type:"resmi" },
+    { month:4,  day:19, name:"Atatürk'ü Anma, Gençlik ve Spor Bayramı", icon:"🏃", type:"resmi" },
+    { month:5,  day:15, name:"Demokrasi ve Millî Birlik Günü",  icon:"🇹🇷", type:"resmi" },
+    { month:7,  day:30, name:"Zafer Bayramı",                   icon:"🏆", type:"resmi" },
+    { month:9,  day:29, name:"Cumhuriyet Bayramı",              icon:"🇹🇷", type:"resmi" },
+    { month:10, day:10, name:"Atatürk'ü Anma Günü",            icon:"🕯️",  type:"ozel" },
+    { month:10, day:24, name:"Öğretmenler Günü",                icon:"📚", type:"ozel" },
+    { month:11, day:31, name:"Yılbaşı Arifesi",                 icon:"🎉", type:"ozel" },
+  ];
+  const mothersDay=getMothersDay(year);
+  const fathersDay=getFathersDay(year);
+  fixed.push({ month:4, day:mothersDay, name:`Anneler Günü (${year})`, icon:"👩", type:"ozel" });
+  fixed.push({ month:5, day:fathersDay, name:`Babalar Günü (${year})`, icon:"👨", type:"ozel" });
+  const bayramlar=BAYRAMLAR[year];
+  if(bayramlar){
+    bayramlar.ramazan.forEach(([m,d],i)=>fixed.push({ month:m, day:d, name:`Ramazan Bayramı ${i+1}. Gün (${year})`, icon:"🌙", type:"bayram" }));
+    bayramlar.kurban.forEach(([m,d],i)=>fixed.push({ month:m, day:d, name:`Kurban Bayramı ${i+1}. Gün (${year})`, icon:"🐑", type:"bayram" }));
+  }
+  return fixed;
+};
+const getHoliday=(y,m,d)=>getHolidaysForYear(y).filter(h=>h.month===m&&h.day===d);
 
 /* ── SHARED UI ─────────────────────────────────── */
 function Badge({ children, color="purple", className="" }) {
@@ -325,7 +341,7 @@ function Dashboard({events,tasks,setPage}) {
               const year=2026;
               const isToday=day===now.getDate()&&month===now.getMonth()&&year===now.getFullYear();
               const hasEv=events.some(e=>parseInt(e.date.split("-")[2])===day);
-              const holidays=getHoliday(month,day);
+              const holidays=getHoliday(year,month,day);
               const hasHoliday=holidays.length>0;
               return (
                 <div key={day} onClick={()=>setPage("calendar")}
@@ -556,7 +572,7 @@ function CalendarPage({events}) {
             const now=new Date();
             const isToday=day===now.getDate()&&month===now.getMonth()&&year===now.getFullYear();
             const evs=dayEvs(day);
-            const holidays=getHoliday(month,day);
+            const holidays=getHoliday(year,month,day);
             const hasHoliday=holidays.length>0;
             const bgColor=hasHoliday?"rgba(251,191,36,0.06)":isToday?"rgba(192,132,252,0.05)":"#080810";
             return (
@@ -1081,7 +1097,7 @@ function ReservationPage() {
             <h3 className="text-sm font-semibold text-white/85 mb-4">Tarih, Saat ve Bilgiler</h3>
             {form.date&&(() => {
               const d=new Date(form.date);
-              const holidays=getHoliday(d.getMonth(),d.getDate());
+              const holidays=getHoliday(d.getFullYear(),d.getMonth(),d.getDate());
               if(holidays.length===0)return null;
               return (
                 <div className="p-3 rounded-xl border border-amber-500/20 bg-amber-500/5 space-y-1">
