@@ -3,7 +3,7 @@
   Add to HTML <head>:
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="theme-color" content="#0a0a0f">
+    <meta name="theme-color" content="#111827">
 */
 import { useState, useRef, useEffect } from "react";
 import { QRCodeSVG } from "qrcode.react";
@@ -143,14 +143,14 @@ function Badge({ children, color="purple", className="" }) {
   return <span className={`text-[10px] px-2 py-0.5 rounded-full font-medium whitespace-nowrap ${m[color]||m.gray} ${className}`}>{children}</span>;
 }
 function Card({children,className="",onClick}) {
-  return <div onClick={onClick} className={`rounded-2xl border border-white/[0.06] backdrop-blur-xl ${onClick?"cursor-pointer hover:border-white/[0.1] transition-all duration-300":""} ${className}`} style={{background:"rgba(255,255,255,0.03)",boxShadow:"0 4px 30px rgba(0,0,0,0.1)"}}>{children}</div>;
+  return <div onClick={onClick} className={`rounded-2xl border border-white/[0.1] backdrop-blur-xl ${onClick?"cursor-pointer hover:border-white/[0.1] transition-all duration-300":""} ${className}`} style={{background:"rgba(255,255,255,0.06)",boxShadow:"0 4px 30px rgba(0,0,0,0.1)"}}>{children}</div>;
 }
 function GlassBtn({children,onClick,className="",disabled=false}) {
-  return <button onClick={onClick} disabled={disabled} className={`px-3 py-2 rounded-xl text-xs font-medium text-white/50 border border-white/[0.06] hover:border-white/[0.12] hover:text-white/80 transition-all duration-300 backdrop-blur-sm disabled:opacity-30 ${className}`}>{children}</button>;
+  return <button onClick={onClick} disabled={disabled} className={`px-3 py-2 rounded-xl text-xs font-medium text-white/50 border border-white/[0.1] hover:border-white/[0.12] hover:text-white/80 transition-all duration-300 backdrop-blur-sm disabled:opacity-30 ${className}`}>{children}</button>;
 }
 function SectionHeader({title,right}) {
   return (
-    <div className="flex items-center justify-between px-5 py-4 border-b border-white/[0.06] backdrop-blur-sm">
+    <div className="flex items-center justify-between px-5 py-4 border-b border-white/[0.1] backdrop-blur-sm">
       <h2 className="text-sm font-semibold text-white/80">{title}</h2>
       {right&&<div className="flex items-center gap-2">{right}</div>}
     </div>
@@ -178,12 +178,12 @@ function FieldSelect({label,value,onChange,options}) {
 }
 function StatBox({label,value,sub,icon,color}) {
   return (
-    <div className="rounded-2xl border border-white/3 p-5 relative overflow-hidden" style={{background:"rgba(255,255,255,0.025)"}}>
+    <div className="rounded-2xl border border-white/3 p-5 relative overflow-hidden" style={{background:"rgba(255,255,255,0.05)"}}>
       <div className="absolute -top-6 -right-6 w-20 h-20 rounded-full blur-2xl opacity-[0.08]" style={{background:color}}/>
       <div className="text-xl mb-3" style={{color}}>{icon}</div>
       <div className="text-2xl font-bold text-white mb-0.5">{value}</div>
       <div className="text-xs text-white/50">{label}</div>
-      {sub&&<div className="text-[10px] text-white/25 mt-0.5">{sub}</div>}
+      {sub&&<div className="text-[10px] text-white/35 mt-0.5">{sub}</div>}
     </div>
   );
 }
@@ -194,7 +194,7 @@ function Modal({open,onClose,title,children,width="max-w-lg"}) {
       <div className={`w-full ${width} rounded-2xl border border-white/3 overflow-hidden`} style={{background:"rgba(17,24,39,0.8)"}} onClick={e=>e.stopPropagation()}>
         <div className="flex items-center justify-between px-6 py-4 border-b border-white/3">
           <h3 className="text-sm font-semibold text-white/85">{title}</h3>
-          <button onClick={onClose} className="text-white/30 hover:text-white transition-colors text-lg leading-none">x</button>
+          <button onClick={onClose} className="text-white/40 hover:text-white transition-colors text-lg leading-none">x</button>
         </div>
         <div className="p-6 max-h-[80vh] overflow-auto">{children}</div>
       </div>
@@ -209,7 +209,7 @@ function Drawer({open,onClose,title,children,width="w-96"}) {
         style={{background:"rgba(15,15,28,0.9)"}}>
         <div className="flex items-center justify-between px-6 py-5 border-b border-white/3">
           <h2 className="text-sm font-semibold text-white/85">{title}</h2>
-          <button onClick={onClose} className="text-white/30 hover:text-white transition-colors text-xl leading-none">x</button>
+          <button onClick={onClose} className="text-white/40 hover:text-white transition-colors text-xl leading-none">x</button>
         </div>
         <div className="p-6">{children}</div>
       </div>
@@ -236,7 +236,7 @@ function GlobalSearch({events,setPage,onClose}) {
           <input ref={ref} value={q} onChange={e=>setQ(e.target.value)}
             placeholder="Müşteri, etkinlik türü veya lokasyon ara..."
             className="flex-1 bg-transparent text-white/85 placeholder-white/25 outline-none text-sm"/>
-          <button onClick={onClose} className="text-white/30 hover:text-white text-xs">ESC</button>
+          <button onClick={onClose} className="text-white/40 hover:text-white text-xs">ESC</button>
         </div>
         {results.length>0?(
           <div className="divide-y divide-white/5 max-h-72 overflow-auto">
@@ -246,16 +246,16 @@ function GlobalSearch({events,setPage,onClose}) {
                 <span className="text-2xl">{getIcon(ev.type)}</span>
                 <div>
                   <div className="text-sm text-white/80">{ev.client}</div>
-                  <div className="text-[10px] text-white/35">{ev.type} - {ev.date} - {ev.location}</div>
+                  <div className="text-[10px] text-white/45">{ev.type} - {ev.date} - {ev.location}</div>
                 </div>
                 <Badge className="ml-auto" color={ev.status==="confirmed"?"green":"amber"}>{ev.status==="confirmed"?"Onaylandı":"Bekliyor"}</Badge>
               </div>
             ))}
           </div>
         ):q.length>1?(
-          <div className="px-4 py-6 text-center text-sm text-white/25">Sonuç bulunamadı</div>
+          <div className="px-4 py-6 text-center text-sm text-white/35">Sonuç bulunamadı</div>
         ):(
-          <div className="px-4 py-4 text-xs text-white/30">Aramak için yazmaya baslayin...</div>
+          <div className="px-4 py-4 text-xs text-white/40">Aramak için yazmaya baslayin...</div>
         )}
       </div>
     </div>
@@ -282,7 +282,7 @@ function Dashboard({events,tasks,setPage}) {
       </div>
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         <Card className="lg:col-span-2 overflow-hidden">
-          <SectionHeader title="Yaklaşan Etkinlikler" right={<button onClick={()=>setPage("events")} className="text-xs text-white/30 hover:text-white/60 transition-colors">Hepsi</button>}/>
+          <SectionHeader title="Yaklaşan Etkinlikler" right={<button onClick={()=>setPage("events")} className="text-xs text-white/40 hover:text-white/60 transition-colors">Hepsi</button>}/>
           <div className="divide-y divide-white/5">
             {events.slice(0,5).map(ev=>(
               <div key={ev.id} className="flex items-center gap-3 px-5 py-3 hover:bg-white/[0.02] transition-colors cursor-pointer" onClick={()=>setPage("events")}>
@@ -291,7 +291,7 @@ function Dashboard({events,tasks,setPage}) {
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="text-sm font-medium text-white/85 truncate">{ev.client}</div>
-                  <div className="text-[10px] text-white/35 truncate">{ev.type} - {ev.date} {ev.time} - {ev.location}</div>
+                  <div className="text-[10px] text-white/45 truncate">{ev.type} - {ev.date} {ev.time} - {ev.location}</div>
                 </div>
                 <div className="flex items-center gap-2 flex-shrink-0">
                   <Badge color={ev.payment==="tam"?"green":ev.payment==="kapora"?"blue":"red"}>{ev.payment}</Badge>
@@ -301,14 +301,14 @@ function Dashboard({events,tasks,setPage}) {
                   <div className="flex-1 h-1 rounded-full bg-white/10">
                     <div className="h-1 rounded-full" style={{width:`${(ev.done/ev.tasks)*100}%`,background:ev.done===ev.tasks?"#34d399":"#8b5cf6"}}/>
                   </div>
-                  <span className="text-[10px] text-white/30">{ev.done}/{ev.tasks}</span>
+                  <span className="text-[10px] text-white/40">{ev.done}/{ev.tasks}</span>
                 </div>
               </div>
             ))}
           </div>
         </Card>
         <Card className="overflow-hidden">
-          <SectionHeader title="Açık Görevler" right={<button onClick={()=>setPage("tasks")} className="text-xs text-white/30 hover:text-white/60 transition-colors">Hepsi</button>}/>
+          <SectionHeader title="Açık Görevler" right={<button onClick={()=>setPage("tasks")} className="text-xs text-white/40 hover:text-white/60 transition-colors">Hepsi</button>}/>
           <div className="divide-y divide-white/5">
             {openTasks.slice(0,6).map(t=>{
               const ev=events.find(e=>e.id===t.eventId);
@@ -317,15 +317,15 @@ function Dashboard({events,tasks,setPage}) {
                   <div className="flex items-start justify-between gap-2">
                     <div className="flex-1 min-w-0">
                       <div className="text-xs font-medium text-white/80 truncate">{t.task}</div>
-                      <div className="text-[10px] text-white/30 mt-0.5 truncate">{ev?.client}</div>
+                      <div className="text-[10px] text-white/40 mt-0.5 truncate">{ev?.client}</div>
                     </div>
                     <Badge color={t.status==="devam"?"blue":"amber"}>{TASK_COL[t.status]?.label||t.status}</Badge>
                   </div>
-                  <div className="text-[10px] text-white/25 mt-1.5">&#128100; {t.assignee}</div>
+                  <div className="text-[10px] text-white/35 mt-1.5">&#128100; {t.assignee}</div>
                 </div>
               );
             })}
-            {openTasks.length===0&&<div className="px-5 py-8 text-center text-xs text-white/20">Tüm görevler tamamlandı!</div>}
+            {openTasks.length===0&&<div className="px-5 py-8 text-center text-xs text-white/30">Tüm görevler tamamlandı!</div>}
           </div>
         </Card>
       </div>
@@ -333,7 +333,7 @@ function Dashboard({events,tasks,setPage}) {
         <Card className="lg:col-span-2 p-5">
           <h2 className="text-sm font-semibold text-white/70 mb-4">Haziran 2026</h2>
           <div className="grid grid-cols-7 gap-1 text-center mb-1">
-            {DAY_NAMES.map(d=><div key={d} className="text-[10px] text-white/25 pb-1">{d}</div>)}
+            {DAY_NAMES.map(d=><div key={d} className="text-[10px] text-white/35 pb-1">{d}</div>)}
           </div>
           <div className="grid grid-cols-7 gap-1">
             {Array.from({length:30},(_,i)=>i+1).map(day=>{
@@ -363,7 +363,7 @@ function Dashboard({events,tasks,setPage}) {
                 className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-left hover:bg-white/3 transition-all border border-white/3 hover:border-white/3">
                 <span className="text-base" dangerouslySetInnerHTML={{__html:a.icon}}/>
                 <span className="text-xs text-white/65">{a.label}</span>
-                <span className="ml-auto text-white/20 text-xs">&#8594;</span>
+                <span className="ml-auto text-white/30 text-xs">&#8594;</span>
               </button>
             ))}
           </div>
@@ -372,7 +372,7 @@ function Dashboard({events,tasks,setPage}) {
       <Card className="p-5">
         <div className="flex items-center justify-between mb-5">
           <h2 className="text-sm font-semibold text-white/70">Aylık Gelir Dagilimi</h2>
-          <span className="text-xs text-white/30">{(revenue/1000).toFixed(0)}k TL tahsilat</span>
+          <span className="text-xs text-white/40">{(revenue/1000).toFixed(0)}k TL tahsilat</span>
         </div>
         <div className="flex items-end gap-2 h-28">
           {["Oca","Sub","Mar","Nis","May","Haz","Tem","Agu","Eyl","Eki","Kas","Ara"].map((m,i)=>{
@@ -388,7 +388,7 @@ function Dashboard({events,tasks,setPage}) {
                     <div className="w-full h-1 rounded bg-white/3"/>
                   )}
                 </div>
-                <span className="text-[9px] text-white/25">{m}</span>
+                <span className="text-[9px] text-white/35">{m}</span>
               </div>
             );
           })}
@@ -435,10 +435,10 @@ function EventsPage({events,setEvents}) {
         </div>
         <div className="flex gap-1.5">
           {["Tümü","Onaylandı","Bekliyor"].map(s=>(
-            <button key={s} onClick={()=>setStatusF(s)} className={`px-2.5 py-1.5 rounded-xl text-xs transition-all ${statusF===s?"bg-white/10 text-white/80 border border-white/20":"text-white/35 border border-white/3 hover:text-white/60"}`}>{s}</button>
+            <button key={s} onClick={()=>setStatusF(s)} className={`px-2.5 py-1.5 rounded-xl text-xs transition-all ${statusF===s?"bg-white/10 text-white/80 border border-white/20":"text-white/45 border border-white/3 hover:text-white/60"}`}>{s}</button>
           ))}
         </div>
-        <span className="ml-auto text-xs text-white/25">{filtered.length} etkinlik</span>
+        <span className="ml-auto text-xs text-white/35">{filtered.length} etkinlik</span>
       </div>
       {/* Desktop table */}
       <Card className="overflow-hidden hidden md:block">
@@ -447,25 +447,25 @@ function EventsPage({events,setEvents}) {
             <thead>
               <tr className="border-b border-white/3">
                 {["Etkinlik","Tarih","Lokasyon","Misafir","Bütçe","Ödeme","Durum","Görevler",""].map(h=>(
-                  <th key={h} className="px-4 py-3 text-left text-[10px] text-white/30 font-medium uppercase tracking-wider whitespace-nowrap">{h}</th>
+                  <th key={h} className="px-4 py-3 text-left text-[10px] text-white/40 font-medium uppercase tracking-wider whitespace-nowrap">{h}</th>
                 ))}
               </tr>
             </thead>
             <tbody className="divide-y divide-white/5">
               {filtered.map(ev=>(
                 <tr key={ev.id} onClick={()=>setDrawer(ev)} className="hover:bg-white/[0.015] transition-colors cursor-pointer group">
-                  <td className="px-4 py-3"><div className="flex items-center gap-2.5"><span className="text-xl">{getIcon(ev.type)}</span><div><div className="text-sm font-medium text-white/85 whitespace-nowrap">{ev.client}</div><div className="text-[10px] text-white/35">{ev.type}</div></div></div></td>
-                  <td className="px-4 py-3 text-xs text-white/50 whitespace-nowrap">{ev.date}<br/><span className="text-white/30">{ev.time}</span></td>
+                  <td className="px-4 py-3"><div className="flex items-center gap-2.5"><span className="text-xl">{getIcon(ev.type)}</span><div><div className="text-sm font-medium text-white/85 whitespace-nowrap">{ev.client}</div><div className="text-[10px] text-white/45">{ev.type}</div></div></div></td>
+                  <td className="px-4 py-3 text-xs text-white/50 whitespace-nowrap">{ev.date}<br/><span className="text-white/40">{ev.time}</span></td>
                   <td className="px-4 py-3 text-xs text-white/50 max-w-[140px]"><div className="truncate">{ev.location}</div></td>
                   <td className="px-4 py-3 text-xs text-white/60 text-center">{ev.guests}</td>
                   <td className="px-4 py-3 text-xs font-medium text-white/70 whitespace-nowrap">{ev.budget.toLocaleString()} TL</td>
                   <td className="px-4 py-3"><span className={`text-[10px] px-2 py-0.5 rounded-full font-medium ${PAY_COL[ev.payment]?.bg||""} ${PAY_COL[ev.payment]?.tx||""}`}>{ev.payment}</span></td>
                   <td className="px-4 py-3"><Badge color={ev.status==="confirmed"?"green":"amber"}>{ev.status==="confirmed"?"Onaylandı":"Bekliyor"}</Badge></td>
-                  <td className="px-4 py-3"><div className="flex items-center gap-2"><div className="w-14 h-1.5 rounded-full bg-white/10"><div className="h-1.5 rounded-full" style={{width:`${(ev.done/ev.tasks)*100}%`,background:ev.done===ev.tasks?"#34d399":"#8b5cf6"}}/></div><span className="text-[10px] text-white/30">{ev.done}/{ev.tasks}</span></div></td>
+                  <td className="px-4 py-3"><div className="flex items-center gap-2"><div className="w-14 h-1.5 rounded-full bg-white/10"><div className="h-1.5 rounded-full" style={{width:`${(ev.done/ev.tasks)*100}%`,background:ev.done===ev.tasks?"#34d399":"#8b5cf6"}}/></div><span className="text-[10px] text-white/40">{ev.done}/{ev.tasks}</span></div></td>
                   <td className="px-4 py-3"><button onClick={e=>{e.stopPropagation();openEdit(ev);}} className="opacity-0 group-hover:opacity-100 text-[10px] px-2 py-1 rounded-lg text-white/50 hover:text-white border border-white/3 hover:border-white/20 transition-all whitespace-nowrap">Düzenle</button></td>
                 </tr>
               ))}
-              {filtered.length===0&&<tr><td colSpan={9} className="px-4 py-10 text-center text-xs text-white/25">Etkinlik bulunamadı</td></tr>}
+              {filtered.length===0&&<tr><td colSpan={9} className="px-4 py-10 text-center text-xs text-white/35">Etkinlik bulunamadı</td></tr>}
             </tbody>
           </table>
         </div>
@@ -492,11 +492,11 @@ function EventsPage({events,setEvents}) {
               <div className="flex-1 h-1.5 rounded-full bg-white/10">
                 <div className="h-1.5 rounded-full" style={{width:`${(ev.done/ev.tasks)*100}%`,background:ev.done===ev.tasks?"#34d399":"#8b5cf6"}}/>
               </div>
-              <span className="text-[10px] text-white/30">{ev.done}/{ev.tasks}</span>
+              <span className="text-[10px] text-white/40">{ev.done}/{ev.tasks}</span>
             </div>
           </Card>
         ))}
-        {filtered.length===0&&<div className="text-center py-10 text-xs text-white/25">Etkinlik bulunamadı</div>}
+        {filtered.length===0&&<div className="text-center py-10 text-xs text-white/35">Etkinlik bulunamadı</div>}
       </div>
 
       <Drawer open={!!drawer} onClose={()=>setDrawer(null)} title="Etkinlik Detayı">
@@ -510,12 +510,12 @@ function EventsPage({events,setEvents}) {
             <div className="space-y-0 mb-5">
               {[["Tarih",drawer.date],["Saat",drawer.time],["Lokasyon",drawer.location],["Misafir",`${drawer.guests} kisi`],["Bütçe",`${(drawer.budget||0).toLocaleString()} TL`],["Ödenen",`${(drawer.paid||0).toLocaleString()} TL`],["Kalan",`${((drawer.budget||0)-(drawer.paid||0)).toLocaleString()} TL`],["Telefon",drawer.phone]].map(([k,v])=>(
                 <div key={k} className="flex justify-between py-2.5 border-b border-white/3">
-                  <span className="text-xs text-white/35">{k}</span>
+                  <span className="text-xs text-white/45">{k}</span>
                   <span className="text-xs text-white/75">{v}</span>
                 </div>
               ))}
             </div>
-            {drawer.notes&&<div className="p-3 rounded-xl bg-white/[0.04] mb-4"><div className="text-[10px] text-white/35 mb-1">Not</div><div className="text-xs text-white/70">{drawer.notes}</div></div>}
+            {drawer.notes&&<div className="p-3 rounded-xl bg-white/[0.04] mb-4"><div className="text-[10px] text-white/45 mb-1">Not</div><div className="text-xs text-white/70">{drawer.notes}</div></div>}
             <div className="p-3 rounded-xl bg-white/[0.04] mb-5">
               <div className="flex justify-between mb-2"><span className="text-xs text-white/40">Gorev Ilerlemesi</span><span className="text-xs text-white/60">{drawer.done}/{drawer.tasks}</span></div>
               <div className="h-2 rounded-full bg-white/10"><div className="h-2 rounded-full" style={{width:`${(drawer.done/drawer.tasks)*100}%`,background:drawer.done===drawer.tasks?"#34d399":"linear-gradient(90deg,#8b5cf6,#6366f1)"}}/></div>
@@ -578,10 +578,10 @@ function CalendarPage({events}) {
         </div>
         <div className="grid grid-cols-7 gap-px rounded-xl overflow-hidden" style={{background:"rgba(255,255,255,0.06)"}}>
           {DAY_NAMES.map(d=>(
-            <div key={d} className="py-3 text-center text-[11px] text-white/30 font-medium" style={{background:"rgba(8,8,16,0.6)"}}>{d}</div>
+            <div key={d} className="py-3 text-center text-[11px] text-white/40 font-medium" style={{background:"rgba(17,24,39,0.7)"}}>{d}</div>
           ))}
           {cells.map((day,i)=>{
-            if(!day)return<div key={`e${i}`} style={{background:"rgba(8,8,16,0.6)",opacity:0.3}}/>;
+            if(!day)return<div key={`e${i}`} style={{background:"rgba(17,24,39,0.7)",opacity:0.5}}/>;
             const now=new Date();
             const isToday=day===now.getDate()&&month===now.getMonth()&&year===now.getFullYear();
             const evs=dayEvs(day);
@@ -593,7 +593,7 @@ function CalendarPage({events}) {
                 className="min-h-24 p-2 flex flex-col gap-1 cursor-pointer hover:bg-white/[0.015] transition-colors"
                 style={{background:bgColor}}>
                 <div className="flex items-center justify-between mb-0.5">
-                  <span className={`text-xs w-6 h-6 flex items-center justify-center rounded-full flex-shrink-0 ${isToday?"bg-purple-500 text-white font-bold":"text-white/45"}`}>{day}</span>
+                  <span className={`text-xs w-6 h-6 flex items-center justify-center rounded-full flex-shrink-0 ${isToday?"bg-purple-500 text-white font-bold":"text-white/55"}`}>{day}</span>
                   {hasHoliday&&<span className="text-[10px]" title={holidays[0].name}>{holidays[0].icon}</span>}
                 </div>
                 {holidays.map((h,idx)=>(
@@ -648,7 +648,7 @@ function CalendarPage({events}) {
             ))}
           </div>
         ):(
-          <div className="text-center py-6 text-sm text-white/25">Bu günde etkinlik yok</div>
+          <div className="text-center py-6 text-sm text-white/35">Bu günde etkinlik yok</div>
         ))}
       </Modal>
     </div>
@@ -688,26 +688,26 @@ function TasksPage({tasks,setTasks,events}) {
       </div>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {cols.map(col=>(
-          <div key={col} className="rounded-2xl border border-white/3 overflow-hidden" style={{background:"rgba(255,255,255,0.02)"}}>
+          <div key={col} className="rounded-2xl border border-white/3 overflow-hidden" style={{background:"rgba(255,255,255,0.04)"}}>
             <div className="px-4 py-3 border-b border-white/3 flex items-center gap-2">
               <span className={`w-2 h-2 rounded-full ${col==="bekliyor"?"bg-amber-400":col==="devam"?"bg-blue-400":"bg-emerald-400"}`}/>
               <span className="text-sm font-medium text-white/70">{TASK_COL[col].label}</span>
-              <span className="ml-auto text-[10px] text-white/30">{filt.filter(t=>t.status===col).length}</span>
+              <span className="ml-auto text-[10px] text-white/40">{filt.filter(t=>t.status===col).length}</span>
             </div>
             <div className="p-3 space-y-2 min-h-32">
               {filt.filter(t=>t.status===col).map(task=>{
                 const ev=events.find(e=>e.id===task.eventId);
                 return (
-                  <div key={task.id} className="p-3 rounded-xl border border-white/3 hover:border-white/3 transition-all group" style={{background:"rgba(255,255,255,0.03)"}}>
+                  <div key={task.id} className="p-3 rounded-xl border border-white/3 hover:border-white/3 transition-all group" style={{background:"rgba(255,255,255,0.06)"}}>
                     <div className="flex items-start justify-between gap-2 mb-1.5">
                       <span className="text-xs font-medium text-white/85 flex-1">{task.task}</span>
-                      <button onClick={()=>del(task.id)} className="opacity-0 group-hover:opacity-100 transition-opacity text-white/20 hover:text-rose-400 text-xs leading-none flex-shrink-0">x</button>
+                      <button onClick={()=>del(task.id)} className="opacity-0 group-hover:opacity-100 transition-opacity text-white/30 hover:text-rose-400 text-xs leading-none flex-shrink-0">x</button>
                     </div>
                     <div className="flex items-center gap-2 mb-2">
                       <Badge color={task.priority==="yuksek"?"red":task.priority==="orta"?"amber":"green"}>{task.priority}</Badge>
-                      {ev&&<span className="text-[10px] text-white/30 truncate">{ev.client}</span>}
+                      {ev&&<span className="text-[10px] text-white/40 truncate">{ev.client}</span>}
                     </div>
-                    <div className="text-[10px] text-white/30 mb-3">&#128100; {task.assignee}</div>
+                    <div className="text-[10px] text-white/40 mb-3">&#128100; {task.assignee}</div>
                     <div className="flex gap-1">
                       {cols.filter(c=>c!==col).map(c=>(
                         <button key={c} onClick={()=>move(task.id,c)}
@@ -719,7 +719,7 @@ function TasksPage({tasks,setTasks,events}) {
                   </div>
                 );
               })}
-              {filt.filter(t=>t.status===col).length===0&&<div className="text-center py-8 text-xs text-white/15">Gorev yok</div>}
+              {filt.filter(t=>t.status===col).length===0&&<div className="text-center py-8 text-xs text-white/25">Gorev yok</div>}
             </div>
           </div>
         ))}
@@ -746,6 +746,7 @@ function InvitationsPage({events,guests}) {
   const [activeEv,setActiveEv]=useState(events[0]);
   const [preview,setPreview]=useState(false);
   const [qrOpen,setQrOpen]=useState(false);
+  const [contractOpen,setContractOpen]=useState(false);
   const [themeIdx,setThemeIdx]=useState(0);
   const themes=[
     {name:"Klasik Gold",from:"#b8943f",to:"#d4af37",dark:"#1a1200"},
@@ -767,7 +768,7 @@ function InvitationsPage({events,guests}) {
               <span className="text-xl flex-shrink-0">{getIcon(ev.type)}</span>
               <div className="flex-1 min-w-0">
                 <div className="text-xs font-medium text-white/80 truncate">{ev.client}</div>
-                <div className="text-[10px] text-white/35">{ev.date}</div>
+                <div className="text-[10px] text-white/45">{ev.date}</div>
               </div>
               {activeEv?.id===ev.id&&<span className="text-purple-400">&#9679;</span>}
             </div>
@@ -778,7 +779,7 @@ function InvitationsPage({events,guests}) {
         <div className="flex items-start justify-between gap-4">
           <div>
             <h3 className="text-sm font-semibold text-white/85">{activeEv?.client}</h3>
-            <p className="text-xs text-white/35 mt-0.5">{activeEv?.type} - {activeEv?.date} - {activeEv?.location}</p>
+            <p className="text-xs text-white/45 mt-0.5">{activeEv?.type} - {activeEv?.date} - {activeEv?.location}</p>
           </div>
           <div className="flex gap-2 flex-shrink-0">
             <GlassBtn onClick={()=>setPreview(true)}>Önizle</GlassBtn>
@@ -792,7 +793,7 @@ function InvitationsPage({events,guests}) {
               <div key={i} onClick={()=>setThemeIdx(i)} className="flex flex-col items-center gap-1.5 cursor-pointer">
                 <div className={`w-10 h-10 rounded-xl transition-all ${themeIdx===i?"ring-2 ring-white/50 ring-offset-2 ring-offset-[#080810] scale-110":"opacity-60 hover:opacity-90"}`}
                   style={{background:`linear-gradient(135deg,${t.from},${t.to})`}}/>
-                <span className="text-[9px] text-white/30 text-center w-14 leading-tight">{t.name}</span>
+                <span className="text-[9px] text-white/40 text-center w-14 leading-tight">{t.name}</span>
               </div>
             ))}
           </div>
@@ -801,7 +802,7 @@ function InvitationsPage({events,guests}) {
           <p className="text-xs text-white/40 mb-3">RSVP Özeti</p>
           <div className="grid grid-cols-3 gap-2">
             {[{label:"Katılıyor",count:evGuests.filter(g=>g.response==="katılıyor").length,color:"#34d399"},{label:"Belki",count:evGuests.filter(g=>g.response==="belki").length,color:"#fbbf24"},{label:"Katılamıyor",count:evGuests.filter(g=>g.response==="katılamıyor").length,color:"#f87171"}].map(s=>(
-              <div key={s.label} className="p-3 rounded-xl border border-white/3 text-center" style={{background:"rgba(255,255,255,0.03)"}}>
+              <div key={s.label} className="p-3 rounded-xl border border-white/3 text-center" style={{background:"rgba(255,255,255,0.06)"}}>
                 <div className="text-2xl font-bold" style={{color:s.color}}>{s.count}</div>
                 <div className="text-[10px] text-white/40 mt-0.5">{s.label}</div>
               </div>
@@ -815,13 +816,13 @@ function InvitationsPage({events,guests}) {
             <div className="rounded-xl overflow-hidden border border-white/3 hidden md:block">
               <table className="w-full">
                 <thead><tr className="border-b border-white/3 bg-white/[0.015]">
-                  {["Ad Soyad","Telefon","+Kişi","Çocuk","Yemek","Cevap"].map(h=><th key={h} className="px-3 py-2 text-left text-[10px] text-white/30 uppercase tracking-wider">{h}</th>)}
+                  {["Ad Soyad","Telefon","+Kişi","Çocuk","Yemek","Cevap"].map(h=><th key={h} className="px-3 py-2 text-left text-[10px] text-white/40 uppercase tracking-wider">{h}</th>)}
                 </tr></thead>
                 <tbody className="divide-y divide-white/5">
                   {evGuests.map(g=>(
                     <tr key={g.id} className="hover:bg-white/[0.015] transition-colors">
                       <td className="px-3 py-2 text-xs text-white/75">{g.name}</td>
-                      <td className="px-3 py-2 text-xs text-white/45">{g.phone}</td>
+                      <td className="px-3 py-2 text-xs text-white/55">{g.phone}</td>
                       <td className="px-3 py-2 text-xs text-white/50 text-center">{g.plus}</td>
                       <td className="px-3 py-2 text-xs text-white/50 text-center">{g.children}</td>
                       <td className="px-3 py-2 text-xs text-white/50">{g.food}</td>
@@ -852,11 +853,12 @@ function InvitationsPage({events,guests}) {
         )}
         <div className="p-3 rounded-xl border border-white/3 bg-white/[0.015] flex items-center gap-3">
           <div className="flex-1 min-w-0">
-            <div className="text-[10px] text-white/35 mb-0.5">Davetiye Linki</div>
+            <div className="text-[10px] text-white/45 mb-0.5">Davetiye Linki</div>
             <div className="text-xs font-mono text-purple-400">beka.io/i/{activeEv?.id}</div>
           </div>
           <GlassBtn onClick={()=>navigator.clipboard?.writeText(`https://beka.io/i/${activeEv?.id}`)}>Kopyala</GlassBtn>
           <GlassBtn onClick={()=>setQrOpen(true)}>QR Oluştur</GlassBtn>
+          <GlassBtn onClick={()=>setContractOpen(true)}>Sözleşme</GlassBtn>
         </div>
       </Card>
       <Modal open={preview} onClose={()=>setPreview(false)} title="Davetiye Önizlemesi">
@@ -882,7 +884,7 @@ function InvitationsPage({events,guests}) {
                 <button className="flex-1 py-2.5 rounded-xl text-xs font-semibold text-white" style={{background:`linear-gradient(135deg,${th.from},${th.to})`}}>Katılıyorum</button>
                 <button className="flex-1 py-2.5 rounded-xl text-xs text-white/60 border border-white/15">Katılamıyorum</button>
               </div>
-              <p className="text-[9px] text-white/20">BekaOS - beka.io/i/{activeEv?.id}</p>
+              <p className="text-[9px] text-white/30">BekaOS - beka.io/i/{activeEv?.id}</p>
             </div>
           </div>
         </div>
@@ -897,11 +899,11 @@ function InvitationsPage({events,guests}) {
             <div className="text-xs text-white/40">{activeEv?.type} - {activeEv?.date}</div>
           </div>
           <div className="p-3 rounded-xl border border-white/3 bg-white/[0.02] w-full">
-            <div className="text-[10px] text-white/35 mb-1">Davetiye Linki</div>
+            <div className="text-[10px] text-white/45 mb-1">Davetiye Linki</div>
             <div className="text-xs font-mono text-purple-400">https://beka.io/i/{activeEv?.id}</div>
           </div>
           <div className="p-3 rounded-xl border border-white/3 bg-white/[0.02] w-full">
-            <div className="text-[10px] text-white/35 mb-1">Konum</div>
+            <div className="text-[10px] text-white/45 mb-1">Konum</div>
             <div className="text-xs text-white/60">📍 Yunusemre, Arpacılar Sk Arpacılar Sitesi No:4/BA, 16270 Yıldırım/Bursa</div>
           </div>
           <div className="flex gap-2 w-full">
@@ -910,6 +912,46 @@ function InvitationsPage({events,guests}) {
               if(svg){const svgData=new XMLSerializer().serializeToString(svg);const canvas=document.createElement('canvas');canvas.width=256;canvas.height=256;const ctx=canvas.getContext('2d');const img=new Image();img.onload=()=>{ctx.drawImage(img,0,0);const a=document.createElement('a');a.download=`qr-${activeEv?.id}.png`;a.href=canvas.toDataURL();a.click();};img.src='data:image/svg+xml;base64,'+btoa(svgData);}
             }}>İndir</GlassBtn>
             <GlassBtn className="flex-1 justify-center" onClick={()=>navigator.clipboard?.writeText(`https://beka.io/i/${activeEv?.id}`)}>Linki Kopyala</GlassBtn>
+          </div>
+        </div>
+      </Modal>
+      <Modal open={contractOpen} onClose={()=>setContractOpen(false)} title="Etkinlik Sözleşmesi" width="max-w-2xl">
+        <div className="space-y-4">
+          <div className="p-4 rounded-xl bg-white/[0.04] border border-white/6 text-xs text-white/70 leading-relaxed whitespace-pre-wrap">
+{`ETKİNLİK ORGANİZASYON SÖZLEŞMESİ
+
+TARİH: ${new Date().toLocaleDateString('tr-TR')}
+
+MÜŞTERİ: ${activeEv?.client || '—'}
+ETKİNLİK: ${activeEv?.type || '—'}
+TARİH: ${activeEv?.date || '—'}
+SAAT: ${activeEv?.time || '—'}
+LOKASYON: ${activeEv?.location || '—'}
+MİSAFİR SAYISI: ${activeEv?.guests || '—'}
+TOPLAM ÜCRET: ${(activeEv?.budget || 0).toLocaleString()} TL
+
+MADDE 1 - HİZMET KAPSAMI
+Beka Davet, yukarıda belirtilen etkinlik için organizasyon hizmeti sunmayı taahhüt eder.
+
+MADDE 2 - ÖDEME
+Toplam ücret ${(activeEv?.budget || 0).toLocaleString()} TL olup, %50 kapora ödemesi rezervasyon sırasında alınır. Kalan tutar etkinlik tarihinden 3 gün önce ödenir.
+
+MADDE 3 - İPTAL
+Etkinlik tarihinden 15 gün öncesine kadar yapılan iptallerde kapora iade edilmez. 15 günden kısa sürede yapılan iptallerde toplam ücretin %25'i tahsil edilir.
+
+MADDE 4 - VERİ SAKLAMA
+Müşteri bilgileri ve etkinlik fotoğrafları 6698 sayılı KVKK kapsamında 30 gün süreyle saklanır, ardından otomatik olarak silinir.
+
+MADDE 5 - SORUMLULUK
+Beka Davet, etkinlik planlama ve koordinasyonundan sorumludur. Üçüncü taraf hizmet sağlayıcıların hatalarından sorumlu değildir.
+
+Beka Davet | Yıldırım/Bursa
+İletişim: 0535 033 0645
+Instagram: @beka_davet`}
+          </div>
+          <div className="flex gap-2">
+            <GlassBtn className="flex-1 justify-center" onClick={()=>navigator.clipboard?.writeText(`ETKİNLİK ORGANİZASYON SÖZLEŞMESİ\n\nMÜŞTERİ: ${activeEv?.client}\nETKİNLİK: ${activeEv?.type}\nTARİH: ${activeEv?.date}\nTOPLAM: ${(activeEv?.budget||0).toLocaleString()} TL\n\nBeka Davet | Yıldırım/Bursa | 0535 033 0645`)}>Sözleşmeyi Kopyala</GlassBtn>
+            <GlassBtn className="flex-1 justify-center" onClick={()=>window.print()}>Yazdır</GlassBtn>
           </div>
         </div>
       </Modal>
@@ -940,7 +982,7 @@ function GalleryPage({events,gallery,setGallery}) {
                 <span className="text-xl flex-shrink-0">{getIcon(ev.type)}</span>
                 <div className="flex-1 min-w-0">
                   <div className="text-xs text-white/75 truncate">{ev.client}</div>
-                  <div className="text-[10px] text-white/30">{cnt.length} medya{pend>0&&<span className="text-amber-400"> - {pend} onay</span>}</div>
+                  <div className="text-[10px] text-white/40">{cnt.length} medya{pend>0&&<span className="text-amber-400"> - {pend} onay</span>}</div>
                 </div>
               </div>
             );
@@ -951,7 +993,7 @@ function GalleryPage({events,gallery,setGallery}) {
         <div className="flex items-center justify-between mb-4">
           <div>
             <h3 className="text-sm font-semibold text-white/85">{activeEv?.client}</h3>
-            <p className="text-xs text-white/35 mt-0.5">{photos.length} medya - QR: <span className="text-purple-400 font-mono text-[10px]">beka.io/g/{activeEv?.id}</span></p>
+            <p className="text-xs text-white/45 mt-0.5">{photos.length} medya - QR: <span className="text-purple-400 font-mono text-[10px]">beka.io/g/{activeEv?.id}</span></p>
           </div>
           <div className="flex gap-2">
             <GlassBtn onClick={()=>setGalleryQr(true)}>QR İndir</GlassBtn>
@@ -963,7 +1005,7 @@ function GalleryPage({events,gallery,setGallery}) {
           {[{label:"Toplam",val:photos.length,c:"#8b5cf6"},{label:"Onaylandı",val:photos.filter(p=>p.approved).length,c:"#34d399"},{label:"Bekliyor",val:photos.filter(p=>!p.approved).length,c:"#fbbf24"}].map(s=>(
             <div key={s.label} className="p-3 rounded-xl border border-white/3 bg-white/[0.02] text-center">
               <div className="text-xl font-bold" style={{color:s.c}}>{s.val}</div>
-              <div className="text-[10px] text-white/35">{s.label}</div>
+              <div className="text-[10px] text-white/45">{s.label}</div>
             </div>
           ))}
         </div>
@@ -985,15 +1027,15 @@ function GalleryPage({events,gallery,setGallery}) {
               </div>
             ))}
             <div className="rounded-xl border-2 border-dashed border-white/3 flex flex-col items-center justify-center cursor-pointer hover:border-white/25 transition-colors" style={{aspectRatio:"16/10"}} onClick={()=>document.getElementById('gallery-upload-input')?.click()}>
-              <span className="text-2xl text-white/20 mb-1">+</span>
-              <span className="text-[10px] text-white/25">Yukle</span>
+              <span className="text-2xl text-white/30 mb-1">+</span>
+              <span className="text-[10px] text-white/35">Yukle</span>
             </div>
             <input type="file" id="gallery-upload-input" accept="image/*" multiple className="hidden" onChange={(e)=>{const files=Array.from(e.target.files);const newPhotos=files.map((f,i)=>({id:Date.now()+i,eventId:activeEv?.id,url:URL.createObjectURL(f),approved:false}));setGallery(p=>[...p,...newPhotos]);e.target.value='';}}/>
           </div>
         ):(
           <div className="text-center py-16 border-2 border-dashed border-white/3 rounded-2xl">
             <div className="text-5xl mb-3 opacity-20">&#128248;</div>
-            <div className="text-white/30 text-sm">Bu etkinlik için henuz medya yok</div>
+            <div className="text-white/40 text-sm">Bu etkinlik için henuz medya yok</div>
           </div>
         )}
       </Card>
@@ -1006,7 +1048,7 @@ function GalleryPage({events,gallery,setGallery}) {
               {!lightbox.approved&&<button onClick={()=>{approve(lightbox.id);setLightbox(p=>({...p,approved:true}));}} className="text-xs px-3 py-1.5 rounded-xl bg-emerald-500/20 text-emerald-400">Onayla</button>}
               <button onClick={()=>{const a=document.createElement('a');a.href=lightbox.url;a.download=`foto-${lightbox.id}.jpg`;a.click();}} className="text-xs px-3 py-1.5 rounded-xl bg-blue-500/15 text-blue-400">İndir</button>
               <button onClick={()=>remove(lightbox.id)} className="text-xs px-3 py-1.5 rounded-xl bg-rose-500/15 text-rose-400">Sil</button>
-              <button onClick={()=>setLightbox(null)} className="text-white/30 hover:text-white ml-2 transition-colors text-xl leading-none">x</button>
+              <button onClick={()=>setLightbox(null)} className="text-white/40 hover:text-white ml-2 transition-colors text-xl leading-none">x</button>
             </div>
           </div>
         </div>
@@ -1021,7 +1063,7 @@ function GalleryPage({events,gallery,setGallery}) {
             <div className="text-xs text-white/40">{photos.length} medya</div>
           </div>
           <div className="p-3 rounded-xl border border-white/3 bg-white/[0.02] w-full">
-            <div className="text-[10px] text-white/35 mb-1">Galeri Linki</div>
+            <div className="text-[10px] text-white/45 mb-1">Galeri Linki</div>
             <div className="text-xs font-mono text-purple-400">https://beka.io/g/{activeEv?.id}</div>
           </div>
           <GlassBtn className="w-full justify-center" onClick={()=>{
@@ -1036,16 +1078,66 @@ function GalleryPage({events,gallery,setGallery}) {
 
 /* ── PAYMENTS ───────────────────────────────────── */
 function PaymentsPage({events}) {
+  const [expenses,setExpenses]=useState([]);
+  const [expOpen,setExpOpen]=useState(false);
+  const [expForm,setExpForm]=useState({eventId:"",desc:"",amount:""});
   const totalRev=events.reduce((s,e)=>s+e.budget,0);
   const totalPaid=events.reduce((s,e)=>s+e.paid,0);
+  const totalExp=expenses.reduce((s,e)=>s+e.amount,0);
   const totalRem=totalRev-totalPaid;
   return (
     <div className="space-y-5">
-      <div className="grid grid-cols-3 gap-4">
-        <StatBox label="Toplam Butce" value={`${(totalRev/1000).toFixed(0)}k TL`} sub="Tüm etkinlikler" icon="&#9672;" color="#8b5cf6"/>
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <StatBox label="Toplam Bütçe" value={`${(totalRev/1000).toFixed(0)}k TL`} sub="Tüm etkinlikler" icon="&#9672;" color="#8b5cf6"/>
         <StatBox label="Tahsilat"     value={`${(totalPaid/1000).toFixed(0)}k TL`} sub={`%${totalRev>0?((totalPaid/totalRev)*100).toFixed(0):0} tamamlandı`} icon="&#9689;" color="#34d399"/>
         <StatBox label="Bekleyen"     value={`${(totalRem/1000).toFixed(0)}k TL`} sub="Tahsilat bekliyor" icon="&#9680;" color="#fb923c"/>
+        <StatBox label="Masraflar"    value={`${(totalExp/1000).toFixed(1)}k TL`} sub={`${expenses.length} kalem`} icon="&#9660;" color="#f87171"/>
       </div>
+      {/* Masraf Takibi */}
+      <Card className="p-5">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-sm font-semibold text-white/80">Masraf Takibi</h2>
+          <GlassBtn onClick={()=>setExpOpen(true)}>+ Masraf Ekle</GlassBtn>
+        </div>
+        {expenses.length>0?(
+          <div className="space-y-2">
+            {expenses.map(ex=>(
+              <div key={ex.id} className="flex items-center justify-between p-3 rounded-xl bg-white/[0.03]">
+                <div>
+                  <div className="text-xs text-white/70">{ex.desc}</div>
+                  <div className="text-[10px] text-white/40">{events.find(e=>e.id===ex.eventId)?.client||"Genel"}</div>
+                </div>
+                <div className="flex items-center gap-3">
+                  <span className="text-xs font-medium text-rose-400">-{ex.amount.toLocaleString()} TL</span>
+                  <button onClick={()=>setExpenses(p=>p.filter(e=>e.id!==ex.id))} className="text-[10px] text-white/30 hover:text-rose-400 transition-colors">Sil</button>
+                </div>
+              </div>
+            ))}
+          </div>
+        ):(
+          <div className="text-center py-6 text-xs text-white/25">Henüz masraf eklenmedi</div>
+        )}
+      </Card>
+      <Modal open={expOpen} onClose={()=>setExpOpen(false)} title="Masraf Ekle">
+        <div className="space-y-4">
+          <div>
+            <label className="text-[10px] text-white/40 uppercase tracking-wider mb-1.5 block">Etkinlik</label>
+            <select value={expForm.eventId} onChange={e=>setExpForm(p=>({...p,eventId:e.target.value}))} className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2.5 text-sm text-white/80">
+              <option value="">Genel / Bağımsız</option>
+              {events.map(ev=><option key={ev.id} value={ev.id}>{ev.client} - {ev.type}</option>)}
+            </select>
+          </div>
+          <FieldInput label="Açıklama" value={expForm.desc} onChange={e=>setExpForm(p=>({...p,desc:e.target.value}))} placeholder="Çiçek, dekorasyon, kiralama..."/>
+          <FieldInput label="Tutar (TL)" type="number" value={expForm.amount} onChange={e=>setExpForm(p=>({...p,amount:e.target.value}))} placeholder="0"/>
+          <button onClick={()=>{
+            if(expForm.desc&&expForm.amount){
+              setExpenses(p=>[...p,{id:Date.now(),...expForm,amount:parseInt(expForm.amount)}]);
+              setExpForm({eventId:"",desc:"",amount:""});
+              setExpOpen(false);
+            }
+          }} className="w-full py-2.5 rounded-xl text-xs font-semibold text-white" style={{background:"linear-gradient(135deg,#8b5cf6,#6366f1)"}}>Ekle</button>
+        </div>
+      </Modal>
       <Card className="overflow-hidden">
         <SectionHeader title="Ödeme Detayları"/>
         {/* Desktop table */}
@@ -1053,7 +1145,7 @@ function PaymentsPage({events}) {
           <table className="w-full">
             <thead><tr className="border-b border-white/3">
               {["Müşteri","Etkinlik","Tarih","Toplam","Ödenen","Kalan","%","Durum",""].map(h=>(
-                <th key={h} className="px-4 py-3 text-left text-[10px] text-white/30 font-medium uppercase tracking-wider whitespace-nowrap">{h}</th>
+                <th key={h} className="px-4 py-3 text-left text-[10px] text-white/40 font-medium uppercase tracking-wider whitespace-nowrap">{h}</th>
               ))}
             </tr></thead>
             <tbody className="divide-y divide-white/5">
@@ -1089,9 +1181,9 @@ function PaymentsPage({events}) {
                   <span className={`text-[10px] px-2 py-0.5 rounded-full font-medium ${PAY_COL[ev.payment]?.bg||""} ${PAY_COL[ev.payment]?.tx||""}`}>{ev.payment}</span>
                 </div>
                 <div className="grid grid-cols-3 gap-2 text-[11px] mb-2">
-                  <div><div className="text-white/30">Toplam</div><div className="text-white/70 font-medium">{ev.budget.toLocaleString()}</div></div>
-                  <div><div className="text-white/30">Ödenen</div><div className="text-emerald-400 font-medium">{ev.paid.toLocaleString()}</div></div>
-                  <div><div className="text-white/30">Kalan</div><div className="text-rose-400 font-medium">{rem.toLocaleString()}</div></div>
+                  <div><div className="text-white/40">Toplam</div><div className="text-white/70 font-medium">{ev.budget.toLocaleString()}</div></div>
+                  <div><div className="text-white/40">Ödenen</div><div className="text-emerald-400 font-medium">{ev.paid.toLocaleString()}</div></div>
+                  <div><div className="text-white/40">Kalan</div><div className="text-rose-400 font-medium">{rem.toLocaleString()}</div></div>
                 </div>
                 <div className="flex items-center gap-2">
                   <div className="flex-1 h-1.5 rounded-full bg-white/10"><div className="h-1.5 rounded-full" style={{width:`${pct}%`,background:pct===100?"#34d399":"linear-gradient(90deg,#8b5cf6,#6366f1)"}}/></div>
@@ -1134,6 +1226,7 @@ function PaymentsPage({events}) {
 function ReservationPage({events,setEvents}) {
   const [step,setStep]=useState(1);
   const [form,setForm]=useState({type:"",date:"",time:"",guests:"",location:"",cöncept:"",services:[],name:"",phone:"",email:"",notes:""});
+  const [kvkk,setKvkk]=useState(false);
   const upd=(k,v)=>setForm(p=>({...p,[k]:v}));
   const [done,setDone]=useState(false);
   const cöncepts=["Boho & Dogal","Klasik Romantik","Tropical Cenneti","Vintage & Rustik","Modern Minimal","Pembe Masallar","Siyah & Altin","Mavi Ruya"];
@@ -1150,7 +1243,7 @@ function ReservationPage({events,setEvents}) {
       <p className="text-white/50 text-sm mb-6">Ekibimiz en kisa surede <span className="text-purple-400">{form.phone||"sizi"}</span> arayacak.</p>
       <div className="p-4 rounded-2xl border border-white/3 bg-white/[0.02] text-left space-y-2 mb-6">
         {[["Etkinlik",form.type],["Tarih",`${form.date} ${form.time}`],["Kişi",`${form.guests} kisi`],["Lokasyon",form.location],["Tahmini",`${total.toLocaleString()} TL`]].map(([k,v])=>(
-          <div key={k} className="flex justify-between text-xs"><span className="text-white/35">{k}</span><span className="text-white/75">{v||"—"}</span></div>
+          <div key={k} className="flex justify-between text-xs"><span className="text-white/45">{k}</span><span className="text-white/75">{v||"—"}</span></div>
         ))}
       </div>
       <button onClick={()=>{setDone(false);setStep(1);setForm({type:"",date:"",time:"",guests:"",location:"",cöncept:"",services:[],name:"",phone:"",email:"",notes:""});}}
@@ -1167,10 +1260,10 @@ function ReservationPage({events,setEvents}) {
           <div key={s} className={`flex items-center ${i<steps.length-1?"flex-1":""}`}>
             <div className="flex flex-col items-center">
               <div onClick={()=>i<step-1&&setStep(i+1)}
-                className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold transition-all ${step>i+1?"bg-emerald-500 text-white cursor-pointer":step===i+1?"bg-purple-500 text-white":"bg-white/8 text-white/30"}`}>
+                className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold transition-all ${step>i+1?"bg-emerald-500 text-white cursor-pointer":step===i+1?"bg-purple-500 text-white":"bg-white/8 text-white/40"}`}>
                 {step>i+1?"&#10003;":i+1}
               </div>
-              <span className="text-[9px] text-white/25 mt-1 text-center w-14 leading-tight">{s}</span>
+              <span className="text-[9px] text-white/35 mt-1 text-center w-14 leading-tight">{s}</span>
             </div>
             {i<steps.length-1&&<div className="flex-1 h-px mx-2 mb-4 transition-all" style={{background:step>i+1?"#8b5cf6":"rgba(255,255,255,0.08)"}}/>}
           </div>
@@ -1264,12 +1357,12 @@ function ReservationPage({events,setEvents}) {
             <div className="p-4 rounded-xl bg-white/[0.04] space-y-2">
               {[["Etkinlik",form.type||"—"],["Tarih",form.date||"—"],["Saat",form.time||"—"],["Kişi",form.guests?`${form.guests} kisi`:"—"],["Lokasyon",form.location||"—"],["Konsept",form.cöncept||"—"],["Ad Soyad",form.name||"—"],["Telefon",form.phone||"—"]].map(([k,v])=>(
                 <div key={k} className="flex justify-between py-1.5 border-b border-white/3">
-                  <span className="text-xs text-white/35">{k}</span><span className="text-xs text-white/75">{v}</span>
+                  <span className="text-xs text-white/45">{k}</span><span className="text-xs text-white/75">{v}</span>
                 </div>
               ))}
               {form.services.length>0&&(
                 <div className="flex justify-between py-1.5 border-b border-white/3">
-                  <span className="text-xs text-white/35">Ek Hizmetler</span>
+                  <span className="text-xs text-white/45">Ek Hizmetler</span>
                   <span className="text-xs text-white/75 text-right max-w-[200px]">{form.services.join(", ")}</span>
                 </div>
               )}
@@ -1278,11 +1371,22 @@ function ReservationPage({events,setEvents}) {
               <div className="flex justify-between items-center">
                 <div>
                   <div className="text-sm text-white/60">Tahmini Toplam</div>
-                  <div className="text-[10px] text-white/30 mt-0.5">{form.guests&&`${form.guests} kisi x 80 TL`}{servicesPrice>0&&` + ${servicesPrice.toLocaleString()} TL hizmet`}</div>
+                  <div className="text-[10px] text-white/40 mt-0.5">{form.guests&&`${form.guests} kisi x 80 TL`}{servicesPrice>0&&` + ${servicesPrice.toLocaleString()} TL hizmet`}</div>
                 </div>
                 <span className="text-2xl font-bold text-purple-300">{total.toLocaleString()} TL</span>
               </div>
-              <p className="text-[10px] text-white/20 mt-2">* Kesin fiyat gorusme sonrası belirlenir.</p>
+              <p className="text-[10px] text-white/30 mt-2">* Kesin fiyat görüşme sonrası belirlenir.</p>
+            </div>
+            {/* KVKK */}
+            <div className="p-4 rounded-xl border border-white/6 bg-white/[0.02]">
+              <label className="flex items-start gap-3 cursor-pointer">
+                <input type="checkbox" checked={kvkk} onChange={e=>setKvkk(e.target.checked)} className="mt-1 w-4 h-4 rounded accent-purple-500 flex-shrink-0"/>
+                <div className="text-xs text-white/60 leading-relaxed">
+                  <span className="text-white/80 font-medium">KVKK Aydınlatma Metni ve Açık Rıza</span><br/>
+                  Kişisel verileriniz (ad, soyad, telefon, e-posta, etkinlik bilgileri), 6698 sayılı Kişisel Verilerin Korunması Kanunu kapsamında Beka Davet tarafından hizmet sunumu, rezervasyon yönetimi ve müşteri iletişimi amacıyla işlenecektir. Verileriniz, etkinlik tarihinden itibaren <span className="text-purple-400 font-medium">30 gün</span> süreyle saklanacak, ardından otomatik olarak silinecektir. Galeri fotoğraflarınız da aynı süre sonunda kaldırılacaktır. Dilediğiniz zaman verilerinizin silinmesini talep edebilirsiniz.<br/>
+                  <span className="text-white/40 mt-1 block">Bu kutucuğu işaretleyerek yukarıdaki koşulları okuduğunuzu ve kabul ettiğinizi onaylıyorsunuz.</span>
+                </div>
+              </label>
             </div>
           </div>
         )}
@@ -1298,8 +1402,8 @@ function ReservationPage({events,setEvents}) {
               const newEv={id:Date.now(),client:form.name||"Yeni Müşteri",type:form.type||"Nişan",date:form.date||"—",time:form.time||"—",location:form.location||"—",guests:parseInt(form.guests)||0,budget:total,paid:0,payment:"Bekliyor",status:"pending",tasks:3,done:0,phone:form.phone||""};
               setEvents(prev=>[...prev,newEv]);
               setDone(true);
-            }}
-              className="px-6 py-2 rounded-xl text-xs font-semibold text-white" style={{background:"linear-gradient(135deg,#34d399,#059669)"}}>
+            }} disabled={!kvkk}
+              className="px-6 py-2 rounded-xl text-xs font-semibold text-white disabled:opacity-40 disabled:cursor-not-allowed" style={{background:kvkk?"linear-gradient(135deg,#34d399,#059669)":"linear-gradient(135deg,#374151,#4b5563)"}}>
               Rezervasyonu Gonder
             </button>
           )}
@@ -1337,7 +1441,7 @@ function WhatsAppPage({events}) {
                 <span className="text-xl">{tmpl.icon}</span>
                 <div className="flex-1 min-w-0">
                   <div className="text-xs font-medium text-white/80 truncate">{tmpl.name}</div>
-                  <div className="text-[10px] text-white/30 truncate">{tmpl.trigger}</div>
+                  <div className="text-[10px] text-white/40 truncate">{tmpl.trigger}</div>
                 </div>
                 <Badge color={catCol[tmpl.cat]||"gray"}>{tmpl.cat}</Badge>
               </div>
@@ -1349,7 +1453,7 @@ function WhatsAppPage({events}) {
         <div className="flex items-start justify-between gap-4">
           <div>
             <h3 className="text-sm font-semibold text-white/85">{active?.icon} {active?.name}</h3>
-            <p className="text-xs text-white/35 mt-0.5">{active?.trigger}</p>
+            <p className="text-xs text-white/45 mt-0.5">{active?.trigger}</p>
           </div>
           <div className="flex gap-2 flex-shrink-0">
             <GlassBtn onClick={()=>setPreview(true)}>Önizle</GlassBtn>
@@ -1381,7 +1485,7 @@ function WhatsAppPage({events}) {
                 <span className="text-base">{getIcon(ev.type)}</span>
                 <div className="flex-1 min-w-0">
                   <div className="text-xs text-white/75 truncate">{ev.client}</div>
-                  <div className="text-[10px] text-white/35">{ev.phone}</div>
+                  <div className="text-[10px] text-white/45">{ev.phone}</div>
                 </div>
                 <button onClick={()=>setSent(p=>[{id:Date.now(),name:ev.client,tmpl:active.name},...p])}
                   className="text-[10px] px-2 py-1 rounded-lg bg-green-500/15 text-green-400 hover:bg-green-500/25 transition-colors flex-shrink-0">
@@ -1399,7 +1503,7 @@ function WhatsAppPage({events}) {
                 <div key={s.id} className="flex items-center gap-2 px-3 py-2 rounded-xl bg-green-500/8 border border-green-500/15">
                   <span className="text-green-400 text-xs">&#10003;</span>
                   <span className="text-xs text-white/65 flex-1">{s.tmpl} - {s.name}</span>
-                  <span className="text-[10px] text-white/25">Az önce</span>
+                  <span className="text-[10px] text-white/35">Az önce</span>
                 </div>
               ))}
             </div>
@@ -1415,7 +1519,7 @@ function WhatsAppPage({events}) {
           <div className="p-4 min-h-40" style={{background:"#0b141a"}}>
             <div className="max-w-[88%] p-3 rounded-2xl rounded-tl-sm text-sm text-white leading-relaxed" style={{background:"#202c33",whiteSpace:"pre-wrap"}}>
               {fill(editBody,events[0])}
-              <div className="text-[10px] text-white/30 text-right mt-1.5">14:32 &#10003;&#10003;</div>
+              <div className="text-[10px] text-white/40 text-right mt-1.5">14:32 &#10003;&#10003;</div>
             </div>
           </div>
         </div>
@@ -1461,7 +1565,7 @@ function StaffPage({events}) {
               </div>
               <button onClick={()=>toggle(s.id)}><Badge color={s.status==="aktif"?"green":"red"}>{s.status}</Badge></button>
             </div>
-            <div className="space-y-1.5 text-xs text-white/45 mb-4">
+            <div className="space-y-1.5 text-xs text-white/55 mb-4">
               {s.phone&&<div>&#128222; {s.phone}</div>}
               {s.email&&<div>&#9993; {s.email}</div>}
               <div>&#128203; {s.events} etkinlik</div>
@@ -1479,15 +1583,15 @@ function StaffPage({events}) {
         <div className="p-5 overflow-x-auto">
           <table className="w-full">
             <thead><tr className="border-b border-white/3">
-              <th className="pb-3 text-left text-[10px] text-white/30 font-medium uppercase tracking-wider">Etkinlik</th>
+              <th className="pb-3 text-left text-[10px] text-white/40 font-medium uppercase tracking-wider">Etkinlik</th>
               {staff.filter(s=>s.status==="aktif").map(s=>(
-                <th key={s.id} className="pb-3 text-center text-[10px] text-white/30 font-medium uppercase tracking-wider px-3 whitespace-nowrap">{s.name.split(" ")[0]}</th>
+                <th key={s.id} className="pb-3 text-center text-[10px] text-white/40 font-medium uppercase tracking-wider px-3 whitespace-nowrap">{s.name.split(" ")[0]}</th>
               ))}
             </tr></thead>
             <tbody className="divide-y divide-white/5">
               {events.slice(0,5).map(ev=>(
                 <tr key={ev.id}>
-                  <td className="py-3 text-xs text-white/70 whitespace-nowrap">{getIcon(ev.type)} {ev.client} <span className="text-white/30">- {ev.date}</span></td>
+                  <td className="py-3 text-xs text-white/70 whitespace-nowrap">{getIcon(ev.type)} {ev.client} <span className="text-white/40">- {ev.date}</span></td>
                   {staff.filter(s=>s.status==="aktif").map(s=>{
                     const assigned=initTasks.some(t=>t.eventId===ev.id&&t.assignee.startsWith(s.name.split(" ")[0]));
                     return <td key={s.id} className="py-3 text-center px-3"><span className={`text-base ${assigned?"text-emerald-400":"text-white/10"}`}>{assigned?"●":"○"}</span></td>;
@@ -1524,7 +1628,7 @@ function CRMPage({events}) {
       <div className="flex items-center gap-4">
         <input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Müşteri adi veya telefon ara..."
           className="flex-1 max-w-sm px-4 py-2 rounded-xl text-sm text-white/80 placeholder-white/25 outline-none border border-white/3 bg-white/3 focus:border-purple-500/40 transition-colors"/>
-        <span className="text-xs text-white/30">{clients.length} musteri</span>
+        <span className="text-xs text-white/40">{clients.length} musteri</span>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <Card className="overflow-hidden">
@@ -1538,7 +1642,7 @@ function CRMPage({events}) {
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="text-xs font-medium text-white/80 truncate">{c.client}</div>
-                  <div className="text-[10px] text-white/30">{c.phone}</div>
+                  <div className="text-[10px] text-white/40">{c.phone}</div>
                 </div>
                 <Badge color={c.status==="confirmed"?"green":"amber"}>{c.status==="confirmed"?"Onaylandı":"Bekliyor"}</Badge>
               </div>
@@ -1568,7 +1672,7 @@ function CRMPage({events}) {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-5">
                 {[["Telefon",selected.phone],["Etkinlik",selected.type],["Tarih",selected.date],["Bütçe",`${selected.budget.toLocaleString()} TL`],["Ödenen",`${selected.paid.toLocaleString()} TL`],["Kalan",`${(selected.budget-selected.paid).toLocaleString()} TL`]].map(([k,v])=>(
                   <div key={k} className="p-3 rounded-xl bg-white/[0.02] border border-white/3">
-                    <div className="text-[10px] text-white/35 mb-1">{k}</div>
+                    <div className="text-[10px] text-white/45 mb-1">{k}</div>
                     <div className="text-sm text-white/80 font-medium">{v}</div>
                   </div>
                 ))}
@@ -1581,7 +1685,7 @@ function CRMPage({events}) {
                       <span className="text-xl">{getIcon(ev.type)}</span>
                       <div className="flex-1">
                         <div className="text-xs text-white/75">{ev.type}</div>
-                        <div className="text-[10px] text-white/35">{ev.date} - {ev.location}</div>
+                        <div className="text-[10px] text-white/45">{ev.date} - {ev.location}</div>
                       </div>
                       <Badge color={ev.status==="confirmed"?"green":"amber"}>{ev.status==="confirmed"?"Onaylandı":"Bekliyor"}</Badge>
                     </div>
@@ -1598,7 +1702,7 @@ function CRMPage({events}) {
           ):(
             <div className="flex flex-col items-center justify-center h-64 text-center">
               <div className="text-5xl mb-4 opacity-20">&#128101;</div>
-              <div className="text-white/30 text-sm">Detaylari gormek için bir musteri seçin</div>
+              <div className="text-white/40 text-sm">Detaylari gormek için bir musteri seçin</div>
             </div>
           )}
         </Card>
@@ -1640,13 +1744,13 @@ function AnalyticsPage({events, tasks}) {
                   <div className="w-full rounded-t-md" style={{height:`${(d.g/maxM)*100}%`,background:"rgba(52,211,153,0.4)",minHeight:4}}/>
                   <div className="w-full" style={{height:`${((d.r-d.g)/maxM)*100}%`,background:"rgba(139,92,246,0.3)",minHeight:d.r>d.g?2:0}}/>
                 </div>
-                <span className="text-[9px] text-white/30">{d.m}</span>
+                <span className="text-[9px] text-white/40">{d.m}</span>
               </div>
             ))}
           </div>
           <div className="flex gap-4 mt-3">
-            <div className="flex items-center gap-1.5"><span className="w-3 h-1.5 rounded bg-emerald-400/50 inline-block"/><span className="text-[10px] text-white/35">Tahsilat</span></div>
-            <div className="flex items-center gap-1.5"><span className="w-3 h-1.5 rounded bg-purple-400/40 inline-block"/><span className="text-[10px] text-white/35">Kalan</span></div>
+            <div className="flex items-center gap-1.5"><span className="w-3 h-1.5 rounded bg-emerald-400/50 inline-block"/><span className="text-[10px] text-white/45">Tahsilat</span></div>
+            <div className="flex items-center gap-1.5"><span className="w-3 h-1.5 rounded bg-purple-400/40 inline-block"/><span className="text-[10px] text-white/45">Kalan</span></div>
           </div>
         </Card>
         <Card className="p-5">
@@ -1660,7 +1764,7 @@ function AnalyticsPage({events, tasks}) {
                   <div className="h-2 rounded-full" style={{width:`${(item.count/maxCount)*100}%`,background:"linear-gradient(90deg,#8b5cf6,#6366f1)"}}/>
                 </div>
                 <span className="text-xs text-white/40 w-5 text-right flex-shrink-0">{item.count}</span>
-                <span className="text-[10px] text-white/25 w-14 text-right flex-shrink-0">{(item.revenue/1000).toFixed(0)}k</span>
+                <span className="text-[10px] text-white/35 w-14 text-right flex-shrink-0">{(item.revenue/1000).toFixed(0)}k</span>
               </div>
             ))}
           </div>
@@ -1692,7 +1796,7 @@ function AnalyticsPage({events, tasks}) {
               </svg>
               <div className="absolute inset-0 flex flex-col items-center justify-center">
                 <span className="text-xl font-bold text-white">{taskPct}%</span>
-                <span className="text-[9px] text-white/30">Tamamlandi</span>
+                <span className="text-[9px] text-white/40">Tamamlandi</span>
               </div>
             </div>
           </div>
@@ -1700,7 +1804,7 @@ function AnalyticsPage({events, tasks}) {
             {["tamamlandı","devam","bekliyor"].map(s=>(
               <div key={s} className="text-center">
                 <div className="text-sm font-bold" style={{color:s==="tamamlandı"?"#34d399":s==="devam"?"#60a5fa":"#fbbf24"}}>{localTasks.filter(t=>t.status===s).length}</div>
-                <div className="text-[9px] text-white/30">{TASK_COL[s]?.label||s}</div>
+                <div className="text-[9px] text-white/40">{TASK_COL[s]?.label||s}</div>
               </div>
             ))}
           </div>
@@ -1708,14 +1812,14 @@ function AnalyticsPage({events, tasks}) {
         <Card className="p-5">
           <h2 className="text-sm font-semibold text-white/70 mb-4">Toplam Misafir</h2>
           <div className="text-3xl font-bold text-white mb-1">{totalGuests.toLocaleString()}</div>
-          <div className="text-xs text-white/35 mb-4">Bu ay - {events.length} etkinlik</div>
+          <div className="text-xs text-white/45 mb-4">Bu ay - {events.length} etkinlik</div>
           <div className="space-y-2">
             {events.sort((a,b)=>b.guests-a.guests).slice(0,4).map(ev=>(
               <div key={ev.id} className="flex items-center gap-2">
                 <span className="text-sm">{getIcon(ev.type)}</span>
                 <span className="text-xs text-white/55 flex-1 truncate">{ev.client.split("&")[0].trim()}</span>
                 <div className="w-16 h-1.5 rounded-full bg-white/8"><div className="h-1.5 rounded-full" style={{width:`${(ev.guests/totalGuests)*100}%`,background:"#8b5cf6"}}/></div>
-                <span className="text-[10px] text-white/35 w-6 text-right">{ev.guests}</span>
+                <span className="text-[10px] text-white/45 w-6 text-right">{ev.guests}</span>
               </div>
             ))}
           </div>
@@ -1854,13 +1958,13 @@ function SettingsPage() {
       <Card className="p-5">
         <h2 className="text-sm font-semibold text-white/80 mb-4">Sosyal Medya</h2>
         <div className="space-y-3">
-          <a href="https://www.instagram.com/beka_davet" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 p-3 rounded-xl border border-white/3 hover:border-white/10 transition-all" style={{background:"rgba(255,255,255,0.02)"}}>
+          <a href="https://www.instagram.com/beka_davet" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 p-3 rounded-xl border border-white/3 hover:border-white/10 transition-all" style={{background:"rgba(255,255,255,0.04)"}}>
             <span className="text-xl">📸</span>
             <div className="flex-1">
               <div className="text-sm text-white/80">Instagram</div>
               <div className="text-xs text-white/40">@beka_davet</div>
             </div>
-            <span className="text-xs text-white/30">→</span>
+            <span className="text-xs text-white/40">→</span>
           </a>
         </div>
       </Card>
@@ -1871,7 +1975,7 @@ function SettingsPage() {
             <div key={n.k} className="flex items-center justify-between py-2 border-b border-white/3 last:border-0">
               <div>
                 <div className="text-sm text-white/75">{n.l}</div>
-                <div className="text-xs text-white/35">{n.s}</div>
+                <div className="text-xs text-white/45">{n.s}</div>
               </div>
               <button onClick={()=>setNotifs(p=>({...p,[n.k]:!p[n.k]}))}
                 className={`w-11 h-6 rounded-full transition-all relative ${notifs[n.k]?"bg-purple-500":"bg-white/15"}`}>
@@ -1888,7 +1992,7 @@ function SettingsPage() {
             <div key={k} className="flex items-center justify-between py-2 border-b border-white/3 last:border-0">
               <div>
                 <div className="text-sm text-white/70">{k}</div>
-                <div className="text-xs text-white/30">{v}</div>
+                <div className="text-xs text-white/40">{v}</div>
               </div>
               <Badge color="green">Aktif</Badge>
             </div>
@@ -1906,21 +2010,20 @@ function SettingsPage() {
 }
 
 /* ── NOTIF PANEL ────────────────────────────────── */
-function NotifPanel({onClose,setPage}) {
-  const [notifs,setNotifs]=useState(NOTIFS_INIT);
+function NotifPanel({onClose,setPage,notifs,setNotifs}) {
   const unread=notifs.filter(n=>!n.read).length;
   return (
     <>
       <div className="fixed inset-0 z-40 bg-black/50" onClick={onClose}/>
-      <div className="fixed top-0 right-0 h-full w-80 z-50 border-l border-white/3 overflow-auto flex flex-col" style={{background:"rgba(15,15,28,0.9)"}}>
+      <div className="fixed top-0 right-0 h-full w-80 z-50 border-l border-white/6 overflow-auto flex flex-col" style={{background:"rgba(17,24,39,0.95)"}}>
         <div className="px-5 py-4 border-b border-white/3 flex items-center justify-between flex-shrink-0">
           <div>
             <h2 className="text-sm font-semibold text-white/85">Bildirimler</h2>
             {unread>0 && <span className="text-[10px] text-purple-400 mt-0.5">{unread} okunmamis</span>}
           </div>
           <div className="flex gap-3">
-            <button onClick={()=>setNotifs(p=>p.map(n=>({...n,read:true})))} className="text-[10px] text-white/30 hover:text-white/60 transition-colors">Hepsini Oku</button>
-            <button onClick={onClose} className="text-white/30 hover:text-white transition-colors text-xl leading-none">x</button>
+            <button onClick={()=>setNotifs(p=>p.map(n=>({...n,read:true})))} className="text-[10px] text-white/40 hover:text-white/60 transition-colors">Hepsini Oku</button>
+            <button onClick={onClose} className="text-white/40 hover:text-white transition-colors text-xl leading-none">x</button>
           </div>
         </div>
         <div className="flex-1 divide-y divide-white/5 overflow-auto">
@@ -1931,7 +2034,7 @@ function NotifPanel({onClose,setPage}) {
                 <span className="text-xl flex-shrink-0">{n.icon}</span>
                 <div className="flex-1 min-w-0">
                   <div className={`text-xs leading-relaxed ${n.read?"text-white/50":"text-white/85 font-medium"}`}>{n.text}</div>
-                  <div className="text-[10px] text-white/25 mt-1">{n.time}</div>
+                  <div className="text-[10px] text-white/35 mt-1">{n.time}</div>
                 </div>
                 {!n.read&&<span className="w-2 h-2 rounded-full bg-purple-400 flex-shrink-0 mt-1"/>}
               </div>
@@ -1970,7 +2073,8 @@ export default function BekaOS() {
   const [events,setEvents]=useState(initEvents);
   const [tasks,setTasks]=useState(initTasks);
   const [gallery,setGallery]=useState(initGallery);
-  const unread=NOTIFS_INIT.filter(n=>!n.read).length;
+  const [notifs,setNotifs]=useState(NOTIFS_INIT);
+  const unread=notifs.filter(n=>!n.read).length;
 
   // Detect mobile
   const [isMobile,setIsMobile]=useState(window.innerWidth<768);
@@ -1990,6 +2094,49 @@ export default function BekaOS() {
     window.addEventListener("keydown",handler);
     return ()=>window.removeEventListener("keydown",handler);
   },[]);
+
+  // Etkinlik öncesi otomatik hatırlatmalar (7 gün, 3 gün, 1 gün)
+  useEffect(()=>{
+    const now=new Date();
+    events.forEach(ev=>{
+      const eventDate=new Date(ev.date);
+      const diffDays=Math.ceil((eventDate-now)/(1000*60*60*24));
+      if(diffDays===7||diffDays===3||diffDays===1){
+        setNotifs(prev=>{
+          const key=`reminder-${ev.id}-${diffDays}`;
+          if(prev.some(n=>n.id===key))return prev;
+          const text=diffDays===7
+            ?`${ev.client} - ${ev.type} etkinliğine 7 gün kaldı! Hazırlıklarınızı kontrol edin.`
+            :diffDays===3
+            ?`${ev.client} - ${ev.type} etkinliğine 3 gün kaldı! Son kontrolleri yapın.`
+            :`${ev.client} - ${ev.type} etkinliği YARIN! Her şey hazır mı?`;
+          return [{id:key,icon:diffDays===1?"⚡":"⏰",text,time:"Otomatik",read:false,page:"events"},...prev];
+        });
+      }
+    });
+  },[events]);
+
+  // 30 gün otomasyonu: Süresi dolan galeri fotoğraflarını sil + teşekkür bildirimi
+  useEffect(()=>{
+    const now=new Date();
+    events.forEach(ev=>{
+      const eventDate=new Date(ev.date);
+      const diffDays=Math.floor((now-eventDate)/(1000*60*60*24));
+      if(diffDays>=30){
+        // Galeri fotoğraflarını sil
+        const photosBefore=gallery.filter(g=>g.eventId===ev.id).length;
+        if(photosBefore>0){
+          setGallery(prev=>prev.filter(g=>g.eventId!==ev.id));
+        }
+        // Teşekkür bildirimi ekle (eğer daha önce eklenmemişse)
+        setNotifs(prev=>{
+          const alreadyExists=prev.some(n=>n.id===`thanks-${ev.id}`);
+          if(alreadyExists)return prev;
+          return [{id:`thanks-${ev.id}`,icon:"💐",text:`${ev.client} - ${ev.type} etkinliğinizden 30 gün geçti. Bizi tercih ettiğiniz için teşekkür ederiz! Galeri fotoğrafları KVKK kapsamında otomatik olarak kaldırılmıştır.`,time:"Otomatik",read:false,page:"events"},...prev];
+        });
+      }
+    });
+  },[]); // Sadece ilk yüklemede çalışır
 
   // Close sidebar on mobile when navigating
   const navigate=(p)=>{
@@ -2026,7 +2173,7 @@ export default function BekaOS() {
 
       {/* Sidebar */}
       <aside
-        className={`flex flex-col border-r border-white/[0.06] flex-shrink-0 transition-all duration-300 ${isMobile?"fixed top-0 left-0 h-full z-50":"relative"}`}
+        className={`flex flex-col border-r border-white/[0.1] flex-shrink-0 transition-all duration-300 ${isMobile?"fixed top-0 left-0 h-full z-50":"relative"}`}
         style={{
           width: sidebar ? 240 : (isMobile ? 0 : 64),
           overflow: isMobile && !sidebar ? "hidden" : "visible",
@@ -2036,8 +2183,8 @@ export default function BekaOS() {
         }}>
 
         {/* Logo */}
-        <div className="flex items-center gap-3 px-4 py-5 border-b border-white/[0.06]" style={{minWidth:0}}>
-          <div className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0" style={{background:"#0a0a0f",border:"1.5px solid rgba(139,92,246,0.4)"}}>
+        <div className="flex items-center gap-3 px-4 py-5 border-b border-white/[0.1]" style={{minWidth:0}}>
+          <div className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0" style={{background:"#111827",border:"1.5px solid rgba(139,92,246,0.4)"}}>
             <svg width="22" height="22" viewBox="0 0 32 32" fill="none">
               <circle cx="16" cy="14" r="8" stroke="url(#logoGrad)" strokeWidth="2"/>
               <text x="16" y="18" textAnchor="middle" fontFamily="sans-serif" fontSize="12" fontWeight="700" fill="url(#logoGrad)">B</text>
@@ -2047,7 +2194,7 @@ export default function BekaOS() {
           {(sidebar) && (
             <div className="min-w-0">
               <div className="text-sm font-bold tracking-wide text-white whitespace-nowrap">BekaOS</div>
-              <div className="text-[10px] text-white/25 tracking-widest uppercase whitespace-nowrap">Organizasyon</div>
+              <div className="text-[10px] text-white/35 tracking-widest uppercase whitespace-nowrap">Organizasyon</div>
             </div>
           )}
         </div>
@@ -2076,14 +2223,14 @@ export default function BekaOS() {
         </nav>
 
         {/* User */}
-        <div className="px-3 py-4 border-t border-white/[0.06]">
+        <div className="px-3 py-4 border-t border-white/[0.1]">
           <div className="flex items-center gap-3" style={{justifyContent:sidebar?"flex-start":"center"}}>
             <div className="w-9 h-9 rounded-full flex-shrink-0 flex items-center justify-center text-xs font-bold"
               style={{background:"linear-gradient(135deg,#8b5cf6,#6366f1)"}}>A</div>
             {sidebar && (
               <div className="min-w-0">
                 <div className="text-xs font-medium text-white/70 truncate">Admin</div>
-                <div className="text-[10px] text-white/30 truncate">Beka Davet</div>
+                <div className="text-[10px] text-white/40 truncate">Beka Davet</div>
               </div>
             )}
           </div>
@@ -2094,8 +2241,8 @@ export default function BekaOS() {
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
 
         {/* Topbar */}
-        <header className="flex items-center justify-between px-4 py-3 border-b border-white/[0.06] flex-shrink-0 gap-3"
-          style={{background:"#0a0a0f"}}>
+        <header className="flex items-center justify-between px-4 py-3 border-b border-white/[0.1] flex-shrink-0 gap-3"
+          style={{background:"#111827"}}>
           <div className="flex items-center gap-3 min-w-0">
             <button onClick={()=>setSidebar(!sidebar)}
               className="w-9 h-9 rounded-xl flex items-center justify-center text-white/40 hover:text-white/80 hover:bg-white/3 transition-all flex-shrink-0 text-lg">
@@ -2103,7 +2250,7 @@ export default function BekaOS() {
             </button>
             <div className="min-w-0">
               <h1 className="text-sm font-semibold text-white/85 truncate">{currentNav?.label}</h1>
-              <p className="text-[10px] text-white/25">Haziran 2026</p>
+              <p className="text-[10px] text-white/35">Haziran 2026</p>
             </div>
           </div>
           <div className="flex items-center gap-2 flex-shrink-0">
@@ -2129,14 +2276,14 @@ export default function BekaOS() {
         </header>
 
         {/* Page content */}
-        <main className="flex-1 overflow-auto" style={{background:"#0a0a0f",padding:isMobile?"12px":"24px"}}>
-          {PAGES[page]||<div className="text-white/25 text-sm text-center py-20">Sayfa bulunamadı</div>}
+        <main className="flex-1 overflow-auto" style={{background:"#111827",padding:isMobile?"12px":"24px"}}>
+          {PAGES[page]||<div className="text-white/35 text-sm text-center py-20">Sayfa bulunamadı</div>}
         </main>
 
         {/* Mobile bottom nav */}
         {isMobile && (
-          <nav className="flex-shrink-0 border-t border-white/[0.06] flex items-center justify-around px-2 py-2"
-            style={{background:"#0a0a14"}}>
+          <nav className="flex-shrink-0 border-t border-white/[0.1] flex items-center justify-around px-2 py-2"
+            style={{background:"#151b2b"}}>
             {[
               {id:"dashboard",icon:"&#11041;"},
               {id:"events",icon:"&#10680;"},
@@ -2161,7 +2308,7 @@ export default function BekaOS() {
         )}
       </div>
 
-      {notifOpen&&<NotifPanel onClose={()=>setNotifOpen(false)} setPage={(p)=>{navigate(p);}}/>}
+      {notifOpen&&<NotifPanel onClose={()=>setNotifOpen(false)} setPage={(p)=>{navigate(p);}} notifs={notifs} setNotifs={setNotifs}/>}
       {searchOpen&&<GlobalSearch events={events} setPage={navigate} onClose={()=>setSearchOpen(false)}/>}
     </div>
   );
