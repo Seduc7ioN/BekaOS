@@ -10,6 +10,7 @@ import { QRCodeSVG } from "qrcode.react";
 import LandingPage from "./pages/Landing";
 import AuthPage from "./pages/Auth";
 import { useAuth, useData } from "./lib/AuthContext";
+import { supabase } from "./lib/supabase";
 
 const initEvents = [
   { id:1, type:"Nişan",            client:"Ayşe & Mehmet",  date:"2026-06-02", time:"18:00", guests:80,  status:"confirmed", payment:"kapora",  location:"Bahçelievler Salonu", tasks:12, done:8,  budget:15000, paid:5000,  phone:"0532 111 2233", notes:"Kırmızı & altın tema, canlı müzik." },
@@ -2072,6 +2073,13 @@ function MerasimApp() {
   const { user, loading } = useAuth()
   const [route, setRoute] = useState('landing') // landing | auth | dashboard
 
+  // Kullanıcı giriş yaptığında otomatik dashboard'a yönlendir
+  useEffect(() => {
+    if (user && (route === 'auth' || route === 'landing')) {
+      setRoute('dashboard')
+    }
+  }, [user, route])
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center" style={{background:"#111827"}}>
@@ -2261,12 +2269,19 @@ function Dashboard() {
         <div className="px-3 py-4 border-t border-white/[0.1]">
           <div className="flex items-center gap-3" style={{justifyContent:sidebar?"flex-start":"center"}}>
             <div className="w-9 h-9 rounded-full flex-shrink-0 flex items-center justify-center text-xs font-bold"
-              style={{background:"linear-gradient(135deg,#8b5cf6,#6366f1)"}}>A</div>
+              style={{background:"linear-gradient(135deg,#8b5cf6,#6366f1)"}}>
+              {(company?.name||user?.email||"M")[0].toUpperCase()}
+            </div>
             {sidebar && (
-              <div className="min-w-0">
-                <div className="text-xs font-medium text-white/70 truncate">Admin</div>
-                <div className="text-[10px] text-white/40 truncate">Merasim</div>
+              <div className="min-w-0 flex-1">
+                <div className="text-xs font-medium text-white/70 truncate">{company?.name||"Kullanıcı"}</div>
+                <div className="text-[10px] text-white/40 truncate">{user?.email||""}</div>
               </div>
+            )}
+            {sidebar && (
+              <button onClick={async()=>{await supabase.auth.signOut();window.location.reload();}} className="text-white/20 hover:text-rose-400 transition-colors p-1" title="Çıkış Yap">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+              </button>
             )}
           </div>
         </div>
