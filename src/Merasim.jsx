@@ -271,7 +271,7 @@ function GlobalSearch({events,setPage,onClose}) {
 }
 
 /* ── DASHBOARD ─────────────────────────────────── */
-function DashboardPage({events,tasks,setPage}) {
+function DashboardPage({events,tasks,setPage,company}) {
   const [dashMonth,setDashMonth]=useState(new Date().getMonth());
   const [dashYear,setDashYear]=useState(new Date().getFullYear());
   const dashOffset=new Date(dashYear,dashMonth,1).getDay()===0?6:new Date(dashYear,dashMonth,1).getDay()-1;
@@ -282,14 +282,28 @@ function DashboardPage({events,tasks,setPage}) {
   const openTasks=tasks.filter(t=>t.status!=="tamamlandı");
   const monthlyVals=[32,28,45,51,60,77,0,0,0,0,0,0];
   const maxVal=Math.max(...monthlyVals,1);
+  const now=new Date();
+  const hour=now.getHours();
+  const greeting=hour<12?"Günaydın":hour<18?"İyi günler":"İyi akşamlar";
   return (
     <div className="space-y-5">
+      {/* Hoşgeldin */}
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-xl font-bold text-white">{greeting} 👋</h1>
+          <p className="text-sm text-white/40 mt-0.5">{company?.name||"Merasim"} yönetim paneline hoş geldiniz</p>
+        </div>
+        <div className="text-right">
+          <div className="text-xs text-white/30">{now.toLocaleDateString('tr-TR',{weekday:'long',year:'numeric',month:'long',day:'numeric'})}</div>
+        </div>
+      </div>
+      {/* İstatistikler */}
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
-        <StatBox label="Etkinlik"       value={total}    sub="Bu ay"            icon="&#9672;" color="#8b5cf6"/>
+        <StatBox label="Etkinlik"       value={total}    sub="Toplam"            icon="&#9672;" color="#8b5cf6"/>
         <StatBox label="Onaylandı"         value={conf}     sub={`${total-conf} bekliyor`} icon="&#9689;" color="#34d399"/>
         <StatBox label="Ödeme Bekliyor" value={pendPay}  sub="etkinlik"         icon="&#9680;" color="#fb923c"/>
-        <StatBox label="Misafir"        value={guests}   sub="Bu ay"            icon="&#9676;" color="#60a5fa"/>
-        <StatBox label="Tahsilat"       value={`${(revenue/1000).toFixed(0)}k`} sub="Bu ay" icon="&#9677;" color="#f472b6"/>
+        <StatBox label="Misafir"        value={guests}   sub="Toplam"            icon="&#9676;" color="#60a5fa"/>
+        <StatBox label="Tahsilat"       value={`${(revenue/1000).toFixed(0)}k`} sub="TL" icon="&#9677;" color="#f472b6"/>
       </div>
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         <Card className="lg:col-span-2 overflow-hidden">
@@ -349,13 +363,20 @@ function DashboardPage({events,tasks,setPage}) {
       </div>
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         <Card className="lg:col-span-2 p-5">
-          <div className="flex items-center justify-between mb-4">
-            <button onClick={()=>{setDashMonth(m=>{if(m===0){setDashYear(y=>y-1);return 11;}return m-1;});}} className="px-2 py-1 rounded-lg text-xs text-white/40 hover:text-white border border-white/5 hover:border-white/15 transition-colors">‹</button>
-            <h2 className="text-sm font-semibold text-white/70">{MONTH_NAMES[dashMonth]} {dashYear}</h2>
-            <button onClick={()=>{setDashMonth(m=>{if(m===11){setDashYear(y=>y+1);return 0;}return m+1;});}} className="px-2 py-1 rounded-lg text-xs text-white/40 hover:text-white border border-white/5 hover:border-white/15 transition-colors">›</button>
+          <div className="flex items-center justify-between mb-5">
+            <button onClick={()=>{setDashMonth(m=>{if(m===0){setDashYear(y=>y-1);return 11;}return m-1;});}} className="w-8 h-8 rounded-lg flex items-center justify-center text-white/40 hover:text-white hover:bg-white/5 border border-white/5 hover:border-white/15 transition-all">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="15 18 9 12 15 6"/></svg>
+            </button>
+            <div className="text-center">
+              <h2 className="text-base font-bold text-white">{MONTH_NAMES[dashMonth]}</h2>
+              <div className="text-xs text-white/30">{dashYear}</div>
+            </div>
+            <button onClick={()=>{setDashMonth(m=>{if(m===11){setDashYear(y=>y+1);return 0;}return m+1;});}} className="w-8 h-8 rounded-lg flex items-center justify-center text-white/40 hover:text-white hover:bg-white/5 border border-white/5 hover:border-white/15 transition-all">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="9 18 15 12 9 6"/></svg>
+            </button>
           </div>
-          <div className="grid grid-cols-7 gap-1 text-center mb-1">
-            {DAY_NAMES.map(d=><div key={d} className="text-[10px] text-white/35 pb-1">{d}</div>)}
+          <div className="grid grid-cols-7 gap-1 text-center mb-2">
+            {DAY_NAMES.map(d=><div key={d} className="text-[10px] text-white/25 font-medium pb-1 uppercase tracking-wider">{d}</div>)}
           </div>
           <div className="grid grid-cols-7 gap-1">
             {Array.from({length:new Date(dashYear,dashMonth+1,0).getDate()+dashOffset},(_,i)=>i<dashOffset?null:i-dashOffset+1).map((day,i)=>{
@@ -367,24 +388,30 @@ function DashboardPage({events,tasks,setPage}) {
               const hasHoliday=holidays.length>0;
               return (
                 <div key={day} onClick={()=>setPage("calendar")}
-                  className="aspect-square flex items-center justify-center rounded-lg text-xs cursor-pointer hover:bg-white/5 relative transition-all select-none"
-                  style={{background:hasHoliday?"rgba(251,191,36,0.12)":isToday?"rgba(139,92,246,0.2)":"transparent",color:hasHoliday?"#fbbf24":isToday?"#8b5cf6":hasEv?"rgba(255,255,255,0.85)":"rgba(255,255,255,0.3)",fontWeight:isToday||hasHoliday?"700":"400"}}>
+                  className="aspect-square flex flex-col items-center justify-center rounded-xl text-xs cursor-pointer hover:bg-white/5 relative transition-all select-none"
+                  style={{background:hasHoliday?"rgba(251,191,36,0.1)":isToday?"linear-gradient(135deg,rgba(139,92,246,0.3),rgba(99,102,241,0.2))":"transparent",border:isToday?"1.5px solid rgba(139,92,246,0.4)":"1.5px solid transparent",color:hasHoliday?"#fbbf24":isToday?"#fff":hasEv?"rgba(255,255,255,0.8)":"rgba(255,255,255,0.25)",fontWeight:isToday||hasHoliday?"700":"400"}}>
                   {day}
-                  {hasEv&&!isToday&&!hasHoliday&&<span className="absolute bottom-0.5 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-purple-400"/>}
+                  {hasEv&&!isToday&&!hasHoliday&&<span className="absolute bottom-1 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full" style={{background:"linear-gradient(135deg,#8b5cf6,#6366f1)"}}/>}
+                  {hasHoliday&&<span className="absolute top-0.5 right-1 text-[7px]">{holidays[0]?.icon}</span>}
                 </div>
               );
             })}
           </div>
+          {/* Legend */}
+          <div className="flex items-center gap-4 mt-4 pt-3 border-t border-white/5">
+            <div className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded-full" style={{background:"linear-gradient(135deg,#8b5cf6,#6366f1)"}}/><span className="text-[10px] text-white/30">Bugün</span></div>
+            <div className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-purple-400"/><span className="text-[10px] text-white/30">Etkinlik</span></div>
+            <div className="flex items-center gap-1.5"><span className="text-[10px]">🎉</span><span className="text-[10px] text-white/30">Tatil</span></div>
+          </div>
         </Card>
         <Card className="p-5">
-          <h2 className="text-sm font-semibold text-white/70 mb-4">Hizli Islemler</h2>
-          <div className="space-y-2">
-            {[{icon:"&#128203;",label:"Rezervasyon Al",page:"reservation"},{icon:"&#128140;",label:"Davetiye Oluştur",page:"invitations"},{icon:"&#128248;",label:"Galeri & QR",page:"gallery"},{icon:"&#128179;",label:"Ödeme Takibi",page:"payments"},{icon:"&#128101;",label:"Müşteri CRM",page:"crm"},{icon:"\u2726",label:"AI Asistan",page:"ai"}].map((a,i)=>(
+          <h2 className="text-sm font-semibold text-white/70 mb-4">Hızlı İşlemler</h2>
+          <div className="grid grid-cols-2 gap-2">
+            {[{icon:"📋",label:"Rezervasyon",page:"reservation",color:"#8b5cf6"},{icon:"💌",label:"Davetiye",page:"invitations",color:"#ec4899"},{icon:"📸",label:"Galeri",page:"gallery",color:"#f59e0b"},{icon:"💰",label:"Ödemeler",page:"payments",color:"#10b981"},{icon:"👥",label:"CRM",page:"crm",color:"#3b82f6"},{icon:"🤖",label:"AI Asistan",page:"ai",color:"#6366f1"}].map((a,i)=>(
               <button key={i} onClick={()=>setPage(a.page)}
-                className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-left hover:bg-white/3 transition-all border border-white/3 hover:border-white/3">
-                <span className="text-base" dangerouslySetInnerHTML={{__html:a.icon}}/>
-                <span className="text-xs text-white/65">{a.label}</span>
-                <span className="ml-auto text-white/30 text-xs">&#8594;</span>
+                className="flex flex-col items-center gap-2 p-3 rounded-xl hover:bg-white/5 transition-all border border-white/5 hover:border-white/10">
+                <span className="text-2xl">{a.icon}</span>
+                <span className="text-[10px] text-white/50 font-medium">{a.label}</span>
               </button>
             ))}
           </div>
@@ -626,7 +653,7 @@ function CalendarPage({events,setPage,setPrefillDate}) {
   const [month,setMonth]=useState(new Date().getMonth());
   const [year,setYear]=useState(new Date().getFullYear());
   const [selected,setSelected]=useState(null);
-  const [quickBook,setQuickBook]=useState(null); // {day, month, year} - hızlı rezervasyon modalı
+  const [quickBook,setQuickBook]=useState(null);
   const firstDay=new Date(year,month,1).getDay();
   const daysInMonth=new Date(year,month+1,0).getDate();
   const offset=firstDay===0?6:firstDay-1;
@@ -634,19 +661,36 @@ function CalendarPage({events,setPage,setPrefillDate}) {
   const prev=()=>{if(month===0){setMonth(11);setYear(y=>y-1);}else setMonth(m=>m-1);};
   const next=()=>{if(month===11){setMonth(0);setYear(y=>y+1);}else setMonth(m=>m+1);};
   const dayEvs=(day)=>events.filter(e=>{const d=new Date(e.date);return d.getFullYear()===year&&d.getMonth()===month&&d.getDate()===day;});
+  const today=new Date();
   return (
     <div className="space-y-4">
+      {/* Header */}
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-xl font-bold text-white">Takvim</h1>
+          <p className="text-sm text-white/40 mt-0.5">Etkinliklerinizi takip edin</p>
+        </div>
+        <button onClick={()=>{setMonth(today.getMonth());setYear(today.getFullYear());}}
+          className="px-4 py-2 rounded-xl text-xs font-medium text-purple-400 border border-purple-500/25 hover:bg-purple-500/10 transition-colors">
+          Bugün
+        </button>
+      </div>
       <Card className="p-6">
         <div className="flex items-center justify-between mb-6">
-          <div className="flex items-center gap-3">
-            <button onClick={prev} className="px-3 py-1.5 rounded-xl text-xs text-white/50 hover:text-white border border-white/3 hover:border-white/20 transition-colors">Onceki</button>
-            <h2 className="text-base font-semibold text-white min-w-[150px] text-center">{MONTH_NAMES[month]} {year}</h2>
-            <button onClick={next} className="px-3 py-1.5 rounded-xl text-xs text-white/50 hover:text-white border border-white/3 hover:border-white/20 transition-colors">Sonraki</button>
+          <button onClick={prev} className="w-10 h-10 rounded-xl flex items-center justify-center text-white/40 hover:text-white hover:bg-white/5 border border-white/5 hover:border-white/15 transition-all">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="15 18 9 12 15 6"/></svg>
+          </button>
+          <div className="text-center">
+            <h2 className="text-lg font-bold text-white">{MONTH_NAMES[month]}</h2>
+            <div className="text-xs text-white/30">{year}</div>
           </div>
+          <button onClick={next} className="w-10 h-10 rounded-xl flex items-center justify-center text-white/40 hover:text-white hover:bg-white/5 border border-white/5 hover:border-white/15 transition-all">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="9 18 15 12 9 6"/></svg>
+          </button>
         </div>
-        <div className="grid grid-cols-7 gap-px rounded-xl overflow-hidden" style={{background:"rgba(255,255,255,0.06)"}}>
+        <div className="grid grid-cols-7 gap-1 rounded-xl overflow-hidden">
           {DAY_NAMES.map(d=>(
-            <div key={d} className="py-3 text-center text-[11px] text-white/40 font-medium" style={{background:"rgba(17,24,39,0.7)"}}>{d}</div>
+            <div key={d} className="py-2 text-center text-[10px] text-white/25 font-medium uppercase tracking-wider">{d}</div>
           ))}
           {cells.map((day,i)=>{
             if(!day)return<div key={`e${i}`} style={{background:"rgba(17,24,39,0.7)",opacity:0.5}}/>;
@@ -2468,7 +2512,7 @@ function Dashboard() {
   };
 
   const PAGES={
-    dashboard:<DashboardPage events={events} tasks={tasks} setPage={navigate}/>,
+    dashboard:<DashboardPage events={events} tasks={tasks} setPage={navigate} company={company}/>,
     events:<EventsPage events={events} setEvents={setEvents} updateEvent={updateEvent} setPage={navigate}/>,
     calendar:<CalendarPage events={events} setPage={navigate} setPrefillDate={setPrefillDate}/>,
     tasks:<TasksPage tasks={tasks} setTasks={setTasks} events={events}/>,
