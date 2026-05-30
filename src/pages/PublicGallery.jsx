@@ -66,7 +66,7 @@ export default function PublicGalleryPage({ eventId }) {
     <div className="min-h-screen flex items-center justify-center" style={{ background: "#111827" }}>
       <div className="text-center">
         <div className="text-5xl mb-4">😔</div>
-        <div className="text-white/60 text-sm font-medium">Galeri bulunamadı</div>
+        <div className="text-white/60 text-sm font-medium">Galeri Bulunamadı</div>
       </div>
     </div>
   )

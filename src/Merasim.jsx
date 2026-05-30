@@ -73,14 +73,14 @@ const WA_TEMPLATES = [
     body:"Merhaba {isim}!\n\n{etkinlik_türü} etkinliğinize {gun} gün kaldı!\n\nHazırlıklarınız tamamlanıyor.\n\nMerasim" },
   { id:4, name:"Galeri Paylaşımı",    icon:"\uD83D\uDCF8", trigger:"Manuel - Etkinlik sonrası",    cat:"galeri",
     body:"Merhaba {isim}!\n\nEtkinliginizin fotoğraflari galerinize yüklendi!\n\n{galeri_link}\n\nMerasim" },
-  { id:5, name:"Ödeme Hatırlatma",    icon:"\uD83D\uDCB3", trigger:"Otomatik - Ödeme gecikmesinde",cat:"odeme",
+  { id:5, name:"Ödeme Hatırlatma",    icon:"\uD83D\uDCB3", trigger:"Otomatik - Ödeme gecikmesinde",cat:"ödeme",
     body:"Merhaba {isim},\n\nKalan ödemeniz ({tutar} TL) için hatırlatma.\n\nMerasim" },
   { id:6, name:"Davetiye Linki",      icon:"\uD83D\uDC8C", trigger:"Manuel - Davetiye hazırlandiginda", cat:"davetiye",
     body:"Merhaba {isim}!\n\nDijital davetiyeniz hazır!\n\n{davetiye_link}\n\nMerasim" },
 ];
 
 const NOTIFS_INIT = [
-  { id:1, icon:"\uD83D\uDCB3", text:"Zeynep Kaya'nın odemesi bekliyor",       time:"2 saat önce", read:false, page:"payments"    },
+  { id:1, icon:"\uD83D\uDCB3", text:"Zeynep Kaya'nın ödemesi bekliyor",       time:"2 saat önce", read:false, page:"payments"    },
   { id:2, icon:"\u2705",       text:"Fatma Demir - Tüm görevler tamamlandı",  time:"4 saat önce", read:false, page:"tasks"       },
   { id:3, icon:"\uD83D\uDCE9", text:"Nişan davetiyesine 3 yeni RSVP geldi",  time:"6 saat önce", read:true,  page:"invitations" },
   { id:4, icon:"\uD83D\uDCC5", text:"Ali Yıldız rezervasyonu onay bekliyor",  time:"1 gün önce",  read:true,  page:"events"      },
@@ -379,7 +379,7 @@ function DashboardPage({events,tasks,setPage}) {
         <Card className="p-5">
           <h2 className="text-sm font-semibold text-white/70 mb-4">Hizli Islemler</h2>
           <div className="space-y-2">
-            {[{icon:"&#128203;",label:"Rezervasyon Al",page:"reservation"},{icon:"&#128140;",label:"Davetiye Olustur",page:"invitations"},{icon:"&#128248;",label:"Galeri & QR",page:"gallery"},{icon:"&#128179;",label:"Ödeme Takibi",page:"payments"},{icon:"&#128101;",label:"Müşteri CRM",page:"crm"},{icon:"\u2726",label:"AI Asistan",page:"ai"}].map((a,i)=>(
+            {[{icon:"&#128203;",label:"Rezervasyon Al",page:"reservation"},{icon:"&#128140;",label:"Davetiye Oluştur",page:"invitations"},{icon:"&#128248;",label:"Galeri & QR",page:"gallery"},{icon:"&#128179;",label:"Ödeme Takibi",page:"payments"},{icon:"&#128101;",label:"Müşteri CRM",page:"crm"},{icon:"\u2726",label:"AI Asistan",page:"ai"}].map((a,i)=>(
               <button key={i} onClick={()=>setPage(a.page)}
                 className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-left hover:bg-white/3 transition-all border border-white/3 hover:border-white/3">
                 <span className="text-base" dangerouslySetInnerHTML={{__html:a.icon}}/>
@@ -396,7 +396,7 @@ function DashboardPage({events,tasks,setPage}) {
           <span className="text-xs text-white/40">{(revenue/1000).toFixed(0)}k TL tahsilat</span>
         </div>
         <div className="flex items-end gap-2 h-28">
-          {["Oca","Sub","Mar","Nis","May","Haz","Tem","Agu","Eyl","Eki","Kas","Ara"].map((m,i)=>{
+          {["Oca","Şub","Mar","Nis","May","Haz","Tem","Ağu","Eyl","Eki","Kas","Ara"].map((m,i)=>{
             const val=monthlyVals[i];
             const h=maxVal>0?Math.max((val/maxVal)*100,0):0;
             const active=i===5;
@@ -545,7 +545,7 @@ function EventsPage({events,setEvents,updateEvent,setPage}) {
               <div className="text-xs text-white/40 mt-1">{drawer.type}</div>
             </div>
             <div className="space-y-0 mb-5">
-              {[["Tarih",drawer.date],["Saat",drawer.time],["Lokasyon",drawer.location],["Misafir",`${drawer.guests} kisi`],["Bütçe",`${(drawer.budget||0).toLocaleString()} TL`],["Ödenen",`${(drawer.paid||0).toLocaleString()} TL`],["Kalan",`${((drawer.budget||0)-(drawer.paid||0)).toLocaleString()} TL`],["Telefon",drawer.phone]].map(([k,v])=>(
+              {[["Tarih",drawer.date],["Saat",drawer.time],["Lokasyon",drawer.location],["Misafir",`${drawer.guests} kişi`],["Bütçe",`${(drawer.budget||0).toLocaleString()} TL`],["Ödenen",`${(drawer.paid||0).toLocaleString()} TL`],["Kalan",`${((drawer.budget||0)-(drawer.paid||0)).toLocaleString()} TL`],["Telefon",drawer.phone]].map(([k,v])=>(
                 <div key={k} className="flex justify-between py-2.5 border-b border-white/3">
                   <span className="text-xs text-white/45">{k}</span>
                   <span className="text-xs text-white/75">{v}</span>
@@ -554,7 +554,7 @@ function EventsPage({events,setEvents,updateEvent,setPage}) {
             </div>
             {drawer.notes&&<div className="p-3 rounded-xl bg-white/[0.04] mb-4"><div className="text-[10px] text-white/45 mb-1">Not</div><div className="text-xs text-white/70">{drawer.notes}</div></div>}
             <div className="p-3 rounded-xl bg-white/[0.04] mb-5">
-              <div className="flex justify-between mb-2"><span className="text-xs text-white/40">Gorev Ilerlemesi</span><span className="text-xs text-white/60">{drawer.done}/{drawer.tasks}</span></div>
+              <div className="flex justify-between mb-2"><span className="text-xs text-white/40">Görev Ilerlemesi</span><span className="text-xs text-white/60">{drawer.done}/{drawer.tasks}</span></div>
               <div className="h-2 rounded-full bg-white/10"><div className="h-2 rounded-full" style={{width:`${(drawer.done/drawer.tasks)*100}%`,background:drawer.done===drawer.tasks?"#34d399":"linear-gradient(90deg,#8b5cf6,#6366f1)"}}/></div>
             </div>
             {/* Onay / Red */}
@@ -597,15 +597,15 @@ function EventsPage({events,setEvents,updateEvent,setPage}) {
         )}
       </Drawer>
 
-      <Modal open={!!editModal} onClose={()=>setEditModal(null)} title="Etkinligi Duzenle" width="max-w-2xl">
+      <Modal open={!!editModal} onClose={()=>setEditModal(null)} title="Etkinligi Düzenle" width="max-w-2xl">
         <div className="grid grid-cols-2 gap-4 mb-4">
           <FieldInput label="Müşteri Adi" value={editForm.client||""} onChange={e=>setEditForm(p=>({...p,client:e.target.value}))} placeholder="Ad soyad"/>
-          <FieldSelect label="Etkinlik Turu" value={editForm.type||""} onChange={e=>setEditForm(p=>({...p,type:e.target.value}))} options={EVENT_TYPES}/>
+          <FieldSelect label="Etkinlik Türü" value={editForm.type||""} onChange={e=>setEditForm(p=>({...p,type:e.target.value}))} options={EVENT_TYPES}/>
           <FieldInput label="Tarih" type="date" value={editForm.date||""} onChange={e=>setEditForm(p=>({...p,date:e.target.value}))}/>
           <FieldInput label="Saat" type="time" value={editForm.time||""} onChange={e=>setEditForm(p=>({...p,time:e.target.value}))}/>
           <FieldInput label="Lokasyon" value={editForm.location||""} onChange={e=>setEditForm(p=>({...p,location:e.target.value}))} placeholder="Salon / adres"/>
           <FieldInput label="Misafir Sayisi" type="number" value={editForm.guests||""} onChange={e=>setEditForm(p=>({...p,guests:Math.max(0,parseInt(e.target.value)||0)}))}/>
-          <FieldInput label="Toplam Butce (TL)" type="number" value={editForm.budget||""} onChange={e=>setEditForm(p=>({...p,budget:Math.max(0,parseInt(e.target.value)||0)}))}/>
+          <FieldInput label="Toplam Bütçe (TL)" type="number" value={editForm.budget||""} onChange={e=>setEditForm(p=>({...p,budget:Math.max(0,parseInt(e.target.value)||0)}))}/>
           <FieldInput label="Odenen (TL)" type="number" value={editForm.paid||""} onChange={e=>setEditForm(p=>({...p,paid:Math.max(0,parseInt(e.target.value)||0)}))}/>
           <FieldSelect label="Durum" value={editForm.status||""} onChange={e=>setEditForm(p=>({...p,status:e.target.value}))} options={[{value:"confirmed",label:"Onaylandı"},{value:"pending",label:"Bekliyor"}]}/>
           <FieldSelect label="Ödeme" value={editForm.payment||""} onChange={e=>setEditForm(p=>({...p,payment:e.target.value}))} options={["tam","kapora","bekliyor"]}/>
@@ -769,7 +769,7 @@ function TasksPage({tasks,setTasks,events}) {
           <option value="Tümü">Tüm etkinlikler</option>
           {events.map(e=><option key={e.id} value={e.id}>{e.client}</option>)}
         </select>
-        <button onClick={()=>setAddOpen(true)} className="ml-auto px-3 py-1.5 rounded-xl text-xs text-purple-300 border border-purple-500/25 hover:bg-purple-500/10 transition-colors">+ Gorev Ekle</button>
+        <button onClick={()=>setAddOpen(true)} className="ml-auto px-3 py-1.5 rounded-xl text-xs text-purple-300 border border-purple-500/25 hover:bg-purple-500/10 transition-colors">+ Görev Ekle</button>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {cols.map(col=>(
@@ -804,14 +804,14 @@ function TasksPage({tasks,setTasks,events}) {
                   </div>
                 );
               })}
-              {filt.filter(t=>t.status===col).length===0&&<div className="text-center py-8 text-xs text-white/25">Gorev yok</div>}
+              {filt.filter(t=>t.status===col).length===0&&<div className="text-center py-8 text-xs text-white/25">Görev yok</div>}
             </div>
           </div>
         ))}
       </div>
-      <Modal open={addOpen} onClose={()=>setAddOpen(false)} title="Yeni Gorev Ekle">
+      <Modal open={addOpen} onClose={()=>setAddOpen(false)} title="Yeni Görev Ekle">
         <div className="space-y-4">
-          <FieldInput label="Gorev Adi" value={newTask.task} onChange={e=>setNewTask(p=>({...p,task:e.target.value}))} placeholder="Gorev aciklamasi"/>
+          <FieldInput label="Görev Adi" value={newTask.task} onChange={e=>setNewTask(p=>({...p,task:e.target.value}))} placeholder="Görev aciklamasi"/>
           <FieldSelect label="Etkinlik" value={newTask.eventId} onChange={e=>setNewTask(p=>({...p,eventId:e.target.value}))}
             options={[{value:"",label:"— Genel —"},...events.map(e=>({value:e.id,label:e.client}))]}/>
           <FieldInput label="Sorumlu" value={newTask.assignee} onChange={e=>setNewTask(p=>({...p,assignee:e.target.value}))} placeholder="Personel adi"/>
@@ -1167,7 +1167,7 @@ function GalleryPage({events,gallery,setGallery,company}) {
               const content=await zip.generateAsync({type:"blob"});
               saveAs(content,`${activeEv?.client||'galeri'}-fotograflar.zip`);
             }}>ZIP</GlassBtn>
-            <button onClick={()=>fileRef.current?.click()} disabled={uploading} className="px-3 py-2 rounded-xl text-xs text-purple-300 border border-purple-500/25 hover:bg-purple-500/10 transition-colors disabled:opacity-40">{uploading?"Yükleniyor...":"+ Yükle"}</button>
+            <label htmlFor="gallery-file-input" className="px-3 py-2 rounded-xl text-xs text-purple-300 border border-purple-500/25 hover:bg-purple-500/10 transition-colors cursor-pointer">{uploading?"Yükleniyor...":"+ Yükle"}</label>
           </div>
         </div>
         <div className="grid grid-cols-3 gap-3 mb-4">
@@ -1195,11 +1195,11 @@ function GalleryPage({events,gallery,setGallery,company}) {
                 {photo.approved&&<div className="absolute top-2 left-2 text-emerald-400 text-xs">&#10003;</div>}
               </div>
             ))}
-            <div className="rounded-xl border-2 border-dashed border-white/3 flex flex-col items-center justify-center cursor-pointer hover:border-white/25 transition-colors" style={{aspectRatio:"16/10"}} onClick={()=>fileRef.current?.click()}>
+            <label htmlFor="gallery-file-input" className="rounded-xl border-2 border-dashed border-white/3 flex flex-col items-center justify-center cursor-pointer hover:border-white/25 transition-colors" style={{aspectRatio:"16/10"}}>
               <span className="text-2xl text-white/30 mb-1">+</span>
-              <span className="text-[10px] text-white/35">Yukle</span>
-            </div>
-            <input type="file" ref={fileRef} accept="image/*" multiple className="hidden" onChange={handleUpload}/>
+              <span className="text-[10px] text-white/35">Yükle</span>
+            </label>
+            <input type="file" id="gallery-file-input" accept="image/*" multiple className="hidden" onChange={handleUpload}/>
           </div>
         ):(
           <div className="text-center py-16 border-2 border-dashed border-white/3 rounded-2xl">
@@ -1416,7 +1416,7 @@ function ReservationPage({events,addEvent,prefillDate,setPrefillDate}) {
   const [newServiceName,setNewServiceName]=useState("");
   const servicesPrice=customServices.filter(s=>form.services.includes(s.name)).reduce((s,n)=>s+n.price,0);
   const total=servicesPrice;
-  const steps=["Etkinlik Turu","Tarih & Kisi","Konsept","Ek Hizmetler","İletişim","Özet"];
+  const steps=["Etkinlik Türü","Tarih & Kişi","Konsept","Ek Hizmetler","İletişim","Özet"];
 
   if(done)return(
     <div className="max-w-md mx-auto text-center py-20">
@@ -1424,7 +1424,7 @@ function ReservationPage({events,addEvent,prefillDate,setPrefillDate}) {
       <h2 className="text-xl font-bold text-white mb-2">Rezervasyon Alindi!</h2>
       <p className="text-white/50 text-sm mb-6">Ekibimiz en kisa surede <span className="text-purple-400">{form.phone||"sizi"}</span> arayacak.</p>
       <div className="p-4 rounded-2xl border border-white/3 bg-white/[0.02] text-left space-y-2 mb-6">
-        {[["Etkinlik",form.type],["Tarih",`${form.date} ${form.time}`],["Kişi",`${form.guests} kisi`],["Lokasyon",form.location],["Tahmini",`${total.toLocaleString()} TL`]].map(([k,v])=>(
+        {[["Etkinlik",form.type],["Tarih",`${form.date} ${form.time}`],["Kişi",`${form.guests} kişi`],["Lokasyon",form.location],["Tahmini",`${total.toLocaleString()} TL`]].map(([k,v])=>(
           <div key={k} className="flex justify-between text-xs"><span className="text-white/45">{k}</span><span className="text-white/75">{v||"—"}</span></div>
         ))}
       </div>
@@ -1486,7 +1486,7 @@ function ReservationPage({events,addEvent,prefillDate,setPrefillDate}) {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <FieldInput label="Etkinlik Tarihi" type="date" value={form.date} onChange={e=>upd("date",e.target.value)}/>
               <FieldInput label="Saat" type="time" value={form.time} onChange={e=>upd("time",e.target.value)}/>
-              <FieldInput label="Kisi Sayisi" type="number" value={form.guests} onChange={e=>upd("guests",e.target.value)} placeholder="Misafir sayisi"/>
+              <FieldInput label="Kişi Sayisi" type="number" value={form.guests} onChange={e=>upd("guests",e.target.value)} placeholder="Misafir sayisi"/>
               <FieldInput label="Lokasyon Tercihi" value={form.location} onChange={e=>upd("location",e.target.value)} placeholder="Semt, salon adi..."/>
             </div>
           </div>
@@ -1557,7 +1557,7 @@ function ReservationPage({events,addEvent,prefillDate,setPrefillDate}) {
           <div className="space-y-4">
             <h3 className="text-sm font-semibold text-white/85 mb-4">Özet & Onay</h3>
             <div className="p-4 rounded-xl bg-white/[0.04] space-y-2">
-              {[["Etkinlik",form.type||"—"],["Tarih",form.date||"—"],["Saat",form.time||"—"],["Kişi",form.guests?`${form.guests} kisi`:"—"],["Lokasyon",form.location||"—"],["Konsept",form.cöncept||"—"],["Ad Soyad",form.name||"—"],["Telefon",form.phone||"—"]].map(([k,v])=>(
+              {[["Etkinlik",form.type||"—"],["Tarih",form.date||"—"],["Saat",form.time||"—"],["Kişi",form.guests?`${form.guests} kişi`:"—"],["Lokasyon",form.location||"—"],["Konsept",form.cöncept||"—"],["Ad Soyad",form.name||"—"],["Telefon",form.phone||"—"]].map(([k,v])=>(
                 <div key={k} className="flex justify-between py-1.5 border-b border-white/3">
                   <span className="text-xs text-white/45">{k}</span><span className="text-xs text-white/75">{v}</span>
                 </div>
@@ -1573,7 +1573,7 @@ function ReservationPage({events,addEvent,prefillDate,setPrefillDate}) {
               <div className="flex justify-between items-center">
                 <div>
                   <div className="text-sm text-white/60">Tahmini Toplam</div>
-                  <div className="text-[10px] text-white/40 mt-0.5">{form.guests&&`${form.guests} kisi x 80 TL`}{servicesPrice>0&&` + ${servicesPrice.toLocaleString()} TL hizmet`}</div>
+                  <div className="text-[10px] text-white/40 mt-0.5">{form.guests&&`${form.guests} kişi x 80 TL`}{servicesPrice>0&&` + ${servicesPrice.toLocaleString()} TL hizmet`}</div>
                 </div>
                 <span className="text-2xl font-bold text-purple-300">{total.toLocaleString()} TL</span>
               </div>
@@ -1606,7 +1606,7 @@ function ReservationPage({events,addEvent,prefillDate,setPrefillDate}) {
               setDone(true);
             }} disabled={!kvkk}
               className="px-6 py-2 rounded-xl text-xs font-semibold text-white disabled:opacity-40 disabled:cursor-not-allowed" style={{background:kvkk?"linear-gradient(135deg,#34d399,#059669)":"linear-gradient(135deg,#374151,#4b5563)"}}>
-              Rezervasyonu Gonder
+              Rezervasyonu Gönder
             </button>
           )}
         </div>
@@ -1622,7 +1622,7 @@ function WhatsAppPage({events}) {
   const [editing,setEditing]=useState(false);
   const [sent,setSent]=useState([]);
   const [preview,setPreview]=useState(false);
-  const catCol={rezervasyon:"blue",hatırlatma:"amber",galeri:"green",odeme:"red",davetiye:"purple"};
+  const catCol={rezervasyon:"blue",hatırlatma:"amber",galeri:"green",ödeme:"red",davetiye:"purple"};
   const fill=(body,ev)=>{
     if(!body||!ev)return body||"";
     return body
@@ -1683,7 +1683,7 @@ function WhatsAppPage({events}) {
           </div>
         </div>
         <div>
-          <p className="text-xs text-white/40 mb-3">Gonderim Hedefleri</p>
+          <p className="text-xs text-white/40 mb-3">Gönderim Hedefleri</p>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
             {events.slice(0,6).map(ev=>(
               <div key={ev.id} className="flex items-center gap-2 p-3 rounded-xl border border-white/3 bg-white/[0.015]">
@@ -1711,7 +1711,7 @@ function WhatsAppPage({events}) {
         </div>
         {sent.length>0&&(
           <div>
-            <p className="text-xs text-white/40 mb-2">Gonderilen ({sent.length})</p>
+            <p className="text-xs text-white/40 mb-2">Gönderilen ({sent.length})</p>
             <div className="space-y-1.5 max-h-36 overflow-auto">
               {sent.map(s=>(
                 <div key={s.id} className="flex items-center gap-2 px-3 py-2 rounded-xl bg-green-500/8 border border-green-500/15">
@@ -1942,7 +1942,7 @@ function AnalyticsPage({events, tasks}) {
   const confRate=Math.round((events.filter(e=>e.status==="confirmed").length/events.length)*100);
   const payRate=Math.round((totalPaid/totalRev)*100);
   const avgBudget=Math.round(totalRev/events.length);
-  const monthlyData=[{m:"Oca",r:32,g:28},{m:"Sub",r:28,g:22},{m:"Mar",r:45,g:38},{m:"Nis",r:51,g:44},{m:"May",r:60,g:52},{m:"Haz",r:77,g:77}];
+  const monthlyData=[{m:"Oca",r:32,g:28},{m:"Şub",r:28,g:22},{m:"Mar",r:45,g:38},{m:"Nis",r:51,g:44},{m:"May",r:60,g:52},{m:"Haz",r:77,g:77}];
   const maxM=Math.max(...monthlyData.map(d=>d.r),1);
   const localTasks=tasks||initTasks;
   const taskDone=localTasks.filter(t=>t.status==="tamamlandı").length;
@@ -1952,8 +1952,8 @@ function AnalyticsPage({events, tasks}) {
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
         <StatBox label="Toplam Gelir"   value={`${(totalRev/1000).toFixed(0)}k TL`}  sub="YTD"              icon="&#128176;" color="#8b5cf6"/>
         <StatBox label="Onay Orani"     value={`%${confRate}`}                         sub="Onaydi / Toplam"  icon="&#10003;"  color="#34d399"/>
-        <StatBox label="Tahsilat"       value={`%${payRate}`}                          sub="Odenen / Butce"   icon="&#9680;"   color="#60a5fa"/>
-        <StatBox label="Ort. Butce"     value={`${(avgBudget/1000).toFixed(1)}k TL`}  sub="Etkinlik basi"    icon="&#9672;"   color="#f472b6"/>
+        <StatBox label="Tahsilat"       value={`%${payRate}`}                          sub="Odenen / Bütçe"   icon="&#9680;"   color="#60a5fa"/>
+        <StatBox label="Ort. Bütçe"     value={`${(avgBudget/1000).toFixed(1)}k TL`}  sub="Etkinlik basi"    icon="&#9672;"   color="#f472b6"/>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <Card className="p-5">
@@ -1975,7 +1975,7 @@ function AnalyticsPage({events, tasks}) {
           </div>
         </Card>
         <Card className="p-5">
-          <h2 className="text-sm font-semibold text-white/70 mb-5">Etkinlik Turu Dagilimi</h2>
+          <h2 className="text-sm font-semibold text-white/70 mb-5">Etkinlik Türü Dagilimi</h2>
           <div className="space-y-3">
             {byType.map(item=>(
               <div key={item.type} className="flex items-center gap-3">
@@ -2007,7 +2007,7 @@ function AnalyticsPage({events, tasks}) {
           </div>
         </Card>
         <Card className="p-5">
-          <h2 className="text-sm font-semibold text-white/70 mb-4">Gorev Tamamlama</h2>
+          <h2 className="text-sm font-semibold text-white/70 mb-4">Görev Tamamlama</h2>
           <div className="flex items-center justify-center py-3">
             <div className="relative w-28 h-28">
               <svg className="w-full h-full -rotate-90" viewBox="0 0 36 36">
@@ -2064,11 +2064,11 @@ function AIPage() {
     chat:"Sen Merasim organizasyon platformunun Turkce konusan AI asistanısın. Etkinlik planlamasi, organizasyon ipuçları ve platform kullanımı hakkında kisa, samimi ve pratik cevaplar ver."
   };
   const PROMPTS={
-    offer:["50 kişilik nisan teklifi","120 kisi kina bütçesi","Kurumsal yilsonu yemeği"],
+    offer:["50 kişilik nisan teklifi","120 kişi kina bütçesi","Kurumsal yilsonu yemeği"],
     cöncept:["Boho tarzında romantik nisan","Pembe & altin baby shower","Siyah & beyaz modern gece"],
     chat:["En popüler etkinlik trendleri","QR galeri nasıl çalışır?","Organizasyon planlamasi ipuçları"]
   };
-  const MODES=[{id:"offer",icon:"&#128203;",label:"Teklif Olustur"},{id:"cöncept",icon:"&#127912;",label:"Konsept Oner"},{id:"chat",icon:"&#128172;",label:"Genel Asistan"}];
+  const MODES=[{id:"offer",icon:"&#128203;",label:"Teklif Oluştur"},{id:"cöncept",icon:"&#127912;",label:"Konsept Oner"},{id:"chat",icon:"&#128172;",label:"Genel Asistan"}];
   const send=async()=>{
     if(!input.trim()||loading)return;
     const txt=input.trim();setInput("");
