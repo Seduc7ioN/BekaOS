@@ -1116,17 +1116,15 @@ function GalleryPage({events,gallery,setGallery,company,addNotif}) {
     let uploaded=0;
     for(const file of files){
       try{
-        // Dosyayı base64'e çevir
-        const reader=new FileReader();
-        const dataUrl=await new Promise((resolve)=>{
-          reader.onload=()=>resolve(reader.result);
-          reader.readAsDataURL(file);
-        });
-        // Supabase'e kaydet
+        const ext=file.name.split('.').pop()||'jpg';
+        const path=`${activeEv.id}/${Date.now()}.${ext}`;
+        const {error:uploadErr}=await supabase.storage.from('gallery').upload(path,file,{upsert:false});
+        if(uploadErr){console.error('Storage upload error:',uploadErr);continue;}
+        const url=supabase.storage.from('gallery').getPublicUrl(path).data.publicUrl;
         const {data:inserted,error}=await supabase.from('gallery').insert({
           company_id:company?.id,
           event_id:activeEv.id,
-          url:dataUrl,
+          url:url,
           approved:true
         }).select().single();
         if(!error&&inserted){
