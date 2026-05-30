@@ -410,7 +410,7 @@ function DashboardPage({events,tasks,setPage}) {
 }
 
 /* ── EVENTS ─────────────────────────────────────── */
-function EventsPage({events,setEvents}) {
+function EventsPage({events,setEvents,updateEvent,setPage}) {
   const [search,setSearch]=useState("");
   const [filter,setFilter]=useState("Tümü");
   const [statusF,setStatusF]=useState("Tümü");
@@ -1298,7 +1298,7 @@ function PaymentsPage({events}) {
 
 
 /* ── RESERVATION ────────────────────────────────── */
-function ReservationPage({events,setEvents,prefillDate,setPrefillDate}) {
+function ReservationPage({events,addEvent,prefillDate,setPrefillDate}) {
   const [step,setStep]=useState(prefillDate?2:1);
   const [form,setForm]=useState({
     type:prefillDate?.type||"",
@@ -1477,9 +1477,9 @@ function ReservationPage({events,setEvents,prefillDate,setPrefillDate}) {
               Devam
             </button>
           ):(
-            <button onClick={()=>{
-              const newEv={id:Date.now(),client:form.name||"Yeni Müşteri",type:form.type||"Nişan",date:form.date||"—",time:form.time||"—",location:form.location||"—",guests:parseInt(form.guests)||0,budget:total,paid:0,payment:"Bekliyor",status:"pending",tasks:3,done:0,phone:form.phone||""};
-              setEvents(prev=>[...prev,newEv]);
+            <button onClick={async()=>{
+              const newEv={client:form.name||"Yeni Müşteri",type:form.type||"Nişan",date:form.date||"—",time:form.time||"—",location:form.location||"—",guests:parseInt(form.guests)||0,budget:total,paid:0,payment:"Bekliyor",status:"pending",tasks:3,done:0,phone:form.phone||""};
+              await addEvent(newEv);
               setDone(true);
             }} disabled={!kvkk}
               className="px-6 py-2 rounded-xl text-xs font-semibold text-white disabled:opacity-40 disabled:cursor-not-allowed" style={{background:kvkk?"linear-gradient(135deg,#34d399,#059669)":"linear-gradient(135deg,#374151,#4b5563)"}}>
@@ -2303,13 +2303,13 @@ function Dashboard() {
 
   const PAGES={
     dashboard:<DashboardPage events={events} tasks={tasks} setPage={navigate}/>,
-    events:<EventsPage events={events} setEvents={setEvents}/>,
+    events:<EventsPage events={events} setEvents={setEvents} updateEvent={updateEvent} setPage={navigate}/>,
     calendar:<CalendarPage events={events} setPage={navigate} setPrefillDate={setPrefillDate}/>,
     tasks:<TasksPage tasks={tasks} setTasks={setTasks} events={events}/>,
     invitations:<InvitationsPage events={events} guests={initGuests}/>,
     gallery:<GalleryPage events={events} gallery={gallery} setGallery={setGallery}/>,
     payments:<PaymentsPage events={events}/>,
-    reservation:<ReservationPage events={events} setEvents={setEvents} prefillDate={prefillDate} setPrefillDate={setPrefillDate}/>,
+    reservation:<ReservationPage events={events} addEvent={addEvent} prefillDate={prefillDate} setPrefillDate={setPrefillDate}/>,
     whatsapp:<WhatsAppPage events={events}/>,
     staff:<StaffPage events={events} tasks={tasks}/>,
     crm:<CRMPage events={events}/>,
