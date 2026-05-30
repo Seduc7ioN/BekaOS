@@ -116,7 +116,7 @@ const getHolidaysForYear=(year)=>{
     { month:3,  day:23, name:"Ulusal Egemenlik ve Çocuk Bayramı", icon:"🇹🇷", type:"resmi" },
     { month:4,  day:1,  name:"Emek ve Dayanışma Günü",          icon:"⚒️",  type:"resmi" },
     { month:4,  day:19, name:"Atatürk'ü Anma, Gençlik ve Spor Bayramı", icon:"🏃", type:"resmi" },
-    { month:5,  day:15, name:"Demokrasi ve Millî Birlik Günü",  icon:"🇹🇷", type:"resmi" },
+    { month:6,  day:15, name:"Demokrasi ve Millî Birlik Günü",  icon:"🇹🇷", type:"resmi" },
     { month:7,  day:30, name:"Zafer Bayramı",                   icon:"🏆", type:"resmi" },
     { month:9,  day:29, name:"Cumhuriyet Bayramı",              icon:"🇹🇷", type:"resmi" },
     { month:10, day:10, name:"Atatürk'ü Anma Günü",            icon:"🕯️",  type:"ozel" },
