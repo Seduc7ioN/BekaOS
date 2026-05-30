@@ -325,12 +325,14 @@ function Dashboard({events,tasks,setPage}) {
               const year=2026;
               const isToday=day===now.getDate()&&month===now.getMonth()&&year===now.getFullYear();
               const hasEv=events.some(e=>parseInt(e.date.split("-")[2])===day);
+              const holidays=getHoliday(month,day);
+              const hasHoliday=holidays.length>0;
               return (
                 <div key={day} onClick={()=>setPage("calendar")}
                   className="aspect-square flex items-center justify-center rounded-lg text-xs cursor-pointer hover:bg-white/5 relative transition-all select-none"
-                  style={{background:isToday?"rgba(192,132,252,0.25)":"transparent",color:isToday?"#c084fc":hasEv?"rgba(255,255,255,0.9)":"rgba(255,255,255,0.3)",fontWeight:isToday?"700":"400"}}>
+                  style={{background:hasHoliday?"rgba(251,191,36,0.15)":isToday?"rgba(192,132,252,0.25)":"transparent",color:hasHoliday?"#fbbf24":isToday?"#c084fc":hasEv?"rgba(255,255,255,0.9)":"rgba(255,255,255,0.3)",fontWeight:isToday||hasHoliday?"700":"400"}}>
                   {day}
-                  {hasEv&&!isToday&&<span className="absolute bottom-0.5 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-purple-400"/>}
+                  {hasEv&&!isToday&&!hasHoliday&&<span className="absolute bottom-0.5 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-purple-400"/>}
                 </div>
               );
             })}
