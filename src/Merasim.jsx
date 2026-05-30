@@ -268,6 +268,9 @@ function GlobalSearch({events,setPage,onClose}) {
 
 /* ── DASHBOARD ─────────────────────────────────── */
 function DashboardPage({events,tasks,setPage}) {
+  const [dashMonth,setDashMonth]=useState(new Date().getMonth());
+  const [dashYear,setDashYear]=useState(new Date().getFullYear());
+  const dashOffset=new Date(dashYear,dashMonth,1).getDay()===0?6:new Date(dashYear,dashMonth,1).getDay()-1;
   const total=events.length, conf=events.filter(e=>e.status==="confirmed").length;
   const pendPay=events.filter(e=>e.payment==="bekliyor").length;
   const guests=events.reduce((s,e)=>s+e.guests,0);
@@ -2234,9 +2237,6 @@ function Dashboard() {
   const [notifOpen,setNotifOpen]=useState(false);
   const [searchOpen,setSearchOpen]=useState(false);
   const [prefillDate,setPrefillDate]=useState(null);
-  const [dashMonth,setDashMonth]=useState(new Date().getMonth());
-  const [dashYear,setDashYear]=useState(new Date().getFullYear());
-  const dashOffset=new Date(dashYear,dashMonth,1).getDay()===0?6:new Date(dashYear,dashMonth,1).getDay()-1;
   const unread=notifs.filter(n=>!n.read).length;
 
   // Detect mobile
