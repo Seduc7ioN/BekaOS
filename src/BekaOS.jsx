@@ -264,7 +264,7 @@ function Dashboard({events,tasks,setPage}) {
         <StatBox label="Tahsilat"       value={`${(revenue/1000).toFixed(0)}k`} sub="Bu ay" icon="&#9677;" color="#f472b6"/>
       </div>
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-        <Çard className="lg:col-span-2 overflow-hidden">
+        <Card className="lg:col-span-2 overflow-hidden">
           <SectionHeader title="Yaklasan Etkinlikler" right={<button onClick={()=>setPage("events")} className="text-xs text-white/30 hover:text-white/60 transition-colors">Hepsi</button>}/>
           <div className="divide-y divide-white/5">
             {events.slice(0,5).map(ev=>(
@@ -289,8 +289,8 @@ function Dashboard({events,tasks,setPage}) {
               </div>
             ))}
           </div>
-        </Çard>
-        <Çard className="overflow-hidden">
+        </Card>
+        <Card className="overflow-hidden">
           <SectionHeader title="Acik Gorevler" right={<button onClick={()=>setPage("tasks")} className="text-xs text-white/30 hover:text-white/60 transition-colors">Hepsi</button>}/>
           <div className="divide-y divide-white/5">
             {openTasks.slice(0,6).map(t=>{
@@ -310,10 +310,10 @@ function Dashboard({events,tasks,setPage}) {
             })}
             {openTasks.length===0&&<div className="px-5 py-8 text-center text-xs text-white/20">Tüm görevler tamamlandı!</div>}
           </div>
-        </Çard>
+        </Card>
       </div>
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-        <Çard className="lg:col-span-2 p-5">
+        <Card className="lg:col-span-2 p-5">
           <h2 className="text-sm font-semibold text-white/70 mb-4">Haziran 2026</h2>
           <div className="grid grid-cols-7 gap-1 text-center mb-1">
             {DAY_NAMES.map(d=><div key={d} className="text-[10px] text-white/25 pb-1">{d}</div>)}
@@ -337,8 +337,8 @@ function Dashboard({events,tasks,setPage}) {
               );
             })}
           </div>
-        </Çard>
-        <Çard className="p-5">
+        </Card>
+        <Card className="p-5">
           <h2 className="text-sm font-semibold text-white/70 mb-4">Hizli Islemler</h2>
           <div className="space-y-2">
             {[{icon:"&#128203;",label:"Rezervasyon Al",page:"reservation"},{icon:"&#128140;",label:"Davetiye Olustur",page:"invitations"},{icon:"&#128248;",label:"Galeri & QR",page:"gallery"},{icon:"&#128179;",label:"Ödeme Takibi",page:"payments"},{icon:"&#128101;",label:"Müşteri CRM",page:"crm"},{icon:"\u2726",label:"AI Asistan",page:"ai"}].map((a,i)=>(
@@ -350,9 +350,9 @@ function Dashboard({events,tasks,setPage}) {
               </button>
             ))}
           </div>
-        </Çard>
+        </Card>
       </div>
-      <Çard className="p-5">
+      <Card className="p-5">
         <div className="flex items-center justify-between mb-5">
           <h2 className="text-sm font-semibold text-white/70">Aylık Gelir Dagilimi</h2>
           <span className="text-xs text-white/30">{(revenue/1000).toFixed(0)}k TL tahsilat</span>
@@ -376,7 +376,7 @@ function Dashboard({events,tasks,setPage}) {
             );
           })}
         </div>
-      </Çard>
+      </Card>
     </div>
   );
 }
@@ -423,7 +423,7 @@ function EventsPage({events,setEvents}) {
         </div>
         <span className="ml-auto text-xs text-white/25">{filtered.length} etkinlik</span>
       </div>
-      <Çard className="overflow-hidden">
+      <Card className="overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
@@ -468,7 +468,7 @@ function EventsPage({events,setEvents}) {
             </tbody>
           </table>
         </div>
-      </Çard>
+      </Card>
 
       <Drawer open={!!drawer} onClose={()=>setDrawer(null)} title="Etkinlik Detayi">
         {drawer&&(
@@ -539,7 +539,7 @@ function CalendarPage({events}) {
   const dayEvs=(day)=>events.filter(e=>{const d=new Date(e.date);return d.getFullYear()===year&&d.getMonth()===month&&d.getDate()===day;});
   return (
     <div className="space-y-4">
-      <Çard className="p-6">
+      <Card className="p-6">
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-3">
             <button onClick={prev} className="px-3 py-1.5 rounded-xl text-xs text-white/50 hover:text-white border border-white/8 hover:border-white/20 transition-colors">Onceki</button>
@@ -590,7 +590,7 @@ function CalendarPage({events}) {
             </div>
           ))}
         </div>
-      </Çard>
+      </Card>
       <Modal open={!!selected} onClose={()=>setSelected(null)} title={selected?`${selected.day} ${MONTH_NAMES[month]} ${year}`:""}>
         {selected&&selected.holidays&&selected.holidays.length>0&&(
           <div className="mb-4 space-y-2">
@@ -728,7 +728,7 @@ function InvitationsPage({events,guests}) {
   const evGuests=activeEv ? guests.filter(g=>g.eventId===activeEv.id) : [];
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-      <Çard className="overflow-hidden">
+      <Card className="overflow-hidden">
         <SectionHeader title="Etkinlikler"/>
         <div className="divide-y divide-white/5">
           {events.map(ev=>(
@@ -743,8 +743,8 @@ function InvitationsPage({events,guests}) {
             </div>
           ))}
         </div>
-      </Çard>
-      <Çard className="md:col-span-2 p-5 space-y-5 overflow-auto">
+      </Card>
+      <Card className="md:col-span-2 p-5 space-y-5 overflow-auto">
         <div className="flex items-start justify-between gap-4">
           <div>
             <h3 className="text-sm font-semibold text-white/85">{activeEv?.client}</h3>
@@ -810,7 +810,7 @@ function InvitationsPage({events,guests}) {
           <GlassBtn>Kopyala</GlassBtn>
           <GlassBtn>QR</GlassBtn>
         </div>
-      </Çard>
+      </Card>
       <Modal open={preview} onClose={()=>setPreview(false)} title="Davetiye Onizlemesi">
         <div className="flex justify-center">
           <div className="w-72 rounded-3xl overflow-hidden" style={{background:`linear-gradient(160deg,${th.dark} 0%,#0d0d18 100%)`,border:"1px solid rgba(192,132,252,0.2)"}}>
@@ -853,7 +853,7 @@ function GalleryPage({events,gallery,setGallery}) {
   const remove=(id)=>{setGallery(prev=>prev.filter(g=>g.id!==id));if(lightbox?.id===id)setLightbox(null);};
   return (
     <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-      <Çard className="overflow-hidden">
+      <Card className="overflow-hidden">
         <SectionHeader title="Etkinlikler"/>
         <div className="divide-y divide-white/5">
           {events.map(ev=>{
@@ -871,8 +871,8 @@ function GalleryPage({events,gallery,setGallery}) {
             );
           })}
         </div>
-      </Çard>
-      <Çard className="md:col-span-3 p-5">
+      </Card>
+      <Card className="md:col-span-3 p-5">
         <div className="flex items-center justify-between mb-4">
           <div>
             <h3 className="text-sm font-semibold text-white/85">{activeEv?.client}</h3>
@@ -921,7 +921,7 @@ function GalleryPage({events,gallery,setGallery}) {
             <div className="text-white/30 text-sm">Bu etkinlik için henuz medya yok</div>
           </div>
         )}
-      </Çard>
+      </Card>
       {lightbox&&(
         <div className="fixed inset-0 z-50 flex items-center justify-center" style={{background:"rgba(0,0,0,0.92)"}} onClick={()=>setLightbox(null)}>
           <div className="max-w-2xl w-full mx-4 rounded-2xl overflow-hidden" onClick={e=>e.stopPropagation()}>
@@ -951,7 +951,7 @@ function PaymentsPage({events}) {
         <StatBox label="Tahsilat"     value={`${(totalPaid/1000).toFixed(0)}k TL`} sub={`%${totalRev>0?((totalPaid/totalRev)*100).toFixed(0):0} tamamlandı`} icon="&#9689;" color="#34d399"/>
         <StatBox label="Bekleyen"     value={`${(totalRem/1000).toFixed(0)}k TL`} sub="Tahsilat bekliyor" icon="&#9680;" color="#fb923c"/>
       </div>
-      <Çard className="overflow-hidden">
+      <Card className="overflow-hidden">
         <SectionHeader title="Ödeme Detaylari"/>
         <div className="overflow-x-auto">
           <table className="w-full">
@@ -986,8 +986,8 @@ function PaymentsPage({events}) {
             </tbody>
           </table>
         </div>
-      </Çard>
-      <Çard className="p-5">
+      </Card>
+      <Card className="p-5">
         <h2 className="text-sm font-semibold text-white/70 mb-5">Tahsilat Oranlari</h2>
         <div className="space-y-3">
           {events.map(ev=>{
@@ -1009,7 +1009,7 @@ function PaymentsPage({events}) {
             );
           })}
         </div>
-      </Çard>
+      </Card>
     </div>
   );
 }
@@ -1061,7 +1061,7 @@ function ReservationPage() {
           </div>
         ))}
       </div>
-      <Çard className="p-6">
+      <Card className="p-6">
         {step===1&&(
           <div>
             <h3 className="text-sm font-semibold text-white/85 mb-5">Etkinlik Türünü Seçin</h3>
@@ -1185,7 +1185,7 @@ function ReservationPage() {
             </button>
           )}
         </div>
-      </Çard>
+      </Card>
     </div>
   );
 }
@@ -1208,7 +1208,7 @@ function WhatsAppPage({events}) {
     .replace(/\{tutar\}/g,(ev.budget-ev.paid).toLocaleString());
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-      <Çard className="overflow-hidden">
+      <Card className="overflow-hidden">
         <SectionHeader title="Sablonlar"/>
         <div className="divide-y divide-white/5">
           {WA_TEMPLATES.map(tmpl=>(
@@ -1225,8 +1225,8 @@ function WhatsAppPage({events}) {
             </div>
           ))}
         </div>
-      </Çard>
-      <Çard className="md:col-span-2 p-5 space-y-4">
+      </Card>
+      <Card className="md:col-span-2 p-5 space-y-4">
         <div className="flex items-start justify-between gap-4">
           <div>
             <h3 className="text-sm font-semibold text-white/85">{active?.icon} {active?.name}</h3>
@@ -1286,7 +1286,7 @@ function WhatsAppPage({events}) {
             </div>
           </div>
         )}
-      </Çard>
+      </Card>
       <Modal open={preview} onClose={()=>setPreview(false)} title="WhatsApp Onizlemesi">
         <div className="rounded-2xl overflow-hidden" style={{background:"#111b21"}}>
           <div className="p-4 flex items-center gap-3 border-b border-white/8">
@@ -1331,7 +1331,7 @@ function StaffPage({events}) {
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {staff.map(s=>(
-          <Çard key={s.id} className="p-5">
+          <Card key={s.id} className="p-5">
             <div className="flex items-start justify-between mb-4">
               <div className="flex items-center gap-3">
                 <div className="w-12 h-12 rounded-2xl flex items-center justify-center text-xl font-bold flex-shrink-0" style={{background:`linear-gradient(135deg,${s.color},${s.color}88)`}}>{s.avatar}</div>
@@ -1352,10 +1352,10 @@ function StaffPage({events}) {
               <button className="flex-1 py-1.5 rounded-xl text-[10px] text-white/50 border border-white/8 hover:border-white/20 transition-colors">Gorevler</button>
               <button onClick={()=>del(s.id)} className="py-1.5 px-2 rounded-xl text-[10px] text-rose-400/50 border border-rose-500/10 hover:border-rose-500/30 hover:text-rose-400 transition-colors">x</button>
             </div>
-          </Çard>
+          </Card>
         ))}
       </div>
-      <Çard className="overflow-hidden">
+      <Card className="overflow-hidden">
         <SectionHeader title="Etkinlik Atamalari"/>
         <div className="p-5 overflow-x-auto">
           <table className="w-full">
@@ -1378,7 +1378,7 @@ function StaffPage({events}) {
             </tbody>
           </table>
         </div>
-      </Çard>
+      </Card>
       <Modal open={addOpen} onClose={()=>setAddOpen(false)} title="Yeni Personel Ekle">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <FieldInput label="Ad Soyad" value={form.name} onChange={upd("name")} placeholder="Adi soyadi"/>
@@ -1408,7 +1408,7 @@ function CRMPage({events}) {
         <span className="text-xs text-white/30">{clients.length} musteri</span>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <Çard className="overflow-hidden">
+        <Card className="overflow-hidden">
           <SectionHeader title="Müşteriler"/>
           <div className="divide-y divide-white/5 max-h-[600px] overflow-auto">
             {clients.map(c=>(
@@ -1425,8 +1425,8 @@ function CRMPage({events}) {
               </div>
             ))}
           </div>
-        </Çard>
-        <Çard className="col-span-2 p-5">
+        </Card>
+        <Card className="col-span-2 p-5">
           {selected?(
             <>
               <div className="flex items-start gap-4 pb-5 border-b border-white/8 mb-5">
@@ -1482,7 +1482,7 @@ function CRMPage({events}) {
               <div className="text-white/30 text-sm">Detaylari gormek için bir musteri secin</div>
             </div>
           )}
-        </Çard>
+        </Card>
       </div>
     </div>
   );
@@ -1512,7 +1512,7 @@ function AnalyticsPage({events, tasks}) {
         <StatBox label="Ort. Butce"     value={`${(avgBudget/1000).toFixed(1)}k TL`}  sub="Etkinlik basi"    icon="&#9672;"   color="#f472b6"/>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <Çard className="p-5">
+        <Card className="p-5">
           <h2 className="text-sm font-semibold text-white/70 mb-5">Aylık Gelir (k TL)</h2>
           <div className="flex items-end gap-3 h-36">
             {monthlyData.map((d,i)=>(
@@ -1529,8 +1529,8 @@ function AnalyticsPage({events, tasks}) {
             <div className="flex items-center gap-1.5"><span className="w-3 h-1.5 rounded bg-emerald-400/50 inline-block"/><span className="text-[10px] text-white/35">Tahsilat</span></div>
             <div className="flex items-center gap-1.5"><span className="w-3 h-1.5 rounded bg-purple-400/40 inline-block"/><span className="text-[10px] text-white/35">Kalan</span></div>
           </div>
-        </Çard>
-        <Çard className="p-5">
+        </Card>
+        <Card className="p-5">
           <h2 className="text-sm font-semibold text-white/70 mb-5">Etkinlik Turu Dagilimi</h2>
           <div className="space-y-3">
             {byType.map(item=>(
@@ -1545,10 +1545,10 @@ function AnalyticsPage({events, tasks}) {
               </div>
             ))}
           </div>
-        </Çard>
+        </Card>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <Çard className="p-5">
+        <Card className="p-5">
           <h2 className="text-sm font-semibold text-white/70 mb-4">Ödeme Durumu</h2>
           <div className="space-y-3">
             {[{label:"Tam Odendi",count:events.filter(e=>e.payment==="tam").length,color:"#34d399"},{label:"Kapora Alindi",count:events.filter(e=>e.payment==="kapora").length,color:"#60a5fa"},{label:"Ödeme Bekliyor",count:events.filter(e=>e.payment==="bekliyor").length,color:"#f87171"}].map(s=>(
@@ -1561,8 +1561,8 @@ function AnalyticsPage({events, tasks}) {
               </div>
             ))}
           </div>
-        </Çard>
-        <Çard className="p-5">
+        </Card>
+        <Card className="p-5">
           <h2 className="text-sm font-semibold text-white/70 mb-4">Gorev Tamamlama</h2>
           <div className="flex items-center justify-center py-3">
             <div className="relative w-28 h-28">
@@ -1585,8 +1585,8 @@ function AnalyticsPage({events, tasks}) {
               </div>
             ))}
           </div>
-        </Çard>
-        <Çard className="p-5">
+        </Card>
+        <Card className="p-5">
           <h2 className="text-sm font-semibold text-white/70 mb-4">Toplam Misafir</h2>
           <div className="text-3xl font-bold text-white mb-1">{totalGuests.toLocaleString()}</div>
           <div className="text-xs text-white/35 mb-4">Bu ay - {events.length} etkinlik</div>
@@ -1600,7 +1600,7 @@ function AnalyticsPage({events, tasks}) {
               </div>
             ))}
           </div>
-        </Çard>
+        </Card>
       </div>
     </div>
   );
@@ -1655,7 +1655,7 @@ function AIPage() {
           </button>
         ))}
       </div>
-      <Çard className="flex flex-col" style={{height:"58vh"}}>
+      <Card className="flex flex-col" style={{height:"58vh"}}>
         <div className="flex-1 overflow-auto p-5 space-y-4">
           {msgs.map((msg,i)=>(
             <div key={i} className={`flex ${msg.role==="user"?"justify-end":"justify-start"}`}>
@@ -1689,7 +1689,7 @@ function AIPage() {
             &#8593;
           </button>
         </div>
-      </Çard>
+      </Card>
     </div>
   );
 }
@@ -1703,7 +1703,7 @@ function SettingsPage() {
   const save=()=>{setSaved(true);setTimeout(()=>setSaved(false),2500);};
   return (
     <div className="max-w-2xl space-y-5">
-      <Çard className="p-5 space-y-4">
+      <Card className="p-5 space-y-4">
         <h2 className="text-sm font-semibold text-white/80">Firma Profili</h2>
         <div className="grid grid-cols-2 gap-4">
           <FieldInput label="Firma Adi"          value={profile.company}  onChange={upd("company")}  placeholder="Firma adi"/>
@@ -1713,8 +1713,8 @@ function SettingsPage() {
           <FieldInput label="Sehir"               value={profile.city}     onChange={upd("city")}     placeholder="İstanbul"/>
           <FieldSelect label="Para Birimi"        value={profile.currency} onChange={upd("currency")} options={["TRY","USD","EUR"]}/>
         </div>
-      </Çard>
-      <Çard className="p-5">
+      </Card>
+      <Card className="p-5">
         <h2 className="text-sm font-semibold text-white/80 mb-4">Bildirim Tercihleri</h2>
         <div className="space-y-3">
           {[{k:"rsvp",l:"RSVP Bildirimleri",s:"Yeni davetiye cevabı"},{k:"payment",l:"Ödeme Hatırlatmalari",s:"Bekleyen odemelerde"},{k:"task",l:"Gorev Güncellemeleri",s:"Durum değişiminde"},{k:"gallery",l:"Galeri Yüklemeleri",s:"Yeni fotoğraf yüklendiğinde"},{k:"reminder",l:"Etkinlik Hatırlatmalari",s:"24 saat önceden"}].map(n=>(
@@ -1730,8 +1730,8 @@ function SettingsPage() {
             </div>
           ))}
         </div>
-      </Çard>
-      <Çard className="p-5">
+      </Card>
+      <Card className="p-5">
         <h2 className="text-sm font-semibold text-white/80 mb-4">Sistem Durumu</h2>
         <div className="space-y-2">
           {[["WhatsApp Business API","0212 555 0001 bagli"],["QR Sistemi","Dynamic - Token bazlı"],["Cloudflare R2","2.4 GB / 10 GB"],["Otomatik Yedekleme","Günlük - Son: Bugun 03:00"],["SSL Sertifikasi","beka.io - Geçerli"]].map(([k,v])=>(
@@ -1744,7 +1744,7 @@ function SettingsPage() {
             </div>
           ))}
         </div>
-      </Çard>
+      </Card>
       <div className="flex justify-end">
         <button onClick={save} className="px-6 py-2.5 rounded-xl text-sm font-semibold text-white transition-all hover:opacity-90"
           style={{background:saved?"linear-gradient(135deg,#34d399,#059669)":"linear-gradient(135deg,#c084fc,#818cf8)"}}>
