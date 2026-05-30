@@ -2200,27 +2200,22 @@ const NAV=[
 ];
 
 function MerasimApp() {
+  // URL'yi同步 olarak kontrol et — önce public sayfalar
+  const initPath = typeof window !== 'undefined' ? window.location.pathname : '/';
+  const initInvite = initPath.match(/^\/i\/(.+)/);
+  const initGallery = initPath.match(/^\/g\/(.+)/);
+
   const { user, loading } = useAuth()
-  const [route, setRoute] = useState('landing') // landing | auth | dashboard | public-invite | public-gallery
-  const [publicId, setPublicId] = useState(null)
+  const [route, setRoute] = useState(
+    initInvite ? 'public-invite' : initGallery ? 'public-gallery' : 'landing'
+  )
+  const [publicId, setPublicId] = useState(
+    initInvite ? initInvite[1] : initGallery ? initGallery[1] : null
+  )
 
-  // URL bazlı routing — davetiye ve galeri linkleri için
+  // Kullanıcı giriş yaptığında otomatik dashboard'a yönlendir (public sayfalar hariç)
   useEffect(() => {
-    const path = window.location.pathname;
-    const matchInvite = path.match(/^\/i\/(.+)/);
-    const matchGallery = path.match(/^\/g\/(.+)/);
-    if (matchInvite) {
-      setPublicId(matchInvite[1]);
-      setRoute('public-invite');
-    } else if (matchGallery) {
-      setPublicId(matchGallery[1]);
-      setRoute('public-gallery');
-    }
-  }, []);
-
-  // Kullanıcı giriş yaptığında otomatik dashboard'a yönlendir
-  useEffect(() => {
-    if (user && (route === 'auth' || route === 'landing')) {
+    if (user && route !== 'public-invite' && route !== 'public-gallery' && (route === 'auth' || route === 'landing')) {
       setRoute('dashboard')
     }
   }, [user, route])
