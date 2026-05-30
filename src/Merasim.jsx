@@ -342,23 +342,26 @@ function DashboardPage({events,tasks,setPage}) {
       </div>
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         <Card className="lg:col-span-2 p-5">
-          <h2 className="text-sm font-semibold text-white/70 mb-4">Haziran 2026</h2>
+          <div className="flex items-center justify-between mb-4">
+            <button onClick={()=>{setDashMonth(m=>{if(m===0){setDashYear(y=>y-1);return 11;}return m-1;});}} className="px-2 py-1 rounded-lg text-xs text-white/40 hover:text-white border border-white/5 hover:border-white/15 transition-colors">‹</button>
+            <h2 className="text-sm font-semibold text-white/70">{MONTH_NAMES[dashMonth]} {dashYear}</h2>
+            <button onClick={()=>{setDashMonth(m=>{if(m===11){setDashYear(y=>y+1);return 0;}return m+1;});}} className="px-2 py-1 rounded-lg text-xs text-white/40 hover:text-white border border-white/5 hover:border-white/15 transition-colors">›</button>
+          </div>
           <div className="grid grid-cols-7 gap-1 text-center mb-1">
             {DAY_NAMES.map(d=><div key={d} className="text-[10px] text-white/35 pb-1">{d}</div>)}
           </div>
           <div className="grid grid-cols-7 gap-1">
-            {Array.from({length:30},(_,i)=>i+1).map(day=>{
+            {Array.from({length:new Date(dashYear,dashMonth+1,0).getDate()+dashOffset},(_,i)=>i<dashOffset?null:i-dashOffset+1).map((day,i)=>{
+              if(!day)return<div key={`e${i}`} style={{opacity:0.3}}/>;
               const now=new Date();
-              const month=5; // Haziran (0-indexed)
-              const year=2026;
-              const isToday=day===now.getDate()&&month===now.getMonth()&&year===now.getFullYear();
-              const hasEv=events.some(e=>parseInt(e.date.split("-")[2])===day);
-              const holidays=getHoliday(year,month,day);
+              const isToday=day===now.getDate()&&dashMonth===now.getMonth()&&dashYear===now.getFullYear();
+              const hasEv=events.some(e=>{const d=new Date(e.date);return d.getFullYear()===dashYear&&d.getMonth()===dashMonth&&d.getDate()===day;});
+              const holidays=getHoliday(dashYear,dashMonth,day);
               const hasHoliday=holidays.length>0;
               return (
                 <div key={day} onClick={()=>setPage("calendar")}
-                  className="aspect-square flex items-center justify-center rounded-lg text-xs cursor-pointer hover:bg-white/3 relative transition-all select-none"
-                  style={{background:hasHoliday?"rgba(251,191,36,0.15)":isToday?"rgba(139,92,246,0.25)":"transparent",color:hasHoliday?"#fbbf24":isToday?"#8b5cf6":hasEv?"rgba(255,255,255,0.9)":"rgba(255,255,255,0.3)",fontWeight:isToday||hasHoliday?"700":"400"}}>
+                  className="aspect-square flex items-center justify-center rounded-lg text-xs cursor-pointer hover:bg-white/5 relative transition-all select-none"
+                  style={{background:hasHoliday?"rgba(251,191,36,0.12)":isToday?"rgba(139,92,246,0.2)":"transparent",color:hasHoliday?"#fbbf24":isToday?"#8b5cf6":hasEv?"rgba(255,255,255,0.85)":"rgba(255,255,255,0.3)",fontWeight:isToday||hasHoliday?"700":"400"}}>
                   {day}
                   {hasEv&&!isToday&&!hasHoliday&&<span className="absolute bottom-0.5 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-purple-400"/>}
                 </div>
@@ -2231,6 +2234,9 @@ function Dashboard() {
   const [notifOpen,setNotifOpen]=useState(false);
   const [searchOpen,setSearchOpen]=useState(false);
   const [prefillDate,setPrefillDate]=useState(null);
+  const [dashMonth,setDashMonth]=useState(new Date().getMonth());
+  const [dashYear,setDashYear]=useState(new Date().getFullYear());
+  const dashOffset=new Date(dashYear,dashMonth,1).getDay()===0?6:new Date(dashYear,dashMonth,1).getDay()-1;
   const unread=notifs.filter(n=>!n.read).length;
 
   // Detect mobile
