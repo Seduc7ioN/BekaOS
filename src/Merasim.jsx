@@ -840,7 +840,7 @@ function InvitationsPage({events,guests}) {
     {name:"Mor Dus",from:"#6a1b9a",to:"#ab47bc",dark:"#0d0018"},
   ];
   const th=themes[themeIdx];
-  const evGuests=activeEv ? guests.filter(g=>g.eventId===activeEv.id) : [];
+  const evGuests=activeEv ? guests.filter(g=>g.event_id===activeEv.id) : [];
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
       <Card className="overflow-hidden">
@@ -1053,20 +1053,39 @@ merasim.app`}
 
 
 /* ── GALLERY ────────────────────────────────────── */
-function GalleryPage({events,gallery,setGallery}) {
-  const [activeEv,setActiveEv]=useState(events[2]);
+function GalleryPage({events,gallery,setGallery,company}) {
+  const [activeEv,setActiveEv]=useState(events[0]);
   const [lightbox,setLightbox]=useState(null);
   const [galleryQr,setGalleryQr]=useState(false);
-  const photos=gallery.filter(g=>g.eventId===activeEv?.id);
+  const [uploading,setUploading]=useState(false);
+  const photos=gallery.filter(g=>g.event_id===activeEv?.id);
   const approve=(id)=>setGallery(prev=>prev.map(g=>g.id===id?{...g,approved:true}:g));
   const remove=(id)=>{setGallery(prev=>prev.filter(g=>g.id!==id));if(lightbox?.id===id)setLightbox(null);};
+
+  const handleUpload=async(e)=>{
+    const files=Array.from(e.target.files);
+    if(!files.length||!activeEv?.id||!company?.id)return;
+    setUploading(true);
+    for(const file of files){
+      const ext=file.name.split('.').pop();
+      const path=`${company.id}/${activeEv.id}/${Date.now()}.${ext}`;
+      const {error}=await supabase.storage.from('gallery').upload(path,file);
+      if(!error){
+        const url=supabase.storage.from('gallery').getPublicUrl(path).data.publicUrl;
+        await supabase.from('gallery').insert({company_id:company.id,event_id:activeEv.id,url,approved:false});
+        setGallery(prev=>[...prev,{id:Date.now(),event_id:activeEv.id,url,approved:false}]);
+      }
+    }
+    setUploading(false);
+    e.target.value='';
+  };
   return (
     <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
       <Card className="overflow-hidden">
         <SectionHeader title="Etkinlikler"/>
         <div className="divide-y divide-white/5">
           {events.map(ev=>{
-            const cnt=gallery.filter(g=>g.eventId===ev.id);
+            const cnt=gallery.filter(g=>g.event_id===ev.id);
             const pend=cnt.filter(g=>!g.approved).length;
             return (
               <div key={ev.id} onClick={()=>setActiveEv(ev)}
@@ -1090,7 +1109,7 @@ function GalleryPage({events,gallery,setGallery}) {
           <div className="flex gap-2">
             <GlassBtn onClick={()=>setGalleryQr(true)}>QR İndir</GlassBtn>
             <GlassBtn>ZIP</GlassBtn>
-            <button onClick={()=>document.getElementById('gallery-upload-input')?.click()} className="px-3 py-2 rounded-xl text-xs text-purple-300 border border-purple-500/25 hover:bg-purple-500/10 transition-colors">+ Yükle</button>
+            <button onClick={()=>document.getElementById('gallery-upload-input')?.click()} disabled={uploading} className="px-3 py-2 rounded-xl text-xs text-purple-300 border border-purple-500/25 hover:bg-purple-500/10 transition-colors disabled:opacity-40">{uploading?"Yükleniyor...":"+ Yükle"}</button>
           </div>
         </div>
         <div className="grid grid-cols-3 gap-3 mb-4">
@@ -1122,7 +1141,7 @@ function GalleryPage({events,gallery,setGallery}) {
               <span className="text-2xl text-white/30 mb-1">+</span>
               <span className="text-[10px] text-white/35">Yukle</span>
             </div>
-            <input type="file" id="gallery-upload-input" accept="image/*" multiple className="hidden" onChange={(e)=>{const files=Array.from(e.target.files);const newPhotos=files.map((f,i)=>({id:Date.now()+i,eventId:activeEv?.id,url:URL.createObjectURL(f),approved:false}));setGallery(p=>[...p,...newPhotos]);e.target.value='';}}/>
+            <input type="file" id="gallery-upload-input" accept="image/*" multiple className="hidden" onChange={handleUpload}/>
           </div>
         ):(
           <div className="text-center py-16 border-2 border-dashed border-white/3 rounded-2xl">
@@ -2310,9 +2329,9 @@ function Dashboard() {
       const diffDays=Math.floor((now-eventDate)/(1000*60*60*24));
       if(diffDays>=30){
         // Galeri fotoğraflarını sil
-        const photosBefore=gallery.filter(g=>g.eventId===ev.id).length;
+        const photosBefore=gallery.filter(g=>g.event_id===ev.id).length;
         if(photosBefore>0){
-          setGallery(prev=>prev.filter(g=>g.eventId!==ev.id));
+          setGallery(prev=>prev.filter(g=>g.event_id!==ev.id));
         }
         // Teşekkür bildirimi ekle (eğer daha önce eklenmemişse)
         setNotifs(prev=>{
@@ -2336,7 +2355,7 @@ function Dashboard() {
     calendar:<CalendarPage events={events} setPage={navigate} setPrefillDate={setPrefillDate}/>,
     tasks:<TasksPage tasks={tasks} setTasks={setTasks} events={events}/>,
     invitations:<InvitationsPage events={events} guests={initGuests}/>,
-    gallery:<GalleryPage events={events} gallery={gallery} setGallery={setGallery}/>,
+    gallery:<GalleryPage events={events} gallery={gallery} setGallery={setGallery} company={company}/>,
     payments:<PaymentsPage events={events}/>,
     reservation:<ReservationPage events={events} addEvent={addEvent} prefillDate={prefillDate} setPrefillDate={setPrefillDate}/>,
     whatsapp:<WhatsAppPage events={events}/>,
