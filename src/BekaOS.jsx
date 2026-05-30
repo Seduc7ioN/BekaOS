@@ -144,12 +144,8 @@ function Badge({ children, color="purple", className="" }) {
 function Card({children,className="",onClick}) {
   return <div onClick={onClick} className={`rounded-2xl border border-white/[0.06] backdrop-blur-xl ${onClick?"cursor-pointer hover:border-white/[0.1] transition-all duration-300":""} ${className}`} style={{background:"rgba(255,255,255,0.03)",boxShadow:"0 4px 30px rgba(0,0,0,0.1)"}}>{children}</div>;
 }
-  return <div onClick={onClick} className={`rounded-2xl border border-white/3 ${onClick?"cursor-pointer":""} ${className}`} style={{background:"rgba(255,255,255,0.025)"}}>{children}</div>;
-}
 function GlassBtn({children,onClick,className="",disabled=false}) {
   return <button onClick={onClick} disabled={disabled} className={`px-3 py-2 rounded-xl text-xs font-medium text-white/50 border border-white/[0.06] hover:border-white/[0.12] hover:text-white/80 transition-all duration-300 backdrop-blur-sm disabled:opacity-30 ${className}`}>{children}</button>;
-}
-  return <button onClick={onClick} disabled={disabled} className={`px-3 py-2 rounded-xl text-xs font-medium text-white/50 border border-white/3 hover:border-white/25 hover:text-white/80 transition-all disabled:opacity-30 ${className}`}>{children}</button>;
 }
 function SectionHeader({title,right}) {
   return (
