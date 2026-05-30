@@ -13,6 +13,8 @@ import PublicInvitePage from "./pages/PublicInvite";
 import PublicGalleryPage from "./pages/PublicGallery";
 import { useAuth, useData } from "./lib/AuthContext";
 import { supabase } from "./lib/supabase";
+import JSZip from "jszip";
+import { saveAs } from "file-saver";
 
 const initEvents = [
   { id:1, type:"Nişan",            client:"Ayşe & Mehmet",  date:"2026-06-02", time:"18:00", guests:80,  status:"confirmed", payment:"kapora",  location:"Bahçelievler Salonu", tasks:12, done:8,  budget:15000, paid:5000,  phone:"0532 111 2233", notes:"Kırmızı & altın tema, canlı müzik." },
@@ -867,7 +869,17 @@ function InvitationsPage({events,guests,updateEvent}) {
           </div>
           <div className="flex gap-2 flex-shrink-0">
             <GlassBtn onClick={()=>setPreview(true)}>Önizle</GlassBtn>
-            <button className="px-3 py-2 rounded-xl text-xs font-medium text-white" style={{background:"linear-gradient(135deg,#8b5cf6,#6366f1)"}}>Olustur & Paylas</button>
+            <button onClick={()=>{
+  const url=`https://merasim.app/i/${activeEv?.id}`;
+  navigator.clipboard?.writeText(url);
+  const phone=(activeEv?.phone||"").replace(/\D/g,"");
+  if(phone){
+    const waPhone=phone.startsWith("0")?"90"+phone.slice(1):phone;
+    window.open(`https://wa.me/${waPhone}?text=${encodeURIComponent(activeEv?.client+" davetiyesi: "+url)}`,"_blank");
+  }else{
+    alert("Davetiye linki kopyalandı: "+url);
+  }
+}} className="px-3 py-2 rounded-xl text-xs font-medium text-white" style={{background:"linear-gradient(135deg,#8b5cf6,#6366f1)"}}>Oluştur & Paylaş</button>
           </div>
         </div>
         <div className="space-y-4">
@@ -1075,20 +1087,28 @@ function GalleryPage({events,gallery,setGallery,company}) {
 
   const handleUpload=async(e)=>{
     const files=Array.from(e.target.files);
-    if(!files.length||!activeEv?.id||!company?.id)return;
+    if(!files.length)return;
+    if(!activeEv?.id){alert("Lütfen önce bir etkinlik seçin.");return;}
     setUploading(true);
+    let uploaded=0;
     for(const file of files){
-      const ext=file.name.split('.').pop();
-      const path=`${company.id}/${activeEv.id}/${Date.now()}.${ext}`;
-      const {error}=await supabase.storage.from('gallery').upload(path,file);
-      if(!error){
+      try{
+        const ext=file.name.split('.').pop()||'jpg';
+        const path=`public/${activeEv.id}/${Date.now()}_${Math.random().toString(36).slice(2,6)}.${ext}`;
+        const {error:uploadErr}=await supabase.storage.from('gallery').upload(path,file);
+        if(uploadErr){
+          console.error('Upload error:',uploadErr);
+          continue;
+        }
         const url=supabase.storage.from('gallery').getPublicUrl(path).data.publicUrl;
-        await supabase.from('gallery').insert({company_id:company.id,event_id:activeEv.id,url,approved:false});
-        setGallery(prev=>[...prev,{id:Date.now(),event_id:activeEv.id,url,approved:false}]);
-      }
+        const {data:inserted}=await supabase.from('gallery').insert({company_id:company?.id,event_id:activeEv.id,url,approved:true}).select().single();
+        if(inserted)setGallery(prev=>[...prev,inserted]);
+        uploaded++;
+      }catch(err){console.error('Error:',err);}
     }
     setUploading(false);
     e.target.value='';
+    if(uploaded>0)alert(`${uploaded} fotoğraf yüklendi!`);
   };
   return (
     <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
@@ -1119,7 +1139,20 @@ function GalleryPage({events,gallery,setGallery,company}) {
           </div>
           <div className="flex gap-2">
             <GlassBtn onClick={()=>setGalleryQr(true)}>QR İndir</GlassBtn>
-            <GlassBtn>ZIP</GlassBtn>
+            <GlassBtn onClick={async()=>{
+              if(!photos.length){alert("İndirilecek fotoğraf yok.");return;}
+              const zip=new JSZip();
+              const folder=zip.folder(`${activeEv?.client||'galeri'}-fotograflar`);
+              for(let i=0;i<photos.length;i++){
+                try{
+                  const res=await fetch(photos[i].url);
+                  const blob=await res.blob();
+                  folder.file(`foto-${i+1}.jpg`,blob);
+                }catch(err){console.error(err);}
+              }
+              const content=await zip.generateAsync({type:"blob"});
+              saveAs(content,`${activeEv?.client||'galeri'}-fotograflar.zip`);
+            }}>ZIP</GlassBtn>
             <button onClick={()=>document.getElementById('gallery-upload-input')?.click()} disabled={uploading} className="px-3 py-2 rounded-xl text-xs text-purple-300 border border-purple-500/25 hover:bg-purple-500/10 transition-colors disabled:opacity-40">{uploading?"Yükleniyor...":"+ Yükle"}</button>
           </div>
         </div>
