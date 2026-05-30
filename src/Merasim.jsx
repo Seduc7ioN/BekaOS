@@ -2192,6 +2192,14 @@ function MerasimApp() {
   const { user, loading } = useAuth()
   const [route, setRoute] = useState('landing') // landing | auth | dashboard
 
+  // URL bazlı routing — davetiye ve galeri linkleri için
+  useEffect(() => {
+    const path = window.location.pathname;
+    if (path.startsWith('/i/') || path.startsWith('/g/')) {
+      setRoute('dashboard');
+    }
+  }, []);
+
   // Kullanıcı giriş yaptığında otomatik dashboard'a yönlendir
   useEffect(() => {
     if (user && (route === 'auth' || route === 'landing')) {
