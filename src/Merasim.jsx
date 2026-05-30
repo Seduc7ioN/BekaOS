@@ -1093,18 +1093,24 @@ function GalleryPage({events,gallery,setGallery,company}) {
     let uploaded=0;
     for(const file of files){
       try{
-        const ext=file.name.split('.').pop()||'jpg';
-        const path=`public/${activeEv.id}/${Date.now()}_${Math.random().toString(36).slice(2,6)}.${ext}`;
-        const {error:uploadErr}=await supabase.storage.from('gallery').upload(path,file);
-        if(uploadErr){
-          console.error('Upload error:',uploadErr);
-          continue;
+        // Dosyayı base64'e çevir
+        const reader=new FileReader();
+        const dataUrl=await new Promise((resolve)=>{
+          reader.onload=()=>resolve(reader.result);
+          reader.readAsDataURL(file);
+        });
+        // Supabase'e kaydet
+        const {data:inserted,error}=await supabase.from('gallery').insert({
+          company_id:company?.id,
+          event_id:activeEv.id,
+          url:dataUrl,
+          approved:true
+        }).select().single();
+        if(!error&&inserted){
+          setGallery(prev=>[...prev,inserted]);
+          uploaded++;
         }
-        const url=supabase.storage.from('gallery').getPublicUrl(path).data.publicUrl;
-        const {data:inserted}=await supabase.from('gallery').insert({company_id:company?.id,event_id:activeEv.id,url,approved:true}).select().single();
-        if(inserted)setGallery(prev=>[...prev,inserted]);
-        uploaded++;
-      }catch(err){console.error('Error:',err);}
+      }catch(err){console.error('Upload error:',err);}
     }
     setUploading(false);
     e.target.value='';

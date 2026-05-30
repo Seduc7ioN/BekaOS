@@ -3,54 +3,69 @@ import { supabase } from '../lib/supabase'
 
 const THEMES = {
   gold: {
-    bg: 'linear-gradient(135deg, #1a1505 0%, #0d0a03 50%, #1a1505 100%)',
-    accent: '#d4a853',
-    accentLight: 'rgba(212,168,83,0.15)',
-    border: 'rgba(212,168,83,0.25)',
-    text: '#f5e6c8',
-    textMuted: 'rgba(212,168,83,0.6)',
+    bg: '#1a1505',
+    cardBg: 'rgba(212,168,83,0.08)',
+    accent: '#fbbf24',
+    accentDark: '#d4a853',
+    border: 'rgba(251,191,36,0.3)',
+    text: '#fff',
+    textSub: '#fbbf24',
+    textMuted: 'rgba(255,255,255,0.7)',
+    btnBg: '#fbbf24',
+    btnText: '#1a1505',
     icon: '✨',
-    pattern: 'radial-gradient(ellipse at 30% 20%, rgba(212,168,83,0.08) 0%, transparent 50%)',
   },
   rose: {
-    bg: 'linear-gradient(135deg, #1a0a14 0%, #0d0508 50%, #1a0a14 100%)',
-    accent: '#e879a0',
-    accentLight: 'rgba(232,121,160,0.12)',
-    border: 'rgba(232,121,160,0.25)',
-    text: '#fce4ec',
-    textMuted: 'rgba(232,121,160,0.6)',
+    bg: '#1a0a14',
+    cardBg: 'rgba(232,121,160,0.08)',
+    accent: '#fb7185',
+    accentDark: '#e879a0',
+    border: 'rgba(251,113,133,0.3)',
+    text: '#fff',
+    textSub: '#fb7185',
+    textMuted: 'rgba(255,255,255,0.7)',
+    btnBg: '#fb7185',
+    btnText: '#1a0a14',
     icon: '🌹',
-    pattern: 'radial-gradient(ellipse at 70% 30%, rgba(232,121,160,0.08) 0%, transparent 50%)',
   },
   nature: {
-    bg: 'linear-gradient(135deg, #0a1a0d 0%, #050d07 50%, #0a1a0d 100%)',
-    accent: '#6ee7b7',
-    accentLight: 'rgba(110,231,183,0.12)',
-    border: 'rgba(110,231,183,0.25)',
-    text: '#d1fae5',
-    textMuted: 'rgba(110,231,183,0.6)',
+    bg: '#0a1a0d',
+    cardBg: 'rgba(110,231,183,0.08)',
+    accent: '#34d399',
+    accentDark: '#6ee7b7',
+    border: 'rgba(52,211,153,0.3)',
+    text: '#fff',
+    textSub: '#34d399',
+    textMuted: 'rgba(255,255,255,0.7)',
+    btnBg: '#34d399',
+    btnText: '#0a1a0d',
     icon: '🌿',
-    pattern: 'radial-gradient(ellipse at 50% 80%, rgba(110,231,183,0.08) 0%, transparent 50%)',
   },
   night: {
-    bg: 'linear-gradient(135deg, #0a0a1e 0%, #050510 50%, #0a0a1e 100%)',
+    bg: '#0a0a1e',
+    cardBg: 'rgba(139,92,246,0.1)',
     accent: '#a78bfa',
-    accentLight: 'rgba(167,139,250,0.12)',
-    border: 'rgba(167,139,250,0.25)',
-    text: '#ede9fe',
-    textMuted: 'rgba(167,139,250,0.6)',
+    accentDark: '#8b5cf6',
+    border: 'rgba(139,92,246,0.3)',
+    text: '#fff',
+    textSub: '#a78bfa',
+    textMuted: 'rgba(255,255,255,0.7)',
+    btnBg: '#a78bfa',
+    btnText: '#0a0a1e',
     icon: '🌙',
-    pattern: 'radial-gradient(ellipse at 80% 20%, rgba(167,139,250,0.08) 0%, transparent 50%)',
   },
   ocean: {
-    bg: 'linear-gradient(135deg, #0a1520 0%, #050a10 50%, #0a1520 100%)',
+    bg: '#0a1520',
+    cardBg: 'rgba(56,189,248,0.08)',
     accent: '#38bdf8',
-    accentLight: 'rgba(56,189,248,0.12)',
-    border: 'rgba(56,189,248,0.25)',
-    text: '#e0f2fe',
-    textMuted: 'rgba(56,189,248,0.6)',
+    accentDark: '#0ea5e9',
+    border: 'rgba(56,189,248,0.3)',
+    text: '#fff',
+    textSub: '#38bdf8',
+    textMuted: 'rgba(255,255,255,0.7)',
+    btnBg: '#38bdf8',
+    btnText: '#0a1520',
     icon: '🌊',
-    pattern: 'radial-gradient(ellipse at 20% 70%, rgba(56,189,248,0.08) 0%, transparent 50%)',
   },
 }
 
@@ -62,9 +77,9 @@ const EVENT_EMOJIS = {
 export default function PublicInvitePage({ eventId }) {
   const [event, setEvent] = useState(null)
   const [loading, setLoading] = useState(true)
-  const [step, setStep] = useState('invite') // invite | rsvp | thanks | gift
+  const [step, setStep] = useState('invite')
   const [rsvp, setRsvp] = useState(null)
-  const [guestForm, setGuestForm] = useState({ name: '', phone: '', response: '', food: 'Standart', plus: 0, children: 0 })
+  const [guestForm, setGuestForm] = useState({ name: '', phone: '', response: '', food: 'Standart', plus: 0 })
   const [copied, setCopied] = useState(false)
 
   useEffect(() => { loadEvent() }, [eventId])
@@ -85,7 +100,6 @@ export default function PublicInvitePage({ eventId }) {
       response: guestForm.response,
       food: guestForm.food,
       plus: parseInt(guestForm.plus) || 0,
-      children: parseInt(guestForm.children) || 0,
     })
     setRsvp(guestForm.response)
     setStep(guestForm.response === 'katılamıyor' ? 'gift' : 'thanks')
@@ -99,52 +113,42 @@ export default function PublicInvitePage({ eventId }) {
 
   if (loading) return (
     <div className="min-h-screen flex items-center justify-center" style={{ background: '#111827' }}>
-      <div className="flex flex-col items-center gap-3">
-        <div className="w-8 h-8 rounded-full border-2 border-white/10 border-t-purple-500 animate-spin"/>
-        <span className="text-xs text-white/30">Davetiye yükleniyor...</span>
-      </div>
+      <div className="w-10 h-10 rounded-full border-3 border-white/10 border-t-amber-500 animate-spin"/>
     </div>
   )
 
   if (!event) return (
-    <div className="min-h-screen flex items-center justify-center" style={{ background: '#111827' }}>
+    <div className="min-h-screen flex items-center justify-center p-6" style={{ background: '#111827' }}>
       <div className="text-center">
-        <div className="text-5xl mb-4">😔</div>
-        <div className="text-white/60 text-sm font-medium">Davetiye bulunamadı</div>
-        <div className="text-white/30 text-xs mt-1">Bu davetiye silinmiş veya link hatalı olabilir</div>
+        <div className="text-6xl mb-4">😔</div>
+        <div className="text-white text-lg font-semibold mb-1">Davetiye Bulunamadı</div>
+        <div className="text-white/50 text-sm">Bu davetiye silinmiş veya link hatalı olabilir</div>
       </div>
     </div>
   )
 
-  const theme = THEMES[event?.theme] || THEMES.gold
+  const t = THEMES[event?.theme] || THEMES.gold
   const emoji = EVENT_EMOJIS[event?.type] || '🎉'
   const clientName = event?.client || 'Etkinlik'
-  const evDate = event?.date || '—'
-  const evTime = event?.time || '—'
-  const evLocation = event?.location || '—'
-  const evGuests = event?.guests || 0
-  const evIban = event?.iban || ''
-  const evIbanName = event?.iban_name || ''
 
   // THANKS SCREEN
   if (step === 'thanks') return (
-    <div className="min-h-screen flex items-center justify-center p-6" style={{ background: theme.bg, backgroundImage: theme.pattern }}>
+    <div className="min-h-screen flex items-center justify-center p-6" style={{ background: t.bg }}>
       <div className="text-center max-w-sm w-full">
-        <div className="text-6xl mb-4 animate-bounce">🎉</div>
-        <h2 className="text-2xl font-bold mb-2" style={{ color: theme.text }}>Teşekkürler!</h2>
-        <p className="text-sm mb-6" style={{ color: theme.textMuted }}>
-          {guestForm.name.split(' ')[0]}, katılımınız kaydedildi.<br/>
-          {evDate} tarihinde görüşmek üzere!
+        <div className="text-7xl mb-4">🎉</div>
+        <h2 className="text-3xl font-bold mb-3" style={{ color: t.text }}>Teşekkürler!</h2>
+        <p className="text-base mb-6" style={{ color: t.textMuted }}>
+          {guestForm.name.split(' ')[0]}, katılımınız kaydedildi.
         </p>
-        <div className="p-4 rounded-2xl mb-6" style={{ background: theme.accentLight, border: `1px solid ${theme.border}` }}>
-          <div className="text-xs mb-1" style={{ color: theme.textMuted }}>Etkinlik Detayı</div>
-          <div className="text-sm font-medium" style={{ color: theme.text }}>📅 {evDate} • 🕐 {evTime}</div>
-          <div className="text-sm" style={{ color: theme.text }}>📍 {evLocation}</div>
+        <div className="p-5 rounded-2xl mb-6" style={{ background: t.cardBg, border: `2px solid ${t.border}` }}>
+          <div className="text-lg font-bold mb-2" style={{ color: t.text }}>{clientName}</div>
+          <div className="text-sm" style={{ color: t.textMuted }}>📅 {event?.date} • 🕐 {event?.time}</div>
+          <div className="text-sm" style={{ color: t.textMuted }}>📍 {event?.location}</div>
         </div>
         <button onClick={() => setStep('invite')}
-          className="text-xs px-6 py-2 rounded-xl transition-all hover:opacity-80"
-          style={{ background: theme.accentLight, color: theme.accent, border: `1px solid ${theme.border}` }}>
-          Davetiyeyi Tekrar Gör
+          className="px-8 py-3 rounded-xl text-sm font-semibold transition-all"
+          style={{ background: t.cardBg, color: t.accent, border: `2px solid ${t.border}` }}>
+          Davetiyeye Dön
         </button>
       </div>
     </div>
@@ -152,66 +156,63 @@ export default function PublicInvitePage({ eventId }) {
 
   // GIFT / IBAN SCREEN
   if (step === 'gift') return (
-    <div className="min-h-screen flex items-center justify-center p-6" style={{ background: theme.bg, backgroundImage: theme.pattern }}>
+    <div className="min-h-screen flex items-center justify-center p-6" style={{ background: t.bg }}>
       <div className="text-center max-w-sm w-full">
-        <div className="text-5xl mb-4">💝</div>
-        <h2 className="text-xl font-bold mb-2" style={{ color: theme.text }}>Hediye Gönder</h2>
-        <p className="text-sm mb-6" style={{ color: theme.textMuted }}>
-          Katılamıyorsanız ama {clientName.split(' ')[0]} için güzel bir dilek göndermek isterseniz:
+        <div className="text-6xl mb-4">💝</div>
+        <h2 className="text-2xl font-bold mb-2" style={{ color: t.text }}>Hediye Gönder</h2>
+        <p className="text-sm mb-6" style={{ color: t.textMuted }}>
+          Katılamıyorsanız {clientName.split(' ')[0]} için güzel bir dilek gönderebilirsiniz
         </p>
-        {evIban ? (
-          <div className="p-5 rounded-2xl mb-6 text-left" style={{ background: theme.accentLight, border: `1px solid ${theme.border}` }}>
-            <div className="text-[10px] uppercase tracking-wider mb-3" style={{ color: theme.textMuted }}>IBAN Bilgisi</div>
-            <div className="font-mono text-sm font-medium mb-1 break-all" style={{ color: theme.text }}>{evIban}</div>
-            {evIbanName && <div className="text-xs mb-3" style={{ color: theme.textMuted }}>{evIbanName}</div>}
+        {event?.iban ? (
+          <div className="p-5 rounded-2xl mb-6 text-left" style={{ background: t.cardBg, border: `2px solid ${t.border}` }}>
+            <div className="text-xs uppercase tracking-wider mb-3 font-bold" style={{ color: t.accent }}>IBAN Bilgisi</div>
+            <div className="font-mono text-lg font-bold mb-1" style={{ color: t.text }}>{event.iban}</div>
+            {event.iban_name && <div className="text-sm mb-4" style={{ color: t.textMuted }}>{event.iban_name}</div>}
             <button onClick={copyIban}
-              className="w-full py-2.5 rounded-xl text-xs font-medium transition-all hover:opacity-80"
-              style={{ background: theme.accent, color: '#000' }}>
+              className="w-full py-3 rounded-xl text-sm font-bold transition-all active:scale-95"
+              style={{ background: t.btnBg, color: t.btnText }}>
               {copied ? '✓ Kopyalandı!' : 'IBAN\'ı Kopyala'}
             </button>
           </div>
         ) : (
-          <div className="p-4 rounded-2xl mb-6" style={{ background: theme.accentLight, border: `1px solid ${theme.border}` }}>
-            <div className="text-sm" style={{ color: theme.textMuted }}>Hediye bilgisi henüz eklenmemiş</div>
+          <div className="p-5 rounded-2xl mb-6" style={{ background: t.cardBg, border: `2px solid ${t.border}` }}>
+            <div className="text-sm" style={{ color: t.textMuted }}>Hediye bilgisi henüz eklenmemiş</div>
           </div>
         )}
-        <div className="flex gap-3 justify-center">
-          <button onClick={() => setStep('invite')}
-            className="text-xs px-6 py-2 rounded-xl transition-all hover:opacity-80"
-            style={{ background: theme.accentLight, color: theme.accent, border: `1px solid ${theme.border}` }}>
-            Davetiyeye Dön
-          </button>
-        </div>
+        <button onClick={() => setStep('invite')}
+          className="px-8 py-3 rounded-xl text-sm font-semibold"
+          style={{ background: t.cardBg, color: t.accent, border: `2px solid ${t.border}` }}>
+          Davetiyeye Dön
+        </button>
       </div>
     </div>
   )
 
   // RSVP SCREEN
   if (step === 'rsvp') return (
-    <div className="min-h-screen flex items-center justify-center p-6" style={{ background: theme.bg, backgroundImage: theme.pattern }}>
+    <div className="min-h-screen flex items-center justify-center p-6" style={{ background: t.bg }}>
       <div className="w-full max-w-sm">
-        <button onClick={() => setStep('invite')} className="text-xs mb-6 flex items-center gap-1 transition-all hover:opacity-80" style={{ color: theme.textMuted }}>
+        <button onClick={() => setStep('invite')} className="text-sm mb-6 font-medium" style={{ color: t.accent }}>
           ← Davetiyeye Dön
         </button>
-        <h2 className="text-xl font-bold mb-1" style={{ color: theme.text }}>Cevabınız</h2>
-        <p className="text-sm mb-6" style={{ color: theme.textMuted }}>Lütfen katılım durumunuzu belirtin</p>
+        <h2 className="text-2xl font-bold mb-1" style={{ color: t.text }}>Cevabınız</h2>
+        <p className="text-sm mb-6" style={{ color: t.textMuted }}>Katılım durumunuzu belirtin</p>
 
         {/* Response Options */}
         <div className="grid grid-cols-3 gap-3 mb-6">
           {[
-            { val: 'katılıyor', label: 'Geliyorum', icon: '✅', desc: 'Katılacağım' },
-            { val: 'belki', label: 'Belki', icon: '🤔', desc: 'Emin değilim' },
-            { val: 'katılamıyor', label: 'Gelemiyorum', icon: '😢', desc: 'Katılamıyorum' },
+            { val: 'katılıyor', label: 'Geliyorum', icon: '✅' },
+            { val: 'belki', label: 'Belki', icon: '🤔' },
+            { val: 'katılamıyor', label: 'Gelemiyorum', icon: '😢' },
           ].map(o => (
             <button key={o.val} onClick={() => setGuestForm(p => ({ ...p, response: o.val }))}
-              className="p-4 rounded-2xl border text-center transition-all"
+              className="p-4 rounded-2xl border-2 text-center transition-all active:scale-95"
               style={{
-                background: guestForm.response === o.val ? theme.accentLight : 'rgba(255,255,255,0.02)',
-                borderColor: guestForm.response === o.val ? theme.accent : theme.border,
+                background: guestForm.response === o.val ? t.cardBg : 'rgba(255,255,255,0.03)',
+                borderColor: guestForm.response === o.val ? t.accent : 'rgba(255,255,255,0.1)',
               }}>
-              <div className="text-2xl mb-1">{o.icon}</div>
-              <div className="text-xs font-medium" style={{ color: theme.text }}>{o.label}</div>
-              <div className="text-[9px] mt-0.5" style={{ color: theme.textMuted }}>{o.desc}</div>
+              <div className="text-3xl mb-1">{o.icon}</div>
+              <div className="text-sm font-bold" style={{ color: t.text }}>{o.label}</div>
             </button>
           ))}
         </div>
@@ -220,35 +221,25 @@ export default function PublicInvitePage({ eventId }) {
         <div className="space-y-3 mb-6">
           <input value={guestForm.name} onChange={e => setGuestForm(p => ({ ...p, name: e.target.value }))}
             placeholder="Adınız Soyadınız *"
-            className="w-full px-4 py-3 rounded-xl text-sm focus:outline-none transition-all"
-            style={{ background: 'rgba(255,255,255,0.05)', border: `1px solid ${theme.border}`, color: theme.text }} />
+            className="w-full px-4 py-3.5 rounded-xl text-base focus:outline-none"
+            style={{ background: 'rgba(255,255,255,0.08)', border: `2px solid ${t.border}`, color: '#fff' }} />
           <input value={guestForm.phone} onChange={e => setGuestForm(p => ({ ...p, phone: e.target.value }))}
             placeholder="Telefon (opsiyonel)"
-            className="w-full px-4 py-3 rounded-xl text-sm focus:outline-none transition-all"
-            style={{ background: 'rgba(255,255,255,0.05)', border: `1px solid ${theme.border}`, color: theme.text }} />
-          <div className="grid grid-cols-2 gap-3">
-            <select value={guestForm.food} onChange={e => setGuestForm(p => ({ ...p, food: e.target.value }))}
-              className="w-full px-4 py-3 rounded-xl text-sm focus:outline-none transition-all"
-              style={{ background: 'rgba(255,255,255,0.05)', border: `1px solid ${theme.border}`, color: theme.text }}>
-              <option value="Standart">Standart</option>
-              <option value="Vejetaryen">Vejetaryen</option>
-              <option value="Vegan">Vegan</option>
-              <option value="Glutensiz">Glutensiz</option>
-            </select>
-            <select value={guestForm.plus} onChange={e => setGuestForm(p => ({ ...p, plus: e.target.value }))}
-              className="w-full px-4 py-3 rounded-xl text-sm focus:outline-none transition-all"
-              style={{ background: 'rgba(255,255,255,0.05)', border: `1px solid ${theme.border}`, color: theme.text }}>
-              <option value="0">+0 Kişi</option>
-              <option value="1">+1 Kişi</option>
-              <option value="2">+2 Kişi</option>
-              <option value="3">+3 Kişi</option>
-            </select>
-          </div>
+            className="w-full px-4 py-3.5 rounded-xl text-base focus:outline-none"
+            style={{ background: 'rgba(255,255,255,0.08)', border: `2px solid ${t.border}`, color: '#fff' }} />
+          <select value={guestForm.food} onChange={e => setGuestForm(p => ({ ...p, food: e.target.value }))}
+            className="w-full px-4 py-3.5 rounded-xl text-base focus:outline-none"
+            style={{ background: 'rgba(255,255,255,0.08)', border: `2px solid ${t.border}`, color: '#fff' }}>
+            <option value="Standart">Standart</option>
+            <option value="Vejetaryen">Vejetaryen</option>
+            <option value="Vegan">Vegan</option>
+            <option value="Glutensiz">Glutensiz</option>
+          </select>
         </div>
 
         <button onClick={submitRsvp} disabled={!guestForm.name || !guestForm.response}
-          className="w-full py-3.5 rounded-xl text-sm font-semibold transition-all disabled:opacity-30"
-          style={{ background: theme.accent, color: '#000' }}>
+          className="w-full py-4 rounded-xl text-base font-bold transition-all active:scale-95 disabled:opacity-30"
+          style={{ background: t.btnBg, color: t.btnText }}>
           Gönder
         </button>
       </div>
@@ -257,65 +248,56 @@ export default function PublicInvitePage({ eventId }) {
 
   // MAIN INVITE SCREEN
   return (
-    <div className="min-h-screen flex flex-col" style={{ background: theme.bg, backgroundImage: theme.pattern }}>
-      {/* Decorative Top */}
+    <div className="min-h-screen flex flex-col" style={{ background: t.bg }}>
       <div className="flex-1 flex items-center justify-center p-6">
         <div className="text-center max-w-sm w-full">
-          {/* Animated Icon */}
-          <div className="text-6xl mb-4 animate-pulse">{emoji}</div>
+          {/* Icon */}
+          <div className="text-7xl mb-5">{emoji}</div>
 
           {/* Type Badge */}
-          <div className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full mb-4"
-            style={{ background: theme.accentLight, border: `1px solid ${theme.border}` }}>
-            <span className="text-[10px] font-medium uppercase tracking-widest" style={{ color: theme.accent }}>{event?.type}</span>
+          <div className="inline-block px-5 py-1.5 rounded-full mb-4"
+            style={{ background: t.cardBg, border: `2px solid ${t.border}` }}>
+            <span className="text-xs font-bold uppercase tracking-widest" style={{ color: t.accent }}>{event?.type}</span>
           </div>
 
-          {/* Client Name */}
-          <h1 className="text-3xl md:text-4xl font-bold mb-2 leading-tight" style={{ color: theme.text }}>
-            {clientName}
-          </h1>
+          {/* Name */}
+          <h1 className="text-4xl font-bold mb-3" style={{ color: t.text }}>{clientName}</h1>
 
           {/* Divider */}
-          <div className="w-16 h-px mx-auto my-5" style={{ background: theme.border }}/>
+          <div className="w-20 h-0.5 mx-auto mb-6 rounded-full" style={{ background: t.accent }}/>
 
           {/* Details */}
-          <div className="space-y-3 mb-8">
+          <div className="space-y-4 mb-8">
             <div className="flex items-center justify-center gap-3">
-              <span style={{ color: theme.textMuted }}>📅</span>
-              <span className="text-sm font-medium" style={{ color: theme.text }}>{evDate}</span>
+              <span className="text-xl">📅</span>
+              <span className="text-lg font-semibold" style={{ color: t.text }}>{event?.date}</span>
             </div>
             <div className="flex items-center justify-center gap-3">
-              <span style={{ color: theme.textMuted }}>🕐</span>
-              <span className="text-sm" style={{ color: theme.text }}>{evTime}</span>
+              <span className="text-xl">🕐</span>
+              <span className="text-lg font-semibold" style={{ color: t.text }}>{event?.time}</span>
             </div>
             <div className="flex items-center justify-center gap-3">
-              <span style={{ color: theme.textMuted }}>📍</span>
-              <span className="text-sm" style={{ color: theme.text }}>{evLocation}</span>
+              <span className="text-xl">📍</span>
+              <span className="text-lg font-semibold" style={{ color: t.text }}>{event?.location}</span>
             </div>
-            {evGuests > 0 && (
-              <div className="flex items-center justify-center gap-3">
-                <span style={{ color: theme.textMuted }}>👥</span>
-                <span className="text-sm" style={{ color: theme.text }}>{evGuests} Misafir</span>
-              </div>
-            )}
           </div>
 
-          {/* CTA */}
+          {/* CTA Button */}
           <button onClick={() => setStep('rsvp')}
-            className="w-full py-3.5 rounded-xl text-sm font-semibold transition-all hover:opacity-90 active:scale-95 mb-4"
-            style={{ background: theme.accent, color: '#000' }}>
+            className="w-full py-4 rounded-xl text-lg font-bold transition-all active:scale-95 shadow-lg mb-4"
+            style={{ background: t.btnBg, color: t.btnText, boxShadow: `0 8px 30px ${t.accent}40` }}>
             Cevabını Bildir
           </button>
 
-          <p className="text-[10px]" style={{ color: theme.textMuted }}>
-            Davetiye: {clientName} • {evDate}
+          <p className="text-xs" style={{ color: t.textMuted }}>
+            {clientName} • {event?.date}
           </p>
         </div>
       </div>
 
       {/* Footer */}
       <div className="text-center py-4">
-        <p className="text-[9px]" style={{ color: 'rgba(255,255,255,0.15)' }}>merasim.app ile oluşturuldu</p>
+        <p className="text-[10px]" style={{ color: 'rgba(255,255,255,0.2)' }}>merasim.app ile oluşturuldu</p>
       </div>
     </div>
   )
