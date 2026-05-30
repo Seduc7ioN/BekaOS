@@ -9,6 +9,8 @@ import { useState, useRef, useEffect } from "react";
 import { QRCodeSVG } from "qrcode.react";
 import LandingPage from "./pages/Landing";
 import AuthPage from "./pages/Auth";
+import PublicInvitePage from "./pages/PublicInvite";
+import PublicGalleryPage from "./pages/PublicGallery";
 import { useAuth, useData } from "./lib/AuthContext";
 import { supabase } from "./lib/supabase";
 
@@ -828,6 +830,7 @@ function InvitationsPage({events,guests}) {
   const [preview,setPreview]=useState(false);
   const [qrOpen,setQrOpen]=useState(false);
   const [contractOpen,setContractOpen]=useState(false);
+  const [contractCompany,setContractCompany]=useState({name:"",phone:"",social:""});
   const [themeIdx,setThemeIdx]=useState(0);
   const themes=[
     {name:"Klasik Gold",from:"#b8943f",to:"#d4af37",dark:"#1a1200"},
@@ -1012,7 +1015,7 @@ MİSAFİR SAYISI: ${activeEv?.guests || '—'}
 TOPLAM ÜCRET: ${(activeEv?.budget || 0).toLocaleString()} TL
 
 MADDE 1 - HİZMET KAPSAMI
-Merasim, yukarıda belirtilen etkinlik için organizasyon hizmeti sunmayı taahhüt eder.
+${contractCompany.name||'Firma Adı'}, yukarıda belirtilen etkinlik için organizasyon hizmeti sunmayı taahhüt eder.
 
 MADDE 2 - ÖDEME
 Toplam ücret ${(activeEv?.budget || 0).toLocaleString()} TL olup, %50 kapora ödemesi rezervasyon sırasında alınır. Kalan tutar etkinlik tarihinden 3 gün önce ödenir.
@@ -1024,14 +1027,22 @@ MADDE 4 - VERİ SAKLAMA
 Müşteri bilgileri ve etkinlik fotoğrafları 6698 sayılı KVKK kapsamında 30 gün süreyle saklanır, ardından otomatik olarak silinir.
 
 MADDE 5 - SORUMLULUK
-Merasim, etkinlik planlama ve koordinasyonundan sorumludur. Üçüncü taraf hizmet sağlayıcıların hatalarından sorumlu değildir.
+${contractCompany.name||'Firma Adı'}, etkinlik planlama ve koordinasyonundan sorumludur. Üçüncü taraf hizmet sağlayıcıların hatalarından sorumlu değildir.
 
-Merasim | Yıldırım/Bursa
-İletişim: 0535 033 0645
-Instagram: @beka_davet`}
+──────────────────────────
+${contractCompany.name||'Firma Adı'}${contractCompany.phone?' | '+contractCompany.phone:''}${contractCompany.social?' | '+contractCompany.social:''}
+
+merasim.app`}
+          </div>
+          {/* Firma Bilgileri */}
+          <div className="p-4 rounded-xl border border-white/6 bg-white/[0.02] space-y-3">
+            <div className="text-xs text-white/40 font-medium">Sözleşme Alt Bilgisi (Düzenlenebilir)</div>
+            <input value={contractCompany.name} onChange={e=>setContractCompany(p=>({...p,name:e.target.value}))} placeholder="Firma Adı" className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-xs text-white/80 placeholder:text-white/20 focus:outline-none focus:border-purple-500/50"/>
+            <input value={contractCompany.phone} onChange={e=>setContractCompany(p=>({...p,phone:e.target.value}))} placeholder="İletişim Telefonu" className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-xs text-white/80 placeholder:text-white/20 focus:outline-none focus:border-purple-500/50"/>
+            <input value={contractCompany.social} onChange={e=>setContractCompany(p=>({...p,social:e.target.value}))} placeholder="Sosyal Medya / Web Sitesi" className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-xs text-white/80 placeholder:text-white/20 focus:outline-none focus:border-purple-500/50"/>
           </div>
           <div className="flex gap-2">
-            <GlassBtn className="flex-1 justify-center" onClick={()=>navigator.clipboard?.writeText(`ETKİNLİK ORGANİZASYON SÖZLEŞMESİ\n\nMÜŞTERİ: ${activeEv?.client}\nETKİNLİK: ${activeEv?.type}\nTARİH: ${activeEv?.date}\nTOPLAM: ${(activeEv?.budget||0).toLocaleString()} TL\n\nMerasim | Yıldırım/Bursa | 0535 033 0645`)}>Sözleşmeyi Kopyala</GlassBtn>
+            <GlassBtn className="flex-1 justify-center" onClick={()=>navigator.clipboard?.writeText(`ETKİNLİK ORGANİZASYON SÖZLEŞMESİ\n\nMÜŞTERİ: ${activeEv?.client}\nETKİNLİK: ${activeEv?.type}\nTARİH: ${activeEv?.date}\nTOPLAM: ${(activeEv?.budget||0).toLocaleString()} TL\n\nMADDE 1 - HİZMET KAPSAMI\n${contractCompany.name||'Firma'}, yukarıda belirtilen etkinlik için organizasyon hizmeti sunmayı taahhüt eder.\n\nMADDE 2 - ÖDEME\nToplam ücret ${(activeEv?.budget||0).toLocaleString()} TL olup, %50 kapora ödemesi rezervasyon sırasında alınır.\n\nMADDE 3 - İPTAL\nEtkinlik tarihinden 15 gün öncesine kadar yapılan iptallerde kapora iade edilmez.\n\nMADDE 4 - VERİ SAKLAMA\nMüşteri bilgileri 6698 sayılı KVKK kapsamında 30 gün süreyle saklanır.\n\n──────────────────────────\n${contractCompany.name||'Firma Adı'}${contractCompany.phone?' | '+contractCompany.phone:''}${contractCompany.social?' | '+contractCompany.social:''}\nmerasim.app`)}>Sözleşmeyi Kopyala</GlassBtn>
             <GlassBtn className="flex-1 justify-center" onClick={()=>window.print()}>Yazdır</GlassBtn>
           </div>
         </div>
@@ -2190,13 +2201,20 @@ const NAV=[
 
 function MerasimApp() {
   const { user, loading } = useAuth()
-  const [route, setRoute] = useState('landing') // landing | auth | dashboard
+  const [route, setRoute] = useState('landing') // landing | auth | dashboard | public-invite | public-gallery
+  const [publicId, setPublicId] = useState(null)
 
   // URL bazlı routing — davetiye ve galeri linkleri için
   useEffect(() => {
     const path = window.location.pathname;
-    if (path.startsWith('/i/') || path.startsWith('/g/')) {
-      setRoute('dashboard');
+    const matchInvite = path.match(/^\/i\/(.+)/);
+    const matchGallery = path.match(/^\/g\/(.+)/);
+    if (matchInvite) {
+      setPublicId(matchInvite[1]);
+      setRoute('public-invite');
+    } else if (matchGallery) {
+      setPublicId(matchGallery[1]);
+      setRoute('public-gallery');
     }
   }, []);
 
@@ -2220,6 +2238,8 @@ function MerasimApp() {
     )
   }
 
+  if (route === 'public-invite') return <PublicInvitePage eventId={publicId} onBack={() => setRoute('landing')} />
+  if (route === 'public-gallery') return <PublicGalleryPage eventId={publicId} onBack={() => setRoute('landing')} />
   if (route === 'landing') return <LandingPage onNavigate={setRoute} />
   if (route === 'auth') return <AuthPage />
   return <Dashboard />
