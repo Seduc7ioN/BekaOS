@@ -9,7 +9,7 @@ import { useState, useRef, useEffect } from "react";
 import { QRCodeSVG } from "qrcode.react";
 import LandingPage from "./pages/Landing";
 import AuthPage from "./pages/Auth";
-import { useAuth } from "./lib/AuthContext";
+import { useAuth, useData } from "./lib/AuthContext";
 
 const initEvents = [
   { id:1, type:"Nişan",            client:"Ayşe & Mehmet",  date:"2026-06-02", time:"18:00", guests:80,  status:"confirmed", payment:"kapora",  location:"Bahçelievler Salonu", tasks:12, done:8,  budget:15000, paid:5000,  phone:"0532 111 2233", notes:"Kırmızı & altın tema, canlı müzik." },
@@ -2095,15 +2095,20 @@ export default function Merasim() {
 }
 
 function Dashboard() {
-  const { user, company } = useAuth()
+  const { user, company, isPro } = useAuth()
+  const {
+    events, setEvents, addEvent, updateEvent, deleteEvent,
+    tasks, setTasks, addTask, updateTask,
+    gallery, setGallery,
+    guests, addGuest, updateGuest,
+    expenses, setExpenses, addExpense, deleteExpense,
+    notifs, setNotifs, addNotif, markNotifRead,
+    dataLoading,
+  } = useData()
   const [page,setPage]=useState("dashboard");
-  const [sidebar,setSidebar]=useState(false); // default closed on mobile
+  const [sidebar,setSidebar]=useState(false);
   const [notifOpen,setNotifOpen]=useState(false);
   const [searchOpen,setSearchOpen]=useState(false);
-  const [events,setEvents]=useState(initEvents);
-  const [tasks,setTasks]=useState(initTasks);
-  const [gallery,setGallery]=useState(initGallery);
-  const [notifs,setNotifs]=useState(NOTIFS_INIT);
   const unread=notifs.filter(n=>!n.read).length;
 
   // Detect mobile
