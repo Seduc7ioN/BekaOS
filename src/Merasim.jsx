@@ -1447,14 +1447,17 @@ function WhatsAppPage({events}) {
   const [sent,setSent]=useState([]);
   const [preview,setPreview]=useState(false);
   const catCol={rezervasyon:"blue",hatırlatma:"amber",galeri:"green",odeme:"red",davetiye:"purple"};
-  const fill=(body,ev)=>body
-    .replace(/\{isim\}/g,ev.client.split("&")[0].trim())
-    .replace(/\{etkinlik_türü\}/g,ev.type)
-    .replace(/\{tarih\}/g,ev.date).replace(/\{saat\}/g,ev.time)
-    .replace(/\{lokasyon\}/g,ev.location).replace(/\{gun\}/g,"3")
-    .replace(/\{galeri_link\}/g,`merasim.app/g/${ev.id}`)
-    .replace(/\{davetiye_link\}/g,`merasim.app/i/${ev.id}`)
-    .replace(/\{tutar\}/g,(ev.budget-ev.paid).toLocaleString());
+  const fill=(body,ev)=>{
+    if(!body||!ev)return body||"";
+    return body
+      .replace(/\{isim\}/g,(ev.client||"").split("&")[0].trim())
+      .replace(/\{etkinlik_türü\}/g,ev.type||"")
+      .replace(/\{tarih\}/g,ev.date||"").replace(/\{saat\}/g,ev.time||"")
+      .replace(/\{lokasyon\}/g,ev.location||"").replace(/\{gun\}/g,"3")
+      .replace(/\{galeri_link\}/g,`merasim.app/g/${ev.id}`)
+      .replace(/\{davetiye_link\}/g,`merasim.app/i/${ev.id}`)
+      .replace(/\{tutar\}/g,((ev.budget||0)-(ev.paid||0)).toLocaleString());
+  };
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
       <Card className="overflow-hidden">
@@ -1513,9 +1516,18 @@ function WhatsAppPage({events}) {
                   <div className="text-xs text-white/75 truncate">{ev.client}</div>
                   <div className="text-[10px] text-white/45">{ev.phone}</div>
                 </div>
-                <button onClick={()=>setSent(p=>[{id:Date.now(),name:ev.client,tmpl:active.name},...p])}
+                <button onClick={()=>{
+                  try{
+                    const phone=(ev.phone||"").replace(/\D/g,"");
+                    if(!phone){alert("Müşteri telefon numarası bulunamadı.");return;}
+                    const msg=fill(editBody,ev);
+                    const waPhone=phone.startsWith("0")?"90"+phone.slice(1):phone;
+                    window.open(`https://wa.me/${waPhone}?text=${encodeURIComponent(msg)}`,"_blank");
+                    setSent(p=>[{id:Date.now(),name:ev.client,tmpl:active?.name||""},...p]);
+                  }catch(err){console.error(err);}
+                }}
                   className="text-[10px] px-2 py-1 rounded-lg bg-green-500/15 text-green-400 hover:bg-green-500/25 transition-colors flex-shrink-0">
-                  Gonder
+                  Gönder
                 </button>
               </div>
             ))}
@@ -1691,8 +1703,15 @@ function CRMPage({events}) {
                   </div>
                 </div>
                 <div className="flex gap-2 flex-shrink-0">
-                  <GlassBtn>WhatsApp</GlassBtn>
-                  <GlassBtn>Ara</GlassBtn>
+                  <GlassBtn onClick={()=>{
+                    const phone=selected.phone?.replace(/\D/g,"")||"";
+                    const url=`https://wa.me/${phone.startsWith("0")?"90"+phone.slice(1):phone}?text=${encodeURIComponent("Merhaba "+selected.client.split("&")[0].trim()+", "+selected.type+" etkinliğiniz hakkında bilgi vermek istiyorum.")}`;
+                    window.open(url,"_blank");
+                  }}>WhatsApp</GlassBtn>
+                  <GlassBtn onClick={()=>{
+                    const phone=selected.phone?.replace(/\D/g,"")||"";
+                    window.open(`tel:${phone}`,"_blank");
+                  }}>Ara</GlassBtn>
                 </div>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-5">
