@@ -1083,15 +1083,30 @@ merasim.app`}
 
 
 /* ── GALLERY ────────────────────────────────────── */
-function GalleryPage({events,gallery,setGallery,company}) {
+function GalleryPage({events,gallery,setGallery,company,addNotif}) {
   const [activeEv,setActiveEv]=useState(events[0]);
   const [lightbox,setLightbox]=useState(null);
   const fileRef=useRef(null);
   const [galleryQr,setGalleryQr]=useState(false);
   const [uploading,setUploading]=useState(false);
   const photos=gallery.filter(g=>g.event_id===activeEv?.id);
-  const approve=(id)=>setGallery(prev=>prev.map(g=>g.id===id?{...g,approved:true}:g));
-  const remove=(id)=>{setGallery(prev=>prev.filter(g=>g.id!==id));if(lightbox?.id===id)setLightbox(null);};
+  const approve=async(id)=>{
+    await supabase.from('gallery').update({approved:true}).eq('id',id);
+    setGallery(prev=>prev.map(g=>g.id===id?{...g,approved:true}:g));
+  };
+  const remove=async(id)=>{
+    await supabase.from('gallery').delete().eq('id',id);
+    setGallery(prev=>prev.filter(g=>g.id!==id));
+    if(lightbox?.id===id)setLightbox(null);
+  };
+  const triggerUpload=()=>{
+    const input=document.createElement('input');
+    input.type='file';
+    input.accept='image/*';
+    input.multiple=true;
+    input.onchange=handleUpload;
+    input.click();
+  };
 
   const handleUpload=async(e)=>{
     const files=Array.from(e.target.files);
@@ -1167,7 +1182,7 @@ function GalleryPage({events,gallery,setGallery,company}) {
               const content=await zip.generateAsync({type:"blob"});
               saveAs(content,`${activeEv?.client||'galeri'}-fotograflar.zip`);
             }}>ZIP</GlassBtn>
-            <label htmlFor="gallery-file-input" className="px-3 py-2 rounded-xl text-xs text-purple-300 border border-purple-500/25 hover:bg-purple-500/10 transition-colors cursor-pointer">{uploading?"Yükleniyor...":"+ Yükle"}</label>
+            <button onClick={triggerUpload} disabled={uploading} className="px-3 py-2 rounded-xl text-xs text-purple-300 border border-purple-500/25 hover:bg-purple-500/10 transition-colors cursor-pointer disabled:opacity-40">{uploading?"Yükleniyor...":"+ Yükle"}</button>
           </div>
         </div>
         <div className="grid grid-cols-3 gap-3 mb-4">
@@ -1195,11 +1210,10 @@ function GalleryPage({events,gallery,setGallery,company}) {
                 {photo.approved&&<div className="absolute top-2 left-2 text-emerald-400 text-xs">&#10003;</div>}
               </div>
             ))}
-            <label htmlFor="gallery-file-input" className="rounded-xl border-2 border-dashed border-white/3 flex flex-col items-center justify-center cursor-pointer hover:border-white/25 transition-colors" style={{aspectRatio:"16/10"}}>
+            <div onClick={triggerUpload} className="rounded-xl border-2 border-dashed border-white/3 flex flex-col items-center justify-center cursor-pointer hover:border-white/25 transition-colors" style={{aspectRatio:"16/10"}}>
               <span className="text-2xl text-white/30 mb-1">+</span>
               <span className="text-[10px] text-white/35">Yükle</span>
-            </label>
-            <input type="file" id="gallery-file-input" accept="image/*" multiple className="hidden" onChange={handleUpload}/>
+            </div>
           </div>
         ):(
           <div className="text-center py-16 border-2 border-dashed border-white/3 rounded-2xl">
@@ -1246,7 +1260,7 @@ function GalleryPage({events,gallery,setGallery,company}) {
 }
 
 /* ── PAYMENTS ───────────────────────────────────── */
-function PaymentsPage({events}) {
+function PaymentsPage({events,updateEvent}) {
   const [expenses,setExpenses]=useState([]);
   const [expOpen,setExpOpen]=useState(false);
   const [expForm,setExpForm]=useState({eventId:"",desc:"",amount:""});
@@ -1331,7 +1345,9 @@ function PaymentsPage({events}) {
                     <td className="px-4 py-3 text-xs font-medium text-rose-400 whitespace-nowrap">{rem.toLocaleString()}</td>
                     <td className="px-4 py-3"><div className="flex items-center gap-2"><div className="w-12 h-1.5 rounded-full bg-white/10"><div className="h-1.5 rounded-full" style={{width:`${pct}%`,background:pct===100?"#34d399":"linear-gradient(90deg,#8b5cf6,#6366f1)"}}/></div><span className="text-[10px] text-white/40">{pct}%</span></div></td>
                     <td className="px-4 py-3"><span className={`text-[10px] px-2 py-0.5 rounded-full font-medium ${PAY_COL[ev.payment]?.bg||""} ${PAY_COL[ev.payment]?.tx||""}`}>{ev.payment}</span></td>
-                    <td className="px-4 py-3">{rem>0&&<button className="text-[10px] px-2.5 py-1 rounded-lg text-white/50 hover:text-white border border-white/3 hover:border-white/20 transition-colors whitespace-nowrap">Tahsil Et</button>}</td>
+                    <td className="px-4 py-3">{rem>0&&<button onClick={async()=>{
+                      await updateEvent(ev.id,{paid:ev.budget,payment:"tam"});
+                    }} className="text-[10px] px-2.5 py-1 rounded-lg text-white/50 hover:text-white border border-white/3 hover:border-white/20 transition-colors whitespace-nowrap">Tahsil Et</button>}</td>
                   </tr>
                 );
               })}
@@ -2169,6 +2185,20 @@ function SettingsPage({company,setPage}) {
     facebook:"",
     website:""
   });
+  useEffect(()=>{
+    if(company){
+      setProfile(p=>({
+        ...p,
+        company:company.name||p.company,
+        email:company.email||p.email,
+        phone:company.phone||p.phone,
+        address:company.address||p.address,
+        city:company.city||p.city,
+        currency:company.currency||p.currency,
+        whatsapp:company.whatsapp||p.whatsapp,
+      }));
+    }
+  },[company]);
   const upd=k=>e=>setProfile(p=>({...p,[k]:e.target.value}));
   const save=async()=>{
     if(company?.id){
@@ -2443,7 +2473,7 @@ function Dashboard() {
     tasks:<TasksPage tasks={tasks} setTasks={setTasks} events={events}/>,
     invitations:<InvitationsPage events={events} guests={guests} updateEvent={updateEvent}/>,
     gallery:<GalleryPage events={events} gallery={gallery} setGallery={setGallery} company={company}/>,
-    payments:<PaymentsPage events={events}/>,
+    payments:<PaymentsPage events={events} updateEvent={updateEvent}/>,
     reservation:<ReservationPage events={events} addEvent={addEvent} prefillDate={prefillDate} setPrefillDate={setPrefillDate}/>,
     whatsapp:<WhatsAppPage events={events}/>,
     staff:<StaffPage events={events} tasks={tasks}/>,

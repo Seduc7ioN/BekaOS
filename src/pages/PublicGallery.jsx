@@ -40,6 +40,13 @@ export default function PublicGalleryPage({ eventId }) {
             url,
             approved: false,
           })
+          // Bildirim oluştur
+          await supabase.from('notifications').insert({
+            company_id: event.company_id,
+            icon: '📸',
+            text: `${event.client} galerisine yeni fotoğraf yüklendi. Onay bekliyor.`,
+            page: 'gallery',
+          })
           uploaded++
         }
       } catch (err) {
