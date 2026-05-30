@@ -3,7 +3,7 @@
   Add to HTML <head>:
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="theme-color" content="#07070e">
+    <meta name="theme-color" content="#0a0a0f">
 */
 import { useState, useRef, useEffect } from "react";
 
@@ -48,7 +48,7 @@ const initGallery = [
 ];
 
 const initStaff = [
-  { id:1, name:"Elif Hanım",   role:"Dekorasyon",     phone:"0532 100 0001", email:"elif@beka.com",  status:"aktif", events:4, avatar:"E", color:"#c084fc" },
+  { id:1, name:"Elif Hanım",   role:"Dekorasyon",     phone:"0532 100 0001", email:"elif@beka.com",  status:"aktif", events:4, avatar:"E", color:"#8b5cf6" },
   { id:2, name:"Murat Kaya",   role:"Teknik & Ses",   phone:"0541 200 0002", email:"murat@beka.com", status:"aktif", events:3, avatar:"M", color:"#60a5fa" },
   { id:3, name:"Selin Taş",    role:"Koordinator",    phone:"0505 300 0003", email:"selin@beka.com", status:"aktif", events:5, avatar:"S", color:"#34d399" },
   { id:4, name:"Ahmet Yılmaz", role:"Fotoğrafçı",     phone:"0533 400 0004", email:"ahmet@beka.com", status:"pasif", events:2, avatar:"A", color:"#fb923c" },
@@ -142,21 +142,25 @@ function Badge({ children, color="purple", className="" }) {
   return <span className={`text-[10px] px-2 py-0.5 rounded-full font-medium whitespace-nowrap ${m[color]||m.gray} ${className}`}>{children}</span>;
 }
 function Card({children,className="",onClick}) {
-  return <div onClick={onClick} className={`rounded-2xl border border-white/5 ${onClick?"cursor-pointer":""} ${className}`} style={{background:"rgba(255,255,255,0.025)"}}>{children}</div>;
+  return <div onClick={onClick} className={`rounded-2xl border border-white/[0.06] backdrop-blur-xl ${onClick?"cursor-pointer hover:border-white/[0.1] transition-all duration-300":""} ${className}`} style={{background:"rgba(255,255,255,0.03)",boxShadow:"0 4px 30px rgba(0,0,0,0.1)"}}>{children}</div>;
+}
+  return <div onClick={onClick} className={`rounded-2xl border border-white/3 ${onClick?"cursor-pointer":""} ${className}`} style={{background:"rgba(255,255,255,0.025)"}}>{children}</div>;
 }
 function GlassBtn({children,onClick,className="",disabled=false}) {
-  return <button onClick={onClick} disabled={disabled} className={`px-3 py-2 rounded-xl text-xs font-medium text-white/50 border border-white/10 hover:border-white/25 hover:text-white/80 transition-all disabled:opacity-30 ${className}`}>{children}</button>;
+  return <button onClick={onClick} disabled={disabled} className={`px-3 py-2 rounded-xl text-xs font-medium text-white/50 border border-white/[0.06] hover:border-white/[0.12] hover:text-white/80 transition-all duration-300 backdrop-blur-sm disabled:opacity-30 ${className}`}>{children}</button>;
+}
+  return <button onClick={onClick} disabled={disabled} className={`px-3 py-2 rounded-xl text-xs font-medium text-white/50 border border-white/3 hover:border-white/25 hover:text-white/80 transition-all disabled:opacity-30 ${className}`}>{children}</button>;
 }
 function SectionHeader({title,right}) {
   return (
-    <div className="flex items-center justify-between px-5 py-4 border-b border-white/5">
+    <div className="flex items-center justify-between px-5 py-4 border-b border-white/[0.06] backdrop-blur-sm">
       <h2 className="text-sm font-semibold text-white/80">{title}</h2>
       {right&&<div className="flex items-center gap-2">{right}</div>}
     </div>
   );
 }
 function FieldInput({label,type="text",value,onChange,placeholder,rows}) {
-  const cls="w-full px-3 py-2.5 rounded-xl text-sm text-white/80 bg-white/5 border border-white/8 focus:border-purple-500/50 outline-none transition-colors placeholder-white/20";
+  const cls="w-full px-3 py-2.5 rounded-xl text-sm text-white/80 bg-white/3 border border-white/3 focus:border-purple-500/50 outline-none transition-colors placeholder-white/20";
   return (
     <div>
       {label&&<label className="text-xs text-white/40 mb-1.5 block">{label}</label>}
@@ -169,7 +173,7 @@ function FieldSelect({label,value,onChange,options}) {
   return (
     <div>
       {label&&<label className="text-xs text-white/40 mb-1.5 block">{label}</label>}
-      <select value={value} onChange={onChange} className="w-full px-3 py-2.5 rounded-xl text-sm text-white/80 bg-[#0f0f1c] border border-white/8 focus:border-purple-500/50 outline-none transition-colors">
+      <select value={value} onChange={onChange} className="w-full px-3 py-2.5 rounded-xl text-sm text-white/80 bg-[#0f0f1c] border border-white/3 focus:border-purple-500/50 outline-none transition-colors">
         {options.map(o=><option key={o.value||o} value={o.value||o}>{o.label||o}</option>)}
       </select>
     </div>
@@ -177,7 +181,7 @@ function FieldSelect({label,value,onChange,options}) {
 }
 function StatBox({label,value,sub,icon,color}) {
   return (
-    <div className="rounded-2xl border border-white/5 p-5 relative overflow-hidden" style={{background:"rgba(255,255,255,0.025)"}}>
+    <div className="rounded-2xl border border-white/3 p-5 relative overflow-hidden" style={{background:"rgba(255,255,255,0.025)"}}>
       <div className="absolute -top-6 -right-6 w-20 h-20 rounded-full blur-2xl opacity-[0.08]" style={{background:color}}/>
       <div className="text-xl mb-3" style={{color}}>{icon}</div>
       <div className="text-2xl font-bold text-white mb-0.5">{value}</div>
@@ -190,8 +194,8 @@ function Modal({open,onClose,title,children,width="max-w-lg"}) {
   if(!open)return null;
   return (
     <div className="fixed inset-0 z-[60] flex items-center justify-center p-4" style={{background:"rgba(0,0,0,0.75)"}} onClick={onClose}>
-      <div className={`w-full ${width} rounded-2xl border border-white/10 overflow-hidden`} style={{background:"#111120"}} onClick={e=>e.stopPropagation()}>
-        <div className="flex items-center justify-between px-6 py-4 border-b border-white/8">
+      <div className={`w-full ${width} rounded-2xl border border-white/3 overflow-hidden`} style={{background:"rgba(17,24,39,0.8)"}} onClick={e=>e.stopPropagation()}>
+        <div className="flex items-center justify-between px-6 py-4 border-b border-white/3">
           <h3 className="text-sm font-semibold text-white/85">{title}</h3>
           <button onClick={onClose} className="text-white/30 hover:text-white transition-colors text-lg leading-none">x</button>
         </div>
@@ -204,9 +208,9 @@ function Drawer({open,onClose,title,children,width="w-96"}) {
   return (
     <>
       {open&&<div className="fixed inset-0 z-40 bg-black/50" onClick={onClose}/>}
-      <div className={`fixed top-0 right-0 h-full z-50 border-l border-white/8 overflow-auto transition-transform duration-300 ${width} ${open?"translate-x-0":"translate-x-full"}`}
-        style={{background:"#0f0f1c"}}>
-        <div className="flex items-center justify-between px-6 py-5 border-b border-white/8">
+      <div className={`fixed top-0 right-0 h-full z-50 border-l border-white/3 overflow-auto transition-transform duration-300 ${width} ${open?"translate-x-0":"translate-x-full"}`}
+        style={{background:"rgba(15,15,28,0.9)"}}>
+        <div className="flex items-center justify-between px-6 py-5 border-b border-white/3">
           <h2 className="text-sm font-semibold text-white/85">{title}</h2>
           <button onClick={onClose} className="text-white/30 hover:text-white transition-colors text-xl leading-none">x</button>
         </div>
@@ -229,8 +233,8 @@ function GlobalSearch({events,setPage,onClose}) {
   ):[];
   return (
     <div className="fixed inset-0 z-[70] flex items-start justify-center pt-24" style={{background:"rgba(0,0,0,0.82)"}} onClick={onClose}>
-      <div className="w-full max-w-xl mx-4 rounded-2xl border border-white/10 overflow-hidden" style={{background:"#111120"}} onClick={e=>e.stopPropagation()}>
-        <div className="flex items-center gap-3 px-4 py-3 border-b border-white/8">
+      <div className="w-full max-w-xl mx-4 rounded-2xl border border-white/3 overflow-hidden" style={{background:"rgba(17,24,39,0.8)"}} onClick={e=>e.stopPropagation()}>
+        <div className="flex items-center gap-3 px-4 py-3 border-b border-white/3">
           <span className="text-white/40">&#128269;</span>
           <input ref={ref} value={q} onChange={e=>setQ(e.target.value)}
             placeholder="Müşteri, etkinlik türü veya lokasyon ara..."
@@ -241,7 +245,7 @@ function GlobalSearch({events,setPage,onClose}) {
           <div className="divide-y divide-white/5 max-h-72 overflow-auto">
             {results.map(ev=>(
               <div key={ev.id} onClick={()=>{setPage("events");onClose();}}
-                className="flex items-center gap-3 px-4 py-3 hover:bg-white/5 cursor-pointer transition-colors">
+                className="flex items-center gap-3 px-4 py-3 hover:bg-white/3 cursor-pointer transition-colors">
                 <span className="text-2xl">{getIcon(ev.type)}</span>
                 <div>
                   <div className="text-sm text-white/80">{ev.client}</div>
@@ -273,7 +277,7 @@ function Dashboard({events,tasks,setPage}) {
   return (
     <div className="space-y-5">
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
-        <StatBox label="Etkinlik"       value={total}    sub="Bu ay"            icon="&#9672;" color="#c084fc"/>
+        <StatBox label="Etkinlik"       value={total}    sub="Bu ay"            icon="&#9672;" color="#8b5cf6"/>
         <StatBox label="Onaylandı"         value={conf}     sub={`${total-conf} bekliyor`} icon="&#9689;" color="#34d399"/>
         <StatBox label="Ödeme Bekliyor" value={pendPay}  sub="etkinlik"         icon="&#9680;" color="#fb923c"/>
         <StatBox label="Misafir"        value={guests}   sub="Bu ay"            icon="&#9676;" color="#60a5fa"/>
@@ -284,8 +288,8 @@ function Dashboard({events,tasks,setPage}) {
           <SectionHeader title="Yaklasan Etkinlikler" right={<button onClick={()=>setPage("events")} className="text-xs text-white/30 hover:text-white/60 transition-colors">Hepsi</button>}/>
           <div className="divide-y divide-white/5">
             {events.slice(0,5).map(ev=>(
-              <div key={ev.id} className="flex items-center gap-3 px-5 py-3 hover:bg-white/[0.03] transition-colors cursor-pointer" onClick={()=>setPage("events")}>
-                <div className="w-9 h-9 rounded-xl flex items-center justify-center text-lg flex-shrink-0" style={{background:"rgba(192,132,252,0.1)"}}>
+              <div key={ev.id} className="flex items-center gap-3 px-5 py-3 hover:bg-white/[0.02] transition-colors cursor-pointer" onClick={()=>setPage("events")}>
+                <div className="w-9 h-9 rounded-xl flex items-center justify-center text-lg flex-shrink-0" style={{background:"rgba(139,92,246,0.1)"}}>
                   {getIcon(ev.type)}
                 </div>
                 <div className="flex-1 min-w-0">
@@ -298,7 +302,7 @@ function Dashboard({events,tasks,setPage}) {
                 </div>
                 <div className="flex items-center gap-2 w-20 flex-shrink-0">
                   <div className="flex-1 h-1 rounded-full bg-white/10">
-                    <div className="h-1 rounded-full" style={{width:`${(ev.done/ev.tasks)*100}%`,background:ev.done===ev.tasks?"#34d399":"#c084fc"}}/>
+                    <div className="h-1 rounded-full" style={{width:`${(ev.done/ev.tasks)*100}%`,background:ev.done===ev.tasks?"#34d399":"#8b5cf6"}}/>
                   </div>
                   <span className="text-[10px] text-white/30">{ev.done}/{ev.tasks}</span>
                 </div>
@@ -312,7 +316,7 @@ function Dashboard({events,tasks,setPage}) {
             {openTasks.slice(0,6).map(t=>{
               const ev=events.find(e=>e.id===t.eventId);
               return (
-                <div key={t.id} className="px-5 py-3 hover:bg-white/[0.03] cursor-pointer transition-colors" onClick={()=>setPage("tasks")}>
+                <div key={t.id} className="px-5 py-3 hover:bg-white/[0.02] cursor-pointer transition-colors" onClick={()=>setPage("tasks")}>
                   <div className="flex items-start justify-between gap-2">
                     <div className="flex-1 min-w-0">
                       <div className="text-xs font-medium text-white/80 truncate">{t.task}</div>
@@ -345,8 +349,8 @@ function Dashboard({events,tasks,setPage}) {
               const hasHoliday=holidays.length>0;
               return (
                 <div key={day} onClick={()=>setPage("calendar")}
-                  className="aspect-square flex items-center justify-center rounded-lg text-xs cursor-pointer hover:bg-white/5 relative transition-all select-none"
-                  style={{background:hasHoliday?"rgba(251,191,36,0.15)":isToday?"rgba(192,132,252,0.25)":"transparent",color:hasHoliday?"#fbbf24":isToday?"#c084fc":hasEv?"rgba(255,255,255,0.9)":"rgba(255,255,255,0.3)",fontWeight:isToday||hasHoliday?"700":"400"}}>
+                  className="aspect-square flex items-center justify-center rounded-lg text-xs cursor-pointer hover:bg-white/3 relative transition-all select-none"
+                  style={{background:hasHoliday?"rgba(251,191,36,0.15)":isToday?"rgba(139,92,246,0.25)":"transparent",color:hasHoliday?"#fbbf24":isToday?"#8b5cf6":hasEv?"rgba(255,255,255,0.9)":"rgba(255,255,255,0.3)",fontWeight:isToday||hasHoliday?"700":"400"}}>
                   {day}
                   {hasEv&&!isToday&&!hasHoliday&&<span className="absolute bottom-0.5 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-purple-400"/>}
                 </div>
@@ -359,7 +363,7 @@ function Dashboard({events,tasks,setPage}) {
           <div className="space-y-2">
             {[{icon:"&#128203;",label:"Rezervasyon Al",page:"reservation"},{icon:"&#128140;",label:"Davetiye Olustur",page:"invitations"},{icon:"&#128248;",label:"Galeri & QR",page:"gallery"},{icon:"&#128179;",label:"Ödeme Takibi",page:"payments"},{icon:"&#128101;",label:"Müşteri CRM",page:"crm"},{icon:"\u2726",label:"AI Asistan",page:"ai"}].map((a,i)=>(
               <button key={i} onClick={()=>setPage(a.page)}
-                className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-left hover:bg-white/5 transition-all border border-white/5 hover:border-white/10">
+                className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-left hover:bg-white/3 transition-all border border-white/3 hover:border-white/3">
                 <span className="text-base" dangerouslySetInnerHTML={{__html:a.icon}}/>
                 <span className="text-xs text-white/65">{a.label}</span>
                 <span className="ml-auto text-white/20 text-xs">&#8594;</span>
@@ -382,9 +386,9 @@ function Dashboard({events,tasks,setPage}) {
               <div key={i} className="flex-1 flex flex-col items-center gap-1.5">
                 <div className="w-full flex items-end" style={{height:"90%"}}>
                   {val>0?(
-                    <div className="w-full rounded-t-lg" style={{height:`${h}%`,minHeight:4,background:active?"linear-gradient(180deg,#c084fc,#6d28d9)":"rgba(255,255,255,0.08)"}}/>
+                    <div className="w-full rounded-t-lg" style={{height:`${h}%`,minHeight:4,background:active?"linear-gradient(180deg,#8b5cf6,#4f46e5)":"rgba(255,255,255,0.08)"}}/>
                   ):(
-                    <div className="w-full h-1 rounded bg-white/5"/>
+                    <div className="w-full h-1 rounded bg-white/3"/>
                   )}
                 </div>
                 <span className="text-[9px] text-white/25">{m}</span>
@@ -426,15 +430,15 @@ function EventsPage({events,setEvents}) {
     <div className="space-y-4">
       <div className="flex items-center gap-2 flex-wrap">
         <input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Müşteri, tur veya lokasyon ara..."
-          className="flex-1 min-w-[200px] max-w-xs px-4 py-2 rounded-xl text-sm text-white/80 placeholder-white/25 outline-none border border-white/8 bg-white/5 focus:border-purple-500/40 transition-colors"/>
+          className="flex-1 min-w-[200px] max-w-xs px-4 py-2 rounded-xl text-sm text-white/80 placeholder-white/25 outline-none border border-white/3 bg-white/3 focus:border-purple-500/40 transition-colors"/>
         <div className="flex gap-1.5 flex-wrap">
           {["Tümu","Nisan","Kına","Doğum Günü","Kurumsal"].map(f=>(
-            <button key={f} onClick={()=>setFilter(f)} className={`px-2.5 py-1.5 rounded-xl text-xs transition-all ${filter===f?"bg-purple-500/20 text-purple-300 border border-purple-500/30":"text-white/40 border border-white/8 hover:text-white/70"}`}>{f}</button>
+            <button key={f} onClick={()=>setFilter(f)} className={`px-2.5 py-1.5 rounded-xl text-xs transition-all ${filter===f?"bg-purple-500/20 text-purple-300 border border-purple-500/30":"text-white/40 border border-white/3 hover:text-white/70"}`}>{f}</button>
           ))}
         </div>
         <div className="flex gap-1.5">
           {["Tümu","Onaylandı","Bekliyor"].map(s=>(
-            <button key={s} onClick={()=>setStatusF(s)} className={`px-2.5 py-1.5 rounded-xl text-xs transition-all ${statusF===s?"bg-white/10 text-white/80 border border-white/20":"text-white/35 border border-white/8 hover:text-white/60"}`}>{s}</button>
+            <button key={s} onClick={()=>setStatusF(s)} className={`px-2.5 py-1.5 rounded-xl text-xs transition-all ${statusF===s?"bg-white/10 text-white/80 border border-white/20":"text-white/35 border border-white/3 hover:text-white/60"}`}>{s}</button>
           ))}
         </div>
         <span className="ml-auto text-xs text-white/25">{filtered.length} etkinlik</span>
@@ -443,7 +447,7 @@ function EventsPage({events,setEvents}) {
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
-              <tr className="border-b border-white/5">
+              <tr className="border-b border-white/3">
                 {["Etkinlik","Tarih","Lokasyon","Misafir","Butce","Ödeme","Durum","Gorevler",""].map(h=>(
                   <th key={h} className="px-4 py-3 text-left text-[10px] text-white/30 font-medium uppercase tracking-wider whitespace-nowrap">{h}</th>
                 ))}
@@ -451,7 +455,7 @@ function EventsPage({events,setEvents}) {
             </thead>
             <tbody className="divide-y divide-white/5">
               {filtered.map(ev=>(
-                <tr key={ev.id} onClick={()=>setDrawer(ev)} className="hover:bg-white/[0.025] transition-colors cursor-pointer group">
+                <tr key={ev.id} onClick={()=>setDrawer(ev)} className="hover:bg-white/[0.015] transition-colors cursor-pointer group">
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-2.5">
                       <span className="text-xl">{getIcon(ev.type)}</span>
@@ -470,13 +474,13 @@ function EventsPage({events,setEvents}) {
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-2">
                       <div className="w-14 h-1.5 rounded-full bg-white/10">
-                        <div className="h-1.5 rounded-full" style={{width:`${(ev.done/ev.tasks)*100}%`,background:ev.done===ev.tasks?"#34d399":"#c084fc"}}/>
+                        <div className="h-1.5 rounded-full" style={{width:`${(ev.done/ev.tasks)*100}%`,background:ev.done===ev.tasks?"#34d399":"#8b5cf6"}}/>
                       </div>
                       <span className="text-[10px] text-white/30">{ev.done}/{ev.tasks}</span>
                     </div>
                   </td>
                   <td className="px-4 py-3">
-                    <button onClick={e=>{e.stopPropagation();openEdit(ev);}} className="opacity-0 group-hover:opacity-100 text-[10px] px-2 py-1 rounded-lg text-white/50 hover:text-white border border-white/8 hover:border-white/20 transition-all whitespace-nowrap">Duzenle</button>
+                    <button onClick={e=>{e.stopPropagation();openEdit(ev);}} className="opacity-0 group-hover:opacity-100 text-[10px] px-2 py-1 rounded-lg text-white/50 hover:text-white border border-white/3 hover:border-white/20 transition-all whitespace-nowrap">Duzenle</button>
                   </td>
                 </tr>
               ))}
@@ -489,14 +493,14 @@ function EventsPage({events,setEvents}) {
       <Drawer open={!!drawer} onClose={()=>setDrawer(null)} title="Etkinlik Detayi">
         {drawer&&(
           <>
-            <div className="text-center pb-5 border-b border-white/8 mb-5">
+            <div className="text-center pb-5 border-b border-white/3 mb-5">
               <div className="text-5xl mb-3">{getIcon(drawer.type)}</div>
               <div className="text-lg font-semibold text-white">{drawer.client}</div>
               <div className="text-xs text-white/40 mt-1">{drawer.type}</div>
             </div>
             <div className="space-y-0 mb-5">
               {[["Tarih",drawer.date],["Saat",drawer.time],["Lokasyon",drawer.location],["Misafir",`${drawer.guests} kisi`],["Butce",`${(drawer.budget||0).toLocaleString()} TL`],["Odenen",`${(drawer.paid||0).toLocaleString()} TL`],["Kalan",`${((drawer.budget||0)-(drawer.paid||0)).toLocaleString()} TL`],["Telefon",drawer.phone]].map(([k,v])=>(
-                <div key={k} className="flex justify-between py-2.5 border-b border-white/5">
+                <div key={k} className="flex justify-between py-2.5 border-b border-white/3">
                   <span className="text-xs text-white/35">{k}</span>
                   <span className="text-xs text-white/75">{v}</span>
                 </div>
@@ -505,10 +509,10 @@ function EventsPage({events,setEvents}) {
             {drawer.notes&&<div className="p-3 rounded-xl bg-white/[0.04] mb-4"><div className="text-[10px] text-white/35 mb-1">Not</div><div className="text-xs text-white/70">{drawer.notes}</div></div>}
             <div className="p-3 rounded-xl bg-white/[0.04] mb-5">
               <div className="flex justify-between mb-2"><span className="text-xs text-white/40">Gorev Ilerlemesi</span><span className="text-xs text-white/60">{drawer.done}/{drawer.tasks}</span></div>
-              <div className="h-2 rounded-full bg-white/10"><div className="h-2 rounded-full" style={{width:`${(drawer.done/drawer.tasks)*100}%`,background:drawer.done===drawer.tasks?"#34d399":"linear-gradient(90deg,#c084fc,#818cf8)"}}/></div>
+              <div className="h-2 rounded-full bg-white/10"><div className="h-2 rounded-full" style={{width:`${(drawer.done/drawer.tasks)*100}%`,background:drawer.done===drawer.tasks?"#34d399":"linear-gradient(90deg,#8b5cf6,#6366f1)"}}/></div>
             </div>
             <div className="space-y-2">
-              <button onClick={()=>openEdit(drawer)} className="w-full py-2.5 rounded-xl text-xs font-semibold text-white" style={{background:"linear-gradient(135deg,#c084fc,#818cf8)"}}>Duzenle</button>
+              <button onClick={()=>openEdit(drawer)} className="w-full py-2.5 rounded-xl text-xs font-semibold text-white" style={{background:"linear-gradient(135deg,#8b5cf6,#6366f1)"}}>Duzenle</button>
               <GlassBtn className="w-full justify-center flex">Davetiye Olustur</GlassBtn>
               <GlassBtn className="w-full justify-center flex">QR Galeri Uret</GlassBtn>
               <GlassBtn className="w-full justify-center flex">WhatsApp Bildir</GlassBtn>
@@ -533,7 +537,7 @@ function EventsPage({events,setEvents}) {
         <FieldInput label="Notlar" value={editForm.notes||""} onChange={e=>setEditForm(p=>({...p,notes:e.target.value}))} placeholder="Ozel istekler..." rows={2}/>
         <div className="flex justify-end gap-2 mt-5">
           <GlassBtn onClick={()=>setEditModal(null)}>Iptal</GlassBtn>
-          <button onClick={saveEdit} className="px-5 py-2 rounded-xl text-xs font-semibold text-white" style={{background:"linear-gradient(135deg,#c084fc,#818cf8)"}}>Kaydet</button>
+          <button onClick={saveEdit} className="px-5 py-2 rounded-xl text-xs font-semibold text-white" style={{background:"linear-gradient(135deg,#8b5cf6,#6366f1)"}}>Kaydet</button>
         </div>
       </Modal>
     </div>
@@ -558,26 +562,26 @@ function CalendarPage({events}) {
       <Card className="p-6">
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-3">
-            <button onClick={prev} className="px-3 py-1.5 rounded-xl text-xs text-white/50 hover:text-white border border-white/8 hover:border-white/20 transition-colors">Onceki</button>
+            <button onClick={prev} className="px-3 py-1.5 rounded-xl text-xs text-white/50 hover:text-white border border-white/3 hover:border-white/20 transition-colors">Onceki</button>
             <h2 className="text-base font-semibold text-white min-w-[150px] text-center">{MONTH_NAMES[month]} {year}</h2>
-            <button onClick={next} className="px-3 py-1.5 rounded-xl text-xs text-white/50 hover:text-white border border-white/8 hover:border-white/20 transition-colors">Sonraki</button>
+            <button onClick={next} className="px-3 py-1.5 rounded-xl text-xs text-white/50 hover:text-white border border-white/3 hover:border-white/20 transition-colors">Sonraki</button>
           </div>
         </div>
         <div className="grid grid-cols-7 gap-px rounded-xl overflow-hidden" style={{background:"rgba(255,255,255,0.06)"}}>
           {DAY_NAMES.map(d=>(
-            <div key={d} className="py-3 text-center text-[11px] text-white/30 font-medium" style={{background:"#080810"}}>{d}</div>
+            <div key={d} className="py-3 text-center text-[11px] text-white/30 font-medium" style={{background:"rgba(8,8,16,0.6)"}}>{d}</div>
           ))}
           {cells.map((day,i)=>{
-            if(!day)return<div key={`e${i}`} style={{background:"#080810",opacity:0.3}}/>;
+            if(!day)return<div key={`e${i}`} style={{background:"rgba(8,8,16,0.6)",opacity:0.3}}/>;
             const now=new Date();
             const isToday=day===now.getDate()&&month===now.getMonth()&&year===now.getFullYear();
             const evs=dayEvs(day);
             const holidays=getHoliday(year,month,day);
             const hasHoliday=holidays.length>0;
-            const bgColor=hasHoliday?"rgba(251,191,36,0.06)":isToday?"rgba(192,132,252,0.05)":"#080810";
+            const bgColor=hasHoliday?"rgba(251,191,36,0.06)":isToday?"rgba(139,92,246,0.05)":"#080810";
             return (
               <div key={day} onClick={()=>setSelected({day,evs,holidays})}
-                className="min-h-24 p-2 flex flex-col gap-1 cursor-pointer hover:bg-white/[0.025] transition-colors"
+                className="min-h-24 p-2 flex flex-col gap-1 cursor-pointer hover:bg-white/[0.015] transition-colors"
                 style={{background:bgColor}}>
                 <div className="flex items-center justify-between mb-0.5">
                   <span className={`text-xs w-6 h-6 flex items-center justify-center rounded-full flex-shrink-0 ${isToday?"bg-purple-500 text-white font-bold":"text-white/45"}`}>{day}</span>
@@ -589,7 +593,7 @@ function CalendarPage({events}) {
                   </div>
                 ))}
                 {evs.map(e=>(
-                  <div key={e.id} className="text-[10px] px-1.5 py-0.5 rounded-md truncate" style={{background:"rgba(192,132,252,0.2)",color:"#d8b4fe"}}>
+                  <div key={e.id} className="text-[10px] px-1.5 py-0.5 rounded-md truncate" style={{background:"rgba(139,92,246,0.2)",color:"#c4b5fd"}}>
                     {getIcon(e.type)} {e.client.split("&")[0].trim().split(" ")[0]}
                   </div>
                 ))}
@@ -599,7 +603,7 @@ function CalendarPage({events}) {
         </div>
         <div className="mt-5 flex flex-wrap gap-2">
           {events.map(e=>(
-            <div key={e.id} className="flex items-center gap-2 px-3 py-1.5 rounded-xl border border-white/8 bg-white/[0.025] text-xs text-white/50">
+            <div key={e.id} className="flex items-center gap-2 px-3 py-1.5 rounded-xl border border-white/3 bg-white/[0.015] text-xs text-white/50">
               <span>{getIcon(e.type)}</span>
               <span className="whitespace-nowrap">{e.date.split("-")[2]} {MONTH_NAMES[parseInt(e.date.split("-")[1])-1]?.slice(0,3)} - {e.client.split("&")[0].trim()}</span>
               <Badge color={e.status==="confirmed"?"green":"amber"}>{e.status==="confirmed"?"Onaylandı":"Bekliyor"}</Badge>
@@ -624,7 +628,7 @@ function CalendarPage({events}) {
         {selected&&(selected.evs.length>0?(
           <div className="space-y-3">
             {selected.evs.map(ev=>(
-              <div key={ev.id} className="p-4 rounded-xl border border-white/8 bg-white/[0.03]">
+              <div key={ev.id} className="p-4 rounded-xl border border-white/3 bg-white/[0.02]">
                 <div className="flex items-center gap-3 mb-2">
                   <span className="text-2xl">{getIcon(ev.type)}</span>
                   <div><div className="text-sm font-semibold text-white/85">{ev.client}</div><div className="text-xs text-white/40">{ev.time} - {ev.location}</div></div>
@@ -667,7 +671,7 @@ function TasksPage({tasks,setTasks,events}) {
           ))}
         </div>
         <select value={filterEv} onChange={e=>setFilterEv(e.target.value)}
-          className="px-3 py-1.5 rounded-xl text-xs text-white/60 bg-white/5 border border-white/8 outline-none bg-[#0f0f1c]">
+          className="px-3 py-1.5 rounded-xl text-xs text-white/60 bg-white/3 border border-white/3 outline-none bg-[#0f0f1c]">
           <option value="Tümu">Tüm etkinlikler</option>
           {events.map(e=><option key={e.id} value={e.id}>{e.client}</option>)}
         </select>
@@ -675,8 +679,8 @@ function TasksPage({tasks,setTasks,events}) {
       </div>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {cols.map(col=>(
-          <div key={col} className="rounded-2xl border border-white/5 overflow-hidden" style={{background:"rgba(255,255,255,0.02)"}}>
-            <div className="px-4 py-3 border-b border-white/5 flex items-center gap-2">
+          <div key={col} className="rounded-2xl border border-white/3 overflow-hidden" style={{background:"rgba(255,255,255,0.02)"}}>
+            <div className="px-4 py-3 border-b border-white/3 flex items-center gap-2">
               <span className={`w-2 h-2 rounded-full ${col==="bekliyor"?"bg-amber-400":col==="devam"?"bg-blue-400":"bg-emerald-400"}`}/>
               <span className="text-sm font-medium text-white/70">{TASK_COL[col].label}</span>
               <span className="ml-auto text-[10px] text-white/30">{filt.filter(t=>t.status===col).length}</span>
@@ -685,7 +689,7 @@ function TasksPage({tasks,setTasks,events}) {
               {filt.filter(t=>t.status===col).map(task=>{
                 const ev=events.find(e=>e.id===task.eventId);
                 return (
-                  <div key={task.id} className="p-3 rounded-xl border border-white/5 hover:border-white/10 transition-all group" style={{background:"rgba(255,255,255,0.03)"}}>
+                  <div key={task.id} className="p-3 rounded-xl border border-white/3 hover:border-white/3 transition-all group" style={{background:"rgba(255,255,255,0.03)"}}>
                     <div className="flex items-start justify-between gap-2 mb-1.5">
                       <span className="text-xs font-medium text-white/85 flex-1">{task.task}</span>
                       <button onClick={()=>del(task.id)} className="opacity-0 group-hover:opacity-100 transition-opacity text-white/20 hover:text-rose-400 text-xs leading-none flex-shrink-0">x</button>
@@ -721,7 +725,7 @@ function TasksPage({tasks,setTasks,events}) {
         </div>
         <div className="flex justify-end gap-2 mt-5">
           <GlassBtn onClick={()=>setAddOpen(false)}>Iptal</GlassBtn>
-          <button onClick={addTask} className="px-5 py-2 rounded-xl text-xs font-semibold text-white" style={{background:"linear-gradient(135deg,#c084fc,#818cf8)"}}>Ekle</button>
+          <button onClick={addTask} className="px-5 py-2 rounded-xl text-xs font-semibold text-white" style={{background:"linear-gradient(135deg,#8b5cf6,#6366f1)"}}>Ekle</button>
         </div>
       </Modal>
     </div>
@@ -749,7 +753,7 @@ function InvitationsPage({events,guests}) {
         <div className="divide-y divide-white/5">
           {events.map(ev=>(
             <div key={ev.id} onClick={()=>setActiveEv(ev)}
-              className={`px-4 py-3 cursor-pointer transition-colors flex items-center gap-3 ${activeEv?.id===ev.id?"bg-purple-500/10 border-l-2 border-purple-500":"hover:bg-white/[0.03]"}`}>
+              className={`px-4 py-3 cursor-pointer transition-colors flex items-center gap-3 ${activeEv?.id===ev.id?"bg-purple-500/10 border-l-2 border-purple-500":"hover:bg-white/[0.02]"}`}>
               <span className="text-xl flex-shrink-0">{getIcon(ev.type)}</span>
               <div className="flex-1 min-w-0">
                 <div className="text-xs font-medium text-white/80 truncate">{ev.client}</div>
@@ -768,7 +772,7 @@ function InvitationsPage({events,guests}) {
           </div>
           <div className="flex gap-2 flex-shrink-0">
             <GlassBtn onClick={()=>setPreview(true)}>Onizle</GlassBtn>
-            <button className="px-3 py-2 rounded-xl text-xs font-medium text-white" style={{background:"linear-gradient(135deg,#c084fc,#818cf8)"}}>Olustur & Paylas</button>
+            <button className="px-3 py-2 rounded-xl text-xs font-medium text-white" style={{background:"linear-gradient(135deg,#8b5cf6,#6366f1)"}}>Olustur & Paylas</button>
           </div>
         </div>
         <div>
@@ -787,7 +791,7 @@ function InvitationsPage({events,guests}) {
           <p className="text-xs text-white/40 mb-3">RSVP Özeti</p>
           <div className="grid grid-cols-3 gap-2">
             {[{label:"Katiliyor",count:evGuests.filter(g=>g.response==="katılıyor").length,color:"#34d399"},{label:"Belki",count:evGuests.filter(g=>g.response==="belki").length,color:"#fbbf24"},{label:"Katilamyor",count:evGuests.filter(g=>g.response==="katılamıyor").length,color:"#f87171"}].map(s=>(
-              <div key={s.label} className="p-3 rounded-xl border border-white/5 text-center" style={{background:"rgba(255,255,255,0.03)"}}>
+              <div key={s.label} className="p-3 rounded-xl border border-white/3 text-center" style={{background:"rgba(255,255,255,0.03)"}}>
                 <div className="text-2xl font-bold" style={{color:s.color}}>{s.count}</div>
                 <div className="text-[10px] text-white/40 mt-0.5">{s.label}</div>
               </div>
@@ -797,14 +801,14 @@ function InvitationsPage({events,guests}) {
         {evGuests.length>0&&(
           <div>
             <p className="text-xs text-white/40 mb-3">Misafir Listesi ({evGuests.length})</p>
-            <div className="rounded-xl overflow-hidden border border-white/5">
+            <div className="rounded-xl overflow-hidden border border-white/3">
               <table className="w-full">
-                <thead><tr className="border-b border-white/5 bg-white/[0.025]">
+                <thead><tr className="border-b border-white/3 bg-white/[0.015]">
                   {["Ad Soyad","Telefon","+Kisi","Cocuk","Yemek","Cevap"].map(h=><th key={h} className="px-3 py-2 text-left text-[10px] text-white/30 uppercase tracking-wider">{h}</th>)}
                 </tr></thead>
                 <tbody className="divide-y divide-white/5">
                   {evGuests.map(g=>(
-                    <tr key={g.id} className="hover:bg-white/[0.025] transition-colors">
+                    <tr key={g.id} className="hover:bg-white/[0.015] transition-colors">
                       <td className="px-3 py-2 text-xs text-white/75">{g.name}</td>
                       <td className="px-3 py-2 text-xs text-white/45">{g.phone}</td>
                       <td className="px-3 py-2 text-xs text-white/50 text-center">{g.plus}</td>
@@ -818,7 +822,7 @@ function InvitationsPage({events,guests}) {
             </div>
           </div>
         )}
-        <div className="p-3 rounded-xl border border-white/8 bg-white/[0.025] flex items-center gap-3">
+        <div className="p-3 rounded-xl border border-white/3 bg-white/[0.015] flex items-center gap-3">
           <div className="flex-1 min-w-0">
             <div className="text-[10px] text-white/35 mb-0.5">Davetiye Linki</div>
             <div className="text-xs font-mono text-purple-400">beka.io/i/{activeEv?.id}</div>
@@ -829,7 +833,7 @@ function InvitationsPage({events,guests}) {
       </Card>
       <Modal open={preview} onClose={()=>setPreview(false)} title="Davetiye Onizlemesi">
         <div className="flex justify-center">
-          <div className="w-72 rounded-3xl overflow-hidden" style={{background:`linear-gradient(160deg,${th.dark} 0%,#0d0d18 100%)`,border:"1px solid rgba(192,132,252,0.2)"}}>
+          <div className="w-72 rounded-3xl overflow-hidden" style={{background:`linear-gradient(160deg,${th.dark} 0%,#0d0d18 100%)`,border:"1px solid rgba(139,92,246,0.2)"}}>
             <div className="relative overflow-hidden h-44 flex items-center justify-center" style={{background:`linear-gradient(135deg,${th.from},${th.to})`}}>
               <div className="text-center z-10">
                 <div className="text-6xl mb-2">{getIcon(activeEv?.type)}</div>
@@ -841,7 +845,7 @@ function InvitationsPage({events,guests}) {
                 <div className="text-lg font-bold text-white mb-1">{activeEv?.client}</div>
                 <div className="text-[11px] tracking-widest uppercase" style={{color:th.from}}>{activeEv?.type}</div>
               </div>
-              <div className="border-t border-b border-white/10 py-3 space-y-1.5">
+              <div className="border-t border-b border-white/3 py-3 space-y-1.5">
                 <div className="text-white/60 text-sm">&#128197; {activeEv?.date}</div>
                 <div className="text-white/60 text-sm">&#128336; {activeEv?.time}</div>
                 <div className="text-white/60 text-sm">&#128205; {activeEv?.location}</div>
@@ -877,7 +881,7 @@ function GalleryPage({events,gallery,setGallery}) {
             const pend=cnt.filter(g=>!g.approved).length;
             return (
               <div key={ev.id} onClick={()=>setActiveEv(ev)}
-                className={`px-4 py-3 cursor-pointer transition-colors flex items-center gap-3 ${activeEv?.id===ev.id?"bg-purple-500/10 border-l-2 border-purple-500":"hover:bg-white/[0.03]"}`}>
+                className={`px-4 py-3 cursor-pointer transition-colors flex items-center gap-3 ${activeEv?.id===ev.id?"bg-purple-500/10 border-l-2 border-purple-500":"hover:bg-white/[0.02]"}`}>
                 <span className="text-xl flex-shrink-0">{getIcon(ev.type)}</span>
                 <div className="flex-1 min-w-0">
                   <div className="text-xs text-white/75 truncate">{ev.client}</div>
@@ -901,8 +905,8 @@ function GalleryPage({events,gallery,setGallery}) {
           </div>
         </div>
         <div className="grid grid-cols-3 gap-3 mb-4">
-          {[{label:"Toplam",val:photos.length,c:"#c084fc"},{label:"Onaylandı",val:photos.filter(p=>p.approved).length,c:"#34d399"},{label:"Bekliyor",val:photos.filter(p=>!p.approved).length,c:"#fbbf24"}].map(s=>(
-            <div key={s.label} className="p-3 rounded-xl border border-white/5 bg-white/[0.02] text-center">
+          {[{label:"Toplam",val:photos.length,c:"#8b5cf6"},{label:"Onaylandı",val:photos.filter(p=>p.approved).length,c:"#34d399"},{label:"Bekliyor",val:photos.filter(p=>!p.approved).length,c:"#fbbf24"}].map(s=>(
+            <div key={s.label} className="p-3 rounded-xl border border-white/3 bg-white/[0.02] text-center">
               <div className="text-xl font-bold" style={{color:s.c}}>{s.val}</div>
               <div className="text-[10px] text-white/35">{s.label}</div>
             </div>
@@ -925,14 +929,14 @@ function GalleryPage({events,gallery,setGallery}) {
                 {photo.approved&&<div className="absolute top-2 left-2 text-emerald-400 text-xs">&#10003;</div>}
               </div>
             ))}
-            <div className="rounded-xl border-2 border-dashed border-white/10 flex flex-col items-center justify-center cursor-pointer hover:border-white/25 transition-colors" style={{aspectRatio:"16/10"}} onClick={()=>document.getElementById('gallery-upload-input')?.click()}>
+            <div className="rounded-xl border-2 border-dashed border-white/3 flex flex-col items-center justify-center cursor-pointer hover:border-white/25 transition-colors" style={{aspectRatio:"16/10"}} onClick={()=>document.getElementById('gallery-upload-input')?.click()}>
               <span className="text-2xl text-white/20 mb-1">+</span>
               <span className="text-[10px] text-white/25">Yukle</span>
             </div>
             <input type="file" id="gallery-upload-input" accept="image/*" multiple className="hidden" onChange={(e)=>{const files=Array.from(e.target.files);const newPhotos=files.map((f,i)=>({id:Date.now()+i,eventId:activeEv?.id,url:URL.createObjectURL(f),approved:false}));setGallery(p=>[...p,...newPhotos]);e.target.value='';}}/>
           </div>
         ):(
-          <div className="text-center py-16 border-2 border-dashed border-white/8 rounded-2xl">
+          <div className="text-center py-16 border-2 border-dashed border-white/3 rounded-2xl">
             <div className="text-5xl mb-3 opacity-20">&#128248;</div>
             <div className="text-white/30 text-sm">Bu etkinlik için henuz medya yok</div>
           </div>
@@ -963,7 +967,7 @@ function PaymentsPage({events}) {
   return (
     <div className="space-y-5">
       <div className="grid grid-cols-3 gap-4">
-        <StatBox label="Toplam Butce" value={`${(totalRev/1000).toFixed(0)}k TL`} sub="Tüm etkinlikler" icon="&#9672;" color="#c084fc"/>
+        <StatBox label="Toplam Butce" value={`${(totalRev/1000).toFixed(0)}k TL`} sub="Tüm etkinlikler" icon="&#9672;" color="#8b5cf6"/>
         <StatBox label="Tahsilat"     value={`${(totalPaid/1000).toFixed(0)}k TL`} sub={`%${totalRev>0?((totalPaid/totalRev)*100).toFixed(0):0} tamamlandı`} icon="&#9689;" color="#34d399"/>
         <StatBox label="Bekleyen"     value={`${(totalRem/1000).toFixed(0)}k TL`} sub="Tahsilat bekliyor" icon="&#9680;" color="#fb923c"/>
       </div>
@@ -971,7 +975,7 @@ function PaymentsPage({events}) {
         <SectionHeader title="Ödeme Detaylari"/>
         <div className="overflow-x-auto">
           <table className="w-full">
-            <thead><tr className="border-b border-white/5">
+            <thead><tr className="border-b border-white/3">
               {["Müşteri","Etkinlik","Tarih","Toplam","Odenen","Kalan","%","Durum",""].map(h=>(
                 <th key={h} className="px-4 py-3 text-left text-[10px] text-white/30 font-medium uppercase tracking-wider whitespace-nowrap">{h}</th>
               ))}
@@ -981,7 +985,7 @@ function PaymentsPage({events}) {
                 const rem=ev.budget-ev.paid;
                 const pct=ev.budget>0?Math.round((ev.paid/ev.budget)*100):0;
                 return (
-                  <tr key={ev.id} className="hover:bg-white/[0.025] transition-colors">
+                  <tr key={ev.id} className="hover:bg-white/[0.015] transition-colors">
                     <td className="px-4 py-3 text-sm text-white/80 whitespace-nowrap">{ev.client}</td>
                     <td className="px-4 py-3 text-xs text-white/50 whitespace-nowrap">{getIcon(ev.type)} {ev.type}</td>
                     <td className="px-4 py-3 text-xs text-white/50">{ev.date}</td>
@@ -990,12 +994,12 @@ function PaymentsPage({events}) {
                     <td className="px-4 py-3 text-xs font-medium text-rose-400 whitespace-nowrap">{rem.toLocaleString()}</td>
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-2">
-                        <div className="w-12 h-1.5 rounded-full bg-white/10"><div className="h-1.5 rounded-full" style={{width:`${pct}%`,background:pct===100?"#34d399":"linear-gradient(90deg,#c084fc,#818cf8)"}}/></div>
+                        <div className="w-12 h-1.5 rounded-full bg-white/10"><div className="h-1.5 rounded-full" style={{width:`${pct}%`,background:pct===100?"#34d399":"linear-gradient(90deg,#8b5cf6,#6366f1)"}}/></div>
                         <span className="text-[10px] text-white/40">{pct}%</span>
                       </div>
                     </td>
                     <td className="px-4 py-3"><span className={`text-[10px] px-2 py-0.5 rounded-full font-medium ${PAY_COL[ev.payment]?.bg||""} ${PAY_COL[ev.payment]?.tx||""}`}>{ev.payment}</span></td>
-                    <td className="px-4 py-3">{rem>0&&<button className="text-[10px] px-2.5 py-1 rounded-lg text-white/50 hover:text-white border border-white/8 hover:border-white/20 transition-colors whitespace-nowrap">Tahsil Et</button>}</td>
+                    <td className="px-4 py-3">{rem>0&&<button className="text-[10px] px-2.5 py-1 rounded-lg text-white/50 hover:text-white border border-white/3 hover:border-white/20 transition-colors whitespace-nowrap">Tahsil Et</button>}</td>
                   </tr>
                 );
               })}
@@ -1015,7 +1019,7 @@ function PaymentsPage({events}) {
                   <span className="text-xs text-white/55 truncate">{ev.client.split("&")[0].trim()}</span>
                 </div>
                 <div className="flex-1 h-2 rounded-full bg-white/8 overflow-hidden">
-                  <div className="h-2 rounded-full transition-all duration-500" style={{width:`${pct}%`,background:pct===100?"#34d399":pct>50?"linear-gradient(90deg,#c084fc,#818cf8)":"linear-gradient(90deg,#fb923c,#f97316)"}}/>
+                  <div className="h-2 rounded-full transition-all duration-500" style={{width:`${pct}%`,background:pct===100?"#34d399":pct>50?"linear-gradient(90deg,#8b5cf6,#6366f1)":"linear-gradient(90deg,#fb923c,#f97316)"}}/>
                 </div>
                 <div className="flex items-center gap-2 flex-shrink-0">
                   <span className="text-xs text-white/40 w-8 text-right">{pct}%</span>
@@ -1049,13 +1053,13 @@ function ReservationPage() {
       <div className="w-20 h-20 rounded-full flex items-center justify-center text-4xl mx-auto mb-6" style={{background:"rgba(52,211,153,0.15)"}}>&#10003;</div>
       <h2 className="text-xl font-bold text-white mb-2">Rezervasyon Alindi!</h2>
       <p className="text-white/50 text-sm mb-6">Ekibimiz en kisa surede <span className="text-purple-400">{form.phone||"sizi"}</span> arayacak.</p>
-      <div className="p-4 rounded-2xl border border-white/8 bg-white/[0.03] text-left space-y-2 mb-6">
+      <div className="p-4 rounded-2xl border border-white/3 bg-white/[0.02] text-left space-y-2 mb-6">
         {[["Etkinlik",form.type],["Tarih",`${form.date} ${form.time}`],["Kisi",`${form.guests} kisi`],["Lokasyon",form.location],["Tahmini",`${total.toLocaleString()} TL`]].map(([k,v])=>(
           <div key={k} className="flex justify-between text-xs"><span className="text-white/35">{k}</span><span className="text-white/75">{v||"—"}</span></div>
         ))}
       </div>
       <button onClick={()=>{setDone(false);setStep(1);setForm({type:"",date:"",time:"",guests:"",location:"",cöncept:"",services:[],name:"",phone:"",email:"",notes:""});}}
-        className="px-6 py-3 rounded-xl text-sm font-medium text-white" style={{background:"linear-gradient(135deg,#c084fc,#818cf8)"}}>
+        className="px-6 py-3 rounded-xl text-sm font-medium text-white" style={{background:"linear-gradient(135deg,#8b5cf6,#6366f1)"}}>
         + Yeni Rezervasyon
       </button>
     </div>
@@ -1084,7 +1088,7 @@ function ReservationPage() {
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
               {EVENT_TYPES.map(t=>(
                 <button key={t} onClick={()=>upd("type",t)}
-                  className={`p-4 rounded-xl border-2 flex flex-col items-center gap-2 transition-all ${form.type===t?"border-purple-500 bg-purple-500/15":"border-white/8 hover:border-white/20 bg-white/[0.03]"}`}>
+                  className={`p-4 rounded-xl border-2 flex flex-col items-center gap-2 transition-all ${form.type===t?"border-purple-500 bg-purple-500/15":"border-white/3 hover:border-white/20 bg-white/[0.02]"}`}>
                   <span className="text-3xl">{getIcon(t)}</span>
                   <span className="text-[11px] text-white/70 text-center leading-tight">{t}</span>
                 </button>
@@ -1123,7 +1127,7 @@ function ReservationPage() {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               {cöncepts.map(c=>(
                 <button key={c} onClick={()=>upd("cöncept",c)}
-                  className={`p-4 rounded-xl border-2 text-left transition-all ${form.cöncept===c?"border-purple-500 bg-purple-500/15":"border-white/8 hover:border-white/20 bg-white/[0.03]"}`}>
+                  className={`p-4 rounded-xl border-2 text-left transition-all ${form.cöncept===c?"border-purple-500 bg-purple-500/15":"border-white/3 hover:border-white/20 bg-white/[0.02]"}`}>
                   <span className="text-sm font-medium text-white/80">{c}</span>
                 </button>
               ))}
@@ -1138,7 +1142,7 @@ function ReservationPage() {
                 const sel=form.services.includes(name);
                 return (
                   <button key={name} onClick={()=>upd("services",sel?form.services.filter(x=>x!==name):[...form.services,name])}
-                    className={`p-4 rounded-xl border-2 flex items-center justify-between transition-all ${sel?"border-purple-500 bg-purple-500/15":"border-white/8 hover:border-white/20 bg-white/[0.03]"}`}>
+                    className={`p-4 rounded-xl border-2 flex items-center justify-between transition-all ${sel?"border-purple-500 bg-purple-500/15":"border-white/3 hover:border-white/20 bg-white/[0.02]"}`}>
                     <span className="text-sm text-white/75">{name}</span>
                     <span className="text-[10px] text-white/40 whitespace-nowrap">+{price.toLocaleString()}</span>
                   </button>
@@ -1164,12 +1168,12 @@ function ReservationPage() {
             <h3 className="text-sm font-semibold text-white/85 mb-4">Özet & Onay</h3>
             <div className="p-4 rounded-xl bg-white/[0.04] space-y-2">
               {[["Etkinlik",form.type||"—"],["Tarih",form.date||"—"],["Saat",form.time||"—"],["Kisi",form.guests?`${form.guests} kisi`:"—"],["Lokasyon",form.location||"—"],["Konsept",form.cöncept||"—"],["Ad Soyad",form.name||"—"],["Telefon",form.phone||"—"]].map(([k,v])=>(
-                <div key={k} className="flex justify-between py-1.5 border-b border-white/5">
+                <div key={k} className="flex justify-between py-1.5 border-b border-white/3">
                   <span className="text-xs text-white/35">{k}</span><span className="text-xs text-white/75">{v}</span>
                 </div>
               ))}
               {form.services.length>0&&(
-                <div className="flex justify-between py-1.5 border-b border-white/5">
+                <div className="flex justify-between py-1.5 border-b border-white/3">
                   <span className="text-xs text-white/35">Ek Hizmetler</span>
                   <span className="text-xs text-white/75 text-right max-w-[200px]">{form.services.join(", ")}</span>
                 </div>
@@ -1187,11 +1191,11 @@ function ReservationPage() {
             </div>
           </div>
         )}
-        <div className="flex items-center justify-between mt-6 pt-4 border-t border-white/8">
+        <div className="flex items-center justify-between mt-6 pt-4 border-t border-white/3">
           <GlassBtn onClick={()=>setStep(s=>Math.max(1,s-1))} disabled={step===1}>Geri</GlassBtn>
           {step<6?(
             <button onClick={()=>setStep(s=>s+1)} disabled={step===1&&!form.type}
-              className="px-6 py-2 rounded-xl text-xs font-semibold text-white disabled:opacity-40 transition-all hover:opacity-90" style={{background:"linear-gradient(135deg,#c084fc,#818cf8)"}}>
+              className="px-6 py-2 rounded-xl text-xs font-semibold text-white disabled:opacity-40 transition-all hover:opacity-90" style={{background:"linear-gradient(135deg,#8b5cf6,#6366f1)"}}>
               Devam
             </button>
           ):(
@@ -1229,7 +1233,7 @@ function WhatsAppPage({events}) {
         <div className="divide-y divide-white/5">
           {WA_TEMPLATES.map(tmpl=>(
             <div key={tmpl.id} onClick={()=>{setActive(tmpl);setEditBody(tmpl.body);setEditing(false);}}
-              className={`px-4 py-3 cursor-pointer transition-colors ${active?.id===tmpl.id?"bg-green-500/[0.08] border-l-2 border-green-500":"hover:bg-white/[0.03]"}`}>
+              className={`px-4 py-3 cursor-pointer transition-colors ${active?.id===tmpl.id?"bg-green-500/[0.08] border-l-2 border-green-500":"hover:bg-white/[0.02]"}`}>
               <div className="flex items-center gap-3">
                 <span className="text-xl">{tmpl.icon}</span>
                 <div className="flex-1 min-w-0">
@@ -1255,13 +1259,13 @@ function WhatsAppPage({events}) {
         </div>
         {editing?(
           <textarea value={editBody} onChange={e=>setEditBody(e.target.value)} rows={8}
-            className="w-full px-4 py-3 rounded-xl text-sm text-white/80 bg-white/5 border border-purple-500/30 outline-none resize-none font-mono leading-relaxed"/>
+            className="w-full px-4 py-3 rounded-xl text-sm text-white/80 bg-white/3 border border-purple-500/30 outline-none resize-none font-mono leading-relaxed"/>
         ):(
-          <div className="p-4 rounded-xl border border-white/8 bg-white/[0.025]">
+          <div className="p-4 rounded-xl border border-white/3 bg-white/[0.015]">
             <pre className="text-sm text-white/75 whitespace-pre-wrap leading-relaxed font-sans">{editBody}</pre>
           </div>
         )}
-        {editing&&<button onClick={()=>setEditing(false)} className="px-4 py-2 rounded-xl text-xs font-medium text-white" style={{background:"linear-gradient(135deg,#c084fc,#818cf8)"}}>Kaydet</button>}
+        {editing&&<button onClick={()=>setEditing(false)} className="px-4 py-2 rounded-xl text-xs font-medium text-white" style={{background:"linear-gradient(135deg,#8b5cf6,#6366f1)"}}>Kaydet</button>}
         <div>
           <p className="text-xs text-white/40 mb-2">Degiskenler</p>
           <div className="flex flex-wrap gap-1.5">
@@ -1274,7 +1278,7 @@ function WhatsAppPage({events}) {
           <p className="text-xs text-white/40 mb-3">Gonderim Hedefleri</p>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
             {events.slice(0,6).map(ev=>(
-              <div key={ev.id} className="flex items-center gap-2 p-3 rounded-xl border border-white/8 bg-white/[0.025]">
+              <div key={ev.id} className="flex items-center gap-2 p-3 rounded-xl border border-white/3 bg-white/[0.015]">
                 <span className="text-base">{getIcon(ev.type)}</span>
                 <div className="flex-1 min-w-0">
                   <div className="text-xs text-white/75 truncate">{ev.client}</div>
@@ -1305,7 +1309,7 @@ function WhatsAppPage({events}) {
       </Card>
       <Modal open={preview} onClose={()=>setPreview(false)} title="WhatsApp Onizlemesi">
         <div className="rounded-2xl overflow-hidden" style={{background:"#111b21"}}>
-          <div className="p-4 flex items-center gap-3 border-b border-white/8">
+          <div className="p-4 flex items-center gap-3 border-b border-white/3">
             <div className="w-10 h-10 rounded-full bg-green-500/20 flex items-center justify-center text-green-400 text-xl">&#128172;</div>
             <div><div className="text-sm font-semibold text-white">Beka Organizasyon</div><div className="text-[10px] text-white/40">WhatsApp Business</div></div>
           </div>
@@ -1330,7 +1334,7 @@ function StaffPage({events}) {
   const upd=k=>e=>setForm(p=>({...p,[k]:e.target.value}));
   const add=()=>{
     if(!form.name.trim())return;
-    setStaff(p=>[...p,{id:Date.now(),...form,status:"aktif",events:0,avatar:form.name[0].toUpperCase(),color:"#c084fc"}]);
+    setStaff(p=>[...p,{id:Date.now(),...form,status:"aktif",events:0,avatar:form.name[0].toUpperCase(),color:"#8b5cf6"}]);
     setForm({name:"",role:"",phone:"",email:""});setAddOpen(false);
   };
   const toggle=(id)=>setStaff(p=>p.map(s=>s.id===id?{...s,status:s.status==="aktif"?"pasif":"aktif"}:s));
@@ -1339,11 +1343,11 @@ function StaffPage({events}) {
     <div className="space-y-5">
       <div className="flex items-start justify-between flex-wrap gap-4">
         <div className="flex gap-3">
-          <StatBox label="Toplam" value={staff.length} sub="personel" icon="&#9676;" color="#c084fc"/>
+          <StatBox label="Toplam" value={staff.length} sub="personel" icon="&#9676;" color="#8b5cf6"/>
           <StatBox label="Aktif"  value={staff.filter(s=>s.status==="aktif").length} sub="calisiyor" icon="&#9689;" color="#34d399"/>
           <StatBox label="Pasif"  value={staff.filter(s=>s.status==="pasif").length} sub="disarida"  icon="&#9680;" color="#fb923c"/>
         </div>
-        <button onClick={()=>setAddOpen(true)} className="px-4 py-2.5 rounded-xl text-sm font-medium text-white" style={{background:"linear-gradient(135deg,#c084fc,#818cf8)"}}>+ Personel Ekle</button>
+        <button onClick={()=>setAddOpen(true)} className="px-4 py-2.5 rounded-xl text-sm font-medium text-white" style={{background:"linear-gradient(135deg,#8b5cf6,#6366f1)"}}>+ Personel Ekle</button>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {staff.map(s=>(
@@ -1364,8 +1368,8 @@ function StaffPage({events}) {
               <div>&#128203; {s.events} etkinlik</div>
             </div>
             <div className="flex gap-2">
-              <button className="flex-1 py-1.5 rounded-xl text-[10px] text-white/50 border border-white/8 hover:border-white/20 transition-colors">Mesaj</button>
-              <button className="flex-1 py-1.5 rounded-xl text-[10px] text-white/50 border border-white/8 hover:border-white/20 transition-colors">Gorevler</button>
+              <button className="flex-1 py-1.5 rounded-xl text-[10px] text-white/50 border border-white/3 hover:border-white/20 transition-colors">Mesaj</button>
+              <button className="flex-1 py-1.5 rounded-xl text-[10px] text-white/50 border border-white/3 hover:border-white/20 transition-colors">Gorevler</button>
               <button onClick={()=>del(s.id)} className="py-1.5 px-2 rounded-xl text-[10px] text-rose-400/50 border border-rose-500/10 hover:border-rose-500/30 hover:text-rose-400 transition-colors">x</button>
             </div>
           </Card>
@@ -1375,7 +1379,7 @@ function StaffPage({events}) {
         <SectionHeader title="Etkinlik Atamalari"/>
         <div className="p-5 overflow-x-auto">
           <table className="w-full">
-            <thead><tr className="border-b border-white/5">
+            <thead><tr className="border-b border-white/3">
               <th className="pb-3 text-left text-[10px] text-white/30 font-medium uppercase tracking-wider">Etkinlik</th>
               {staff.filter(s=>s.status==="aktif").map(s=>(
                 <th key={s.id} className="pb-3 text-center text-[10px] text-white/30 font-medium uppercase tracking-wider px-3 whitespace-nowrap">{s.name.split(" ")[0]}</th>
@@ -1404,7 +1408,7 @@ function StaffPage({events}) {
         </div>
         <div className="flex justify-end gap-2 mt-5">
           <GlassBtn onClick={()=>setAddOpen(false)}>Iptal</GlassBtn>
-          <button onClick={add} className="px-5 py-2 rounded-xl text-xs font-semibold text-white" style={{background:"linear-gradient(135deg,#c084fc,#818cf8)"}}>Kaydet</button>
+          <button onClick={add} className="px-5 py-2 rounded-xl text-xs font-semibold text-white" style={{background:"linear-gradient(135deg,#8b5cf6,#6366f1)"}}>Kaydet</button>
         </div>
       </Modal>
     </div>
@@ -1420,7 +1424,7 @@ function CRMPage({events}) {
     <div className="space-y-4">
       <div className="flex items-center gap-4">
         <input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Müşteri adi veya telefon ara..."
-          className="flex-1 max-w-sm px-4 py-2 rounded-xl text-sm text-white/80 placeholder-white/25 outline-none border border-white/8 bg-white/5 focus:border-purple-500/40 transition-colors"/>
+          className="flex-1 max-w-sm px-4 py-2 rounded-xl text-sm text-white/80 placeholder-white/25 outline-none border border-white/3 bg-white/3 focus:border-purple-500/40 transition-colors"/>
         <span className="text-xs text-white/30">{clients.length} musteri</span>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -1429,8 +1433,8 @@ function CRMPage({events}) {
           <div className="divide-y divide-white/5 max-h-[600px] overflow-auto">
             {clients.map(c=>(
               <div key={c.id} onClick={()=>setSelected(c)}
-                className={`px-4 py-3 cursor-pointer transition-colors flex items-center gap-3 ${selected?.id===c.id?"bg-purple-500/10 border-l-2 border-purple-500":"hover:bg-white/[0.03]"}`}>
-                <div className="w-9 h-9 rounded-xl flex items-center justify-center text-sm font-bold flex-shrink-0" style={{background:"rgba(192,132,252,0.15)",color:"#c084fc"}}>
+                className={`px-4 py-3 cursor-pointer transition-colors flex items-center gap-3 ${selected?.id===c.id?"bg-purple-500/10 border-l-2 border-purple-500":"hover:bg-white/[0.02]"}`}>
+                <div className="w-9 h-9 rounded-xl flex items-center justify-center text-sm font-bold flex-shrink-0" style={{background:"rgba(139,92,246,0.15)",color:"#8b5cf6"}}>
                   {c.client[0]}
                 </div>
                 <div className="flex-1 min-w-0">
@@ -1445,8 +1449,8 @@ function CRMPage({events}) {
         <Card className="col-span-2 p-5">
           {selected?(
             <>
-              <div className="flex items-start gap-4 pb-5 border-b border-white/8 mb-5">
-                <div className="w-16 h-16 rounded-2xl flex items-center justify-center text-2xl font-bold flex-shrink-0" style={{background:"linear-gradient(135deg,#c084fc,#818cf8)"}}>
+              <div className="flex items-start gap-4 pb-5 border-b border-white/3 mb-5">
+                <div className="w-16 h-16 rounded-2xl flex items-center justify-center text-2xl font-bold flex-shrink-0" style={{background:"linear-gradient(135deg,#8b5cf6,#6366f1)"}}>
                   {selected.client[0]}
                 </div>
                 <div className="flex-1 min-w-0">
@@ -1464,7 +1468,7 @@ function CRMPage({events}) {
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-5">
                 {[["Telefon",selected.phone],["Etkinlik",selected.type],["Tarih",selected.date],["Butce",`${selected.budget.toLocaleString()} TL`],["Odenen",`${selected.paid.toLocaleString()} TL`],["Kalan",`${(selected.budget-selected.paid).toLocaleString()} TL`]].map(([k,v])=>(
-                  <div key={k} className="p-3 rounded-xl bg-white/[0.03] border border-white/5">
+                  <div key={k} className="p-3 rounded-xl bg-white/[0.02] border border-white/3">
                     <div className="text-[10px] text-white/35 mb-1">{k}</div>
                     <div className="text-sm text-white/80 font-medium">{v}</div>
                   </div>
@@ -1474,7 +1478,7 @@ function CRMPage({events}) {
                 <h4 className="text-xs text-white/40 mb-3">Etkinlik Gecmisi</h4>
                 <div className="space-y-2">
                   {events.filter(e=>e.phone===selected.phone).map(ev=>(
-                    <div key={ev.id} className="flex items-center gap-3 p-3 rounded-xl border border-white/5 bg-white/[0.02]">
+                    <div key={ev.id} className="flex items-center gap-3 p-3 rounded-xl border border-white/3 bg-white/[0.02]">
                       <span className="text-xl">{getIcon(ev.type)}</span>
                       <div className="flex-1">
                         <div className="text-xs text-white/75">{ev.type}</div>
@@ -1522,7 +1526,7 @@ function AnalyticsPage({events, tasks}) {
   return (
     <div className="space-y-5">
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-        <StatBox label="Toplam Gelir"   value={`${(totalRev/1000).toFixed(0)}k TL`}  sub="YTD"              icon="&#128176;" color="#c084fc"/>
+        <StatBox label="Toplam Gelir"   value={`${(totalRev/1000).toFixed(0)}k TL`}  sub="YTD"              icon="&#128176;" color="#8b5cf6"/>
         <StatBox label="Onay Orani"     value={`%${confRate}`}                         sub="Onaydi / Toplam"  icon="&#10003;"  color="#34d399"/>
         <StatBox label="Tahsilat"       value={`%${payRate}`}                          sub="Odenen / Butce"   icon="&#9680;"   color="#60a5fa"/>
         <StatBox label="Ort. Butce"     value={`${(avgBudget/1000).toFixed(1)}k TL`}  sub="Etkinlik basi"    icon="&#9672;"   color="#f472b6"/>
@@ -1535,7 +1539,7 @@ function AnalyticsPage({events, tasks}) {
               <div key={d.m} className="flex-1 flex flex-col items-center gap-1.5">
                 <div className="w-full flex flex-col justify-end gap-0.5" style={{height:"90%"}}>
                   <div className="w-full rounded-t-md" style={{height:`${(d.g/maxM)*100}%`,background:"rgba(52,211,153,0.4)",minHeight:4}}/>
-                  <div className="w-full" style={{height:`${((d.r-d.g)/maxM)*100}%`,background:"rgba(192,132,252,0.3)",minHeight:d.r>d.g?2:0}}/>
+                  <div className="w-full" style={{height:`${((d.r-d.g)/maxM)*100}%`,background:"rgba(139,92,246,0.3)",minHeight:d.r>d.g?2:0}}/>
                 </div>
                 <span className="text-[9px] text-white/30">{d.m}</span>
               </div>
@@ -1554,7 +1558,7 @@ function AnalyticsPage({events, tasks}) {
                 <span className="text-base w-6 text-center flex-shrink-0">{getIcon(item.type)}</span>
                 <span className="text-xs text-white/60 w-28 flex-shrink-0 truncate">{item.type}</span>
                 <div className="flex-1 h-2 rounded-full bg-white/8">
-                  <div className="h-2 rounded-full" style={{width:`${(item.count/maxCount)*100}%`,background:"linear-gradient(90deg,#c084fc,#818cf8)"}}/>
+                  <div className="h-2 rounded-full" style={{width:`${(item.count/maxCount)*100}%`,background:"linear-gradient(90deg,#8b5cf6,#6366f1)"}}/>
                 </div>
                 <span className="text-xs text-white/40 w-5 text-right flex-shrink-0">{item.count}</span>
                 <span className="text-[10px] text-white/25 w-14 text-right flex-shrink-0">{(item.revenue/1000).toFixed(0)}k</span>
@@ -1584,7 +1588,7 @@ function AnalyticsPage({events, tasks}) {
             <div className="relative w-28 h-28">
               <svg className="w-full h-full -rotate-90" viewBox="0 0 36 36">
                 <circle cx="18" cy="18" r="15.9" fill="none" stroke="rgba(255,255,255,0.08)" strokeWidth="3"/>
-                <circle cx="18" cy="18" r="15.9" fill="none" stroke="#c084fc" strokeWidth="3"
+                <circle cx="18" cy="18" r="15.9" fill="none" stroke="#8b5cf6" strokeWidth="3"
                   strokeDasharray={`${taskPct} 100`} strokeLinecap="round"/>
               </svg>
               <div className="absolute inset-0 flex flex-col items-center justify-center">
@@ -1611,7 +1615,7 @@ function AnalyticsPage({events, tasks}) {
               <div key={ev.id} className="flex items-center gap-2">
                 <span className="text-sm">{getIcon(ev.type)}</span>
                 <span className="text-xs text-white/55 flex-1 truncate">{ev.client.split("&")[0].trim()}</span>
-                <div className="w-16 h-1.5 rounded-full bg-white/8"><div className="h-1.5 rounded-full" style={{width:`${(ev.guests/totalGuests)*100}%`,background:"#c084fc"}}/></div>
+                <div className="w-16 h-1.5 rounded-full bg-white/8"><div className="h-1.5 rounded-full" style={{width:`${(ev.guests/totalGuests)*100}%`,background:"#8b5cf6"}}/></div>
                 <span className="text-[10px] text-white/35 w-6 text-right">{ev.guests}</span>
               </div>
             ))}
@@ -1666,7 +1670,7 @@ function AIPage() {
       <div className="flex gap-3">
         {MODES.map(m=>(
           <button key={m.id} onClick={()=>{setMode(m.id);setMsgs([{role:"assistant",text:"Merhaba! Ne yapmami istersiniz?"}]);}}
-            className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-medium transition-all border ${mode===m.id?"border-purple-500/40 bg-purple-500/15 text-purple-300":"border-white/8 text-white/40 hover:text-white/60 hover:border-white/15"}`}>
+            className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-medium transition-all border ${mode===m.id?"border-purple-500/40 bg-purple-500/15 text-purple-300":"border-white/3 text-white/40 hover:text-white/60 hover:border-white/15"}`}>
             <span dangerouslySetInnerHTML={{__html:m.icon}}/>{m.label}
           </button>
         ))}
@@ -1675,8 +1679,8 @@ function AIPage() {
         <div className="flex-1 overflow-auto p-5 space-y-4">
           {msgs.map((msg,i)=>(
             <div key={i} className={`flex ${msg.role==="user"?"justify-end":"justify-start"}`}>
-              <div className={`max-w-[82%] rounded-2xl px-4 py-3 text-sm leading-relaxed ${msg.role==="user"?"text-white":"text-white/80 border border-white/8"}`}
-                style={{background:msg.role==="user"?"linear-gradient(135deg,#c084fc,#818cf8)":"rgba(255,255,255,0.05)"}}>
+              <div className={`max-w-[82%] rounded-2xl px-4 py-3 text-sm leading-relaxed ${msg.role==="user"?"text-white":"text-white/80 border border-white/3"}`}
+                style={{background:msg.role==="user"?"linear-gradient(135deg,#8b5cf6,#6366f1)":"rgba(255,255,255,0.05)"}}>
                 {msg.role==="assistant"&&<div className="text-[10px] text-purple-400 font-medium mb-1.5">&#10022; BekaOS AI</div>}
                 <div style={{whiteSpace:"pre-wrap"}}>{msg.text}</div>
               </div>
@@ -1684,7 +1688,7 @@ function AIPage() {
           ))}
           {loading&&(
             <div className="flex justify-start">
-              <div className="rounded-2xl px-4 py-3 border border-white/8" style={{background:"rgba(255,255,255,0.05)"}}>
+              <div className="rounded-2xl px-4 py-3 border border-white/3" style={{background:"rgba(255,255,255,0.05)"}}>
                 <div className="flex gap-1.5">{[0,1,2].map(i=><div key={i} className="w-1.5 h-1.5 rounded-full bg-purple-400 animate-bounce" style={{animationDelay:`${i*0.15}s`}}/>)}</div>
               </div>
             </div>
@@ -1693,15 +1697,15 @@ function AIPage() {
         </div>
         <div className="px-5 pb-3 flex flex-wrap gap-1.5">
           {PROMPTS[mode].map(p=>(
-            <button key={p} onClick={()=>setInput(p)} className="text-[10px] px-3 py-1.5 rounded-full text-white/40 border border-white/8 hover:text-white/70 hover:border-white/20 transition-all">{p}</button>
+            <button key={p} onClick={()=>setInput(p)} className="text-[10px] px-3 py-1.5 rounded-full text-white/40 border border-white/3 hover:text-white/70 hover:border-white/20 transition-all">{p}</button>
           ))}
         </div>
         <div className="px-5 pb-5 flex gap-3">
           <input value={input} onChange={e=>setInput(e.target.value)} onKeyDown={e=>e.key==="Enter"&&!e.shiftKey&&send()}
             placeholder="Mesajinizi yazin..."
-            className="flex-1 px-4 py-3 rounded-xl text-sm text-white/80 placeholder-white/25 bg-white/5 border border-white/8 focus:border-purple-500/40 outline-none transition-colors"/>
+            className="flex-1 px-4 py-3 rounded-xl text-sm text-white/80 placeholder-white/25 bg-white/3 border border-white/3 focus:border-purple-500/40 outline-none transition-colors"/>
           <button onClick={send} disabled={loading||!input.trim()}
-            className="px-5 py-3 rounded-xl text-sm font-medium text-white disabled:opacity-40 transition-all hover:opacity-90" style={{background:"linear-gradient(135deg,#c084fc,#818cf8)"}}>
+            className="px-5 py-3 rounded-xl text-sm font-medium text-white disabled:opacity-40 transition-all hover:opacity-90" style={{background:"linear-gradient(135deg,#8b5cf6,#6366f1)"}}>
             &#8593;
           </button>
         </div>
@@ -1734,7 +1738,7 @@ function SettingsPage() {
         <h2 className="text-sm font-semibold text-white/80 mb-4">Bildirim Tercihleri</h2>
         <div className="space-y-3">
           {[{k:"rsvp",l:"RSVP Bildirimleri",s:"Yeni davetiye cevabı"},{k:"payment",l:"Ödeme Hatırlatmalari",s:"Bekleyen odemelerde"},{k:"task",l:"Gorev Güncellemeleri",s:"Durum değişiminde"},{k:"gallery",l:"Galeri Yüklemeleri",s:"Yeni fotoğraf yüklendiğinde"},{k:"reminder",l:"Etkinlik Hatırlatmalari",s:"24 saat önceden"}].map(n=>(
-            <div key={n.k} className="flex items-center justify-between py-2 border-b border-white/5 last:border-0">
+            <div key={n.k} className="flex items-center justify-between py-2 border-b border-white/3 last:border-0">
               <div>
                 <div className="text-sm text-white/75">{n.l}</div>
                 <div className="text-xs text-white/35">{n.s}</div>
@@ -1751,7 +1755,7 @@ function SettingsPage() {
         <h2 className="text-sm font-semibold text-white/80 mb-4">Sistem Durumu</h2>
         <div className="space-y-2">
           {[["WhatsApp Business API","0212 555 0001 bagli"],["QR Sistemi","Dynamic - Token bazlı"],["Cloudflare R2","2.4 GB / 10 GB"],["Otomatik Yedekleme","Günlük - Son: Bugun 03:00"],["SSL Sertifikasi","beka.io - Geçerli"]].map(([k,v])=>(
-            <div key={k} className="flex items-center justify-between py-2 border-b border-white/5 last:border-0">
+            <div key={k} className="flex items-center justify-between py-2 border-b border-white/3 last:border-0">
               <div>
                 <div className="text-sm text-white/70">{k}</div>
                 <div className="text-xs text-white/30">{v}</div>
@@ -1763,7 +1767,7 @@ function SettingsPage() {
       </Card>
       <div className="flex justify-end">
         <button onClick={save} className="px-6 py-2.5 rounded-xl text-sm font-semibold text-white transition-all hover:opacity-90"
-          style={{background:saved?"linear-gradient(135deg,#34d399,#059669)":"linear-gradient(135deg,#c084fc,#818cf8)"}}>
+          style={{background:saved?"linear-gradient(135deg,#34d399,#059669)":"linear-gradient(135deg,#8b5cf6,#6366f1)"}}>
           {saved?"Kaydedildi":"Kaydet"}
         </button>
       </div>
@@ -1778,8 +1782,8 @@ function NotifPanel({onClose,setPage}) {
   return (
     <>
       <div className="fixed inset-0 z-40 bg-black/50" onClick={onClose}/>
-      <div className="fixed top-0 right-0 h-full w-80 z-50 border-l border-white/8 overflow-auto flex flex-col" style={{background:"#0f0f1c"}}>
-        <div className="px-5 py-4 border-b border-white/8 flex items-center justify-between flex-shrink-0">
+      <div className="fixed top-0 right-0 h-full w-80 z-50 border-l border-white/3 overflow-auto flex flex-col" style={{background:"rgba(15,15,28,0.9)"}}>
+        <div className="px-5 py-4 border-b border-white/3 flex items-center justify-between flex-shrink-0">
           <div>
             <h2 className="text-sm font-semibold text-white/85">Bildirimler</h2>
             {unread>0 && <span className="text-[10px] text-purple-400 mt-0.5">{unread} okunmamis</span>}
@@ -1792,7 +1796,7 @@ function NotifPanel({onClose,setPage}) {
         <div className="flex-1 divide-y divide-white/5 overflow-auto">
           {notifs.map(n=>(
             <div key={n.id} onClick={()=>{setNotifs(p=>p.map(x=>x.id===n.id?{...x,read:true}:x));if(n.page){setPage(n.page);onClose();}}}
-              className={`px-5 py-4 cursor-pointer transition-colors hover:bg-white/[0.03] ${!n.read?"bg-purple-500/[0.04]":""}`}>
+              className={`px-5 py-4 cursor-pointer transition-colors hover:bg-white/[0.02] ${!n.read?"bg-purple-500/[0.04]":""}`}>
               <div className="flex items-start gap-3">
                 <span className="text-xl flex-shrink-0">{n.icon}</span>
                 <div className="flex-1 min-w-0">
@@ -1904,7 +1908,7 @@ export default function BekaOS() {
         {/* Logo */}
         <div className="flex items-center gap-3 px-4 py-5 border-b border-white/[0.06]" style={{minWidth:0}}>
           <div className="w-9 h-9 rounded-xl flex items-center justify-center text-sm font-bold flex-shrink-0"
-            style={{background:"linear-gradient(135deg,#c084fc,#818cf8)"}}>B</div>
+            style={{background:"linear-gradient(135deg,#8b5cf6,#6366f1)"}}>B</div>
           {(sidebar) && (
             <div className="min-w-0">
               <div className="text-sm font-bold tracking-wide text-white whitespace-nowrap">BekaOS</div>
@@ -1921,8 +1925,8 @@ export default function BekaOS() {
               style={{
                 padding: sidebar ? "10px 12px" : "10px 0",
                 justifyContent: sidebar ? "flex-start" : "center",
-                background:page===item.id?"rgba(192,132,252,0.12)":"transparent",
-                color:page===item.id?"#c084fc":"rgba(255,255,255,0.42)"
+                background:page===item.id?"rgba(139,92,246,0.12)":"transparent",
+                color:page===item.id?"#8b5cf6":"rgba(255,255,255,0.42)"
               }}>
               <span className="text-lg flex-shrink-0" dangerouslySetInnerHTML={{__html:item.icon}}/>
               {sidebar && (
@@ -1940,7 +1944,7 @@ export default function BekaOS() {
         <div className="px-3 py-4 border-t border-white/[0.06]">
           <div className="flex items-center gap-3" style={{justifyContent:sidebar?"flex-start":"center"}}>
             <div className="w-9 h-9 rounded-full flex-shrink-0 flex items-center justify-center text-xs font-bold"
-              style={{background:"linear-gradient(135deg,#c084fc,#818cf8)"}}>A</div>
+              style={{background:"linear-gradient(135deg,#8b5cf6,#6366f1)"}}>A</div>
             {sidebar && (
               <div className="min-w-0">
                 <div className="text-xs font-medium text-white/70 truncate">Admin</div>
@@ -1956,10 +1960,10 @@ export default function BekaOS() {
 
         {/* Topbar */}
         <header className="flex items-center justify-between px-4 py-3 border-b border-white/[0.06] flex-shrink-0 gap-3"
-          style={{background:"#07070e"}}>
+          style={{background:"#0a0a0f"}}>
           <div className="flex items-center gap-3 min-w-0">
             <button onClick={()=>setSidebar(!sidebar)}
-              className="w-9 h-9 rounded-xl flex items-center justify-center text-white/40 hover:text-white/80 hover:bg-white/5 transition-all flex-shrink-0 text-lg">
+              className="w-9 h-9 rounded-xl flex items-center justify-center text-white/40 hover:text-white/80 hover:bg-white/3 transition-all flex-shrink-0 text-lg">
               &#9776;
             </button>
             <div className="min-w-0">
@@ -1970,19 +1974,19 @@ export default function BekaOS() {
           <div className="flex items-center gap-2 flex-shrink-0">
             {/* Search - icon only on mobile */}
             <button onClick={()=>setSearchOpen(true)}
-              className="w-9 h-9 rounded-xl flex items-center justify-center text-white/40 hover:text-white/70 border border-white/8 hover:border-white/20 transition-all">
+              className="w-9 h-9 rounded-xl flex items-center justify-center text-white/40 hover:text-white/70 border border-white/3 hover:border-white/20 transition-all">
               &#128269;
             </button>
             {/* New event - text on desktop, icon on mobile */}
             <button onClick={()=>navigate("reservation")}
               className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-medium transition-all hover:opacity-90"
-              style={{background:"rgba(192,132,252,0.18)",color:"#c084fc",border:"1px solid rgba(192,132,252,0.28)"}}>
+              style={{background:"rgba(139,92,246,0.18)",color:"#8b5cf6",border:"1px solid rgba(139,92,246,0.28)"}}>
               <span className="text-base leading-none">+</span>
               <span className="hidden sm:block whitespace-nowrap">Yeni Etkinlik</span>
             </button>
             {/* Notif */}
             <button onClick={()=>setNotifOpen(true)}
-              className="relative w-9 h-9 rounded-xl flex items-center justify-center text-white/40 hover:text-white/70 transition-all border border-white/8 hover:border-white/20">
+              className="relative w-9 h-9 rounded-xl flex items-center justify-center text-white/40 hover:text-white/70 transition-all border border-white/3 hover:border-white/20">
               &#128276;
               {unread>0&&<span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-purple-500 text-white text-[9px] flex items-center justify-center font-bold">{unread}</span>}
             </button>
@@ -1990,7 +1994,7 @@ export default function BekaOS() {
         </header>
 
         {/* Page content */}
-        <main className="flex-1 overflow-auto" style={{background:"#07070e",padding:isMobile?"12px":"24px"}}>
+        <main className="flex-1 overflow-auto" style={{background:"#0a0a0f",padding:isMobile?"12px":"24px"}}>
           {PAGES[page]||<div className="text-white/25 text-sm text-center py-20">Sayfa bulunamadı</div>}
         </main>
 
@@ -2007,7 +2011,7 @@ export default function BekaOS() {
             ].map(item=>(
               <button key={item.id} onClick={()=>navigate(item.id)}
                 className="flex flex-col items-center gap-1 px-3 py-1.5 rounded-xl transition-all"
-                style={{color:page===item.id?"#c084fc":"rgba(255,255,255,0.35)",background:page===item.id?"rgba(192,132,252,0.1)":"transparent"}}>
+                style={{color:page===item.id?"#8b5cf6":"rgba(255,255,255,0.35)",background:page===item.id?"rgba(139,92,246,0.1)":"transparent"}}>
                 <span className="text-xl" dangerouslySetInnerHTML={{__html:item.icon}}/>
                 <span className="text-[9px] font-medium capitalize">{NAV.find(n=>n.id===item.id)?.label}</span>
               </button>
