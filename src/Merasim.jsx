@@ -299,7 +299,14 @@ function DashboardPage({events,tasks,setPage}) {
                 </div>
                 <div className="flex items-center gap-2 flex-shrink-0">
                   <Badge color={ev.payment==="tam"?"green":ev.payment==="kapora"?"blue":"red"}>{ev.payment}</Badge>
-                  <Badge color={ev.status==="confirmed"?"green":"amber"}>{ev.status==="confirmed"?"Onaylandı":"Bekliyor"}</Badge>
+                  {ev.status==="confirmed"?(
+                    <Badge color="green">Onaylandı</Badge>
+                  ):(
+                    <button onClick={(e)=>{e.stopPropagation();updateEvent(ev.id,{status:"confirmed"});}}
+                      className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400 hover:bg-emerald-500/25 transition-colors font-medium">
+                      Onayla
+                    </button>
+                  )}
                 </div>
                 <div className="flex items-center gap-2 w-20 flex-shrink-0">
                   <div className="flex-1 h-1 rounded-full bg-white/10">
@@ -464,7 +471,16 @@ function EventsPage({events,setEvents}) {
                   <td className="px-4 py-3 text-xs text-white/60 text-center">{ev.guests}</td>
                   <td className="px-4 py-3 text-xs font-medium text-white/70 whitespace-nowrap">{ev.budget.toLocaleString()} TL</td>
                   <td className="px-4 py-3"><span className={`text-[10px] px-2 py-0.5 rounded-full font-medium ${PAY_COL[ev.payment]?.bg||""} ${PAY_COL[ev.payment]?.tx||""}`}>{ev.payment}</span></td>
-                  <td className="px-4 py-3"><Badge color={ev.status==="confirmed"?"green":"amber"}>{ev.status==="confirmed"?"Onaylandı":"Bekliyor"}</Badge></td>
+                  <td className="px-4 py-3">
+                    {ev.status==="confirmed"?(
+                      <Badge color="green">Onaylandı</Badge>
+                    ):(
+                      <button onClick={e=>{e.stopPropagation();updateEvent(ev.id,{status:"confirmed"});}}
+                        className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400 hover:bg-emerald-500/25 transition-colors font-medium">
+                        Onayla
+                      </button>
+                    )}
+                  </td>
                   <td className="px-4 py-3"><div className="flex items-center gap-2"><div className="w-14 h-1.5 rounded-full bg-white/10"><div className="h-1.5 rounded-full" style={{width:`${(ev.done/ev.tasks)*100}%`,background:ev.done===ev.tasks?"#34d399":"#8b5cf6"}}/></div><span className="text-[10px] text-white/40">{ev.done}/{ev.tasks}</span></div></td>
                   <td className="px-4 py-3"><button onClick={e=>{e.stopPropagation();openEdit(ev);}} className="opacity-0 group-hover:opacity-100 text-[10px] px-2 py-1 rounded-lg text-white/50 hover:text-white border border-white/3 hover:border-white/20 transition-all whitespace-nowrap">Düzenle</button></td>
                 </tr>
@@ -484,7 +500,14 @@ function EventsPage({events,setEvents}) {
                 <div className="text-sm font-semibold text-white/90 truncate">{ev.client}</div>
                 <div className="text-[10px] text-white/40">{ev.type}</div>
               </div>
-              <Badge color={ev.status==="confirmed"?"green":"amber"}>{ev.status==="confirmed"?"Onay":"Bekliyor"}</Badge>
+              {ev.status==="confirmed"?(
+                <Badge color="green">Onaylandı</Badge>
+              ):(
+                <button onClick={e=>{e.stopPropagation();updateEvent(ev.id,{status:"confirmed"});}}
+                  className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400 hover:bg-emerald-500/25 transition-colors font-medium">
+                  Onayla
+                </button>
+              )}
             </div>
             <div className="grid grid-cols-2 gap-2 text-[11px]">
               <div className="text-white/40">📅 {ev.date}</div>
@@ -524,11 +547,41 @@ function EventsPage({events,setEvents}) {
               <div className="flex justify-between mb-2"><span className="text-xs text-white/40">Gorev Ilerlemesi</span><span className="text-xs text-white/60">{drawer.done}/{drawer.tasks}</span></div>
               <div className="h-2 rounded-full bg-white/10"><div className="h-2 rounded-full" style={{width:`${(drawer.done/drawer.tasks)*100}%`,background:drawer.done===drawer.tasks?"#34d399":"linear-gradient(90deg,#8b5cf6,#6366f1)"}}/></div>
             </div>
+            {/* Onay / Red */}
+            {drawer.status!=="confirmed"&&(
+              <button onClick={async()=>{
+                await updateEvent(drawer.id,{status:"confirmed"});
+                setDrawer(null);
+              }} className="w-full py-2.5 rounded-xl text-xs font-semibold text-white mb-2" style={{background:"linear-gradient(135deg,#34d399,#059669)"}}>
+                ✅ Etkinliği Onayla
+              </button>
+            )}
+            {drawer.status==="confirmed"&&(
+              <div className="flex items-center gap-2 p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/20 mb-2">
+                <span className="text-emerald-400 text-sm">✅</span>
+                <span className="text-xs text-emerald-400 font-medium">Bu etkinlik onaylandı</span>
+                <button onClick={async()=>{
+                  await updateEvent(drawer.id,{status:"pending"});
+                  setDrawer(null);
+                }} className="ml-auto text-[10px] text-white/30 hover:text-rose-400 transition-colors">İptal Et</button>
+              </div>
+            )}
             <div className="space-y-2">
-              <button onClick={()=>openEdit(drawer)} className="w-full py-2.5 rounded-xl text-xs font-semibold text-white" style={{background:"linear-gradient(135deg,#8b5cf6,#6366f1)"}}>Duzenle</button>
-              <GlassBtn className="w-full justify-center flex">Davetiye Olustur</GlassBtn>
-              <GlassBtn className="w-full justify-center flex">QR Galeri Uret</GlassBtn>
-              <GlassBtn className="w-full justify-center flex">WhatsApp Bildir</GlassBtn>
+              <button onClick={()=>openEdit(drawer)} className="w-full py-2.5 rounded-xl text-xs font-semibold text-white" style={{background:"linear-gradient(135deg,#8b5cf6,#6366f1)"}}>Düzenle</button>
+              <GlassBtn className="w-full justify-center flex" onClick={()=>{
+                setDrawer(null);
+                setPage("invitations");
+              }}>Davetiye Oluştur</GlassBtn>
+              <GlassBtn className="w-full justify-center flex" onClick={()=>{
+                setDrawer(null);
+                setPage("gallery");
+              }}>QR Galeri Üret</GlassBtn>
+              <GlassBtn className="w-full justify-center flex" onClick={()=>{
+                const phone=(drawer.phone||"").replace(/\D/g,"");
+                if(!phone){alert("Telefon numarası yok.");return;}
+                const waPhone=phone.startsWith("0")?"90"+phone.slice(1):phone;
+                window.open(`https://wa.me/${waPhone}?text=${encodeURIComponent("Merhaba "+drawer.client.split("&")[0].trim()+", "+drawer.type+" etkinliğiniz onaylanmıştır. Detaylar için görüşelim.")}`,"_blank");
+              }}>WhatsApp Bildir</GlassBtn>
             </div>
           </>
         )}
