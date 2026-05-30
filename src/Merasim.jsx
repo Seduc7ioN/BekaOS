@@ -1403,10 +1403,19 @@ function ReservationPage({events,addEvent,prefillDate,setPrefillDate}) {
   const upd=(k,v)=>setForm(p=>({...p,[k]:v}));
   const [done,setDone]=useState(false);
   const cöncepts=["Boho & Dogal","Klasik Romantik","Tropical Cenneti","Vintage & Rustik","Modern Minimal","Pembe Masallar","Siyah & Altin","Mavi Ruya"];
-  const services=[["Fotoğrafçı",2500],["Video Cekimi",3000],["Pasta",800],["Çiçek Duzenlemesi",1500],["DJ / Muzik",2000],["MC",1500],["Ulasim",500],["Misafir Agirl.",1000]];
-  const base=form.guests?parseInt(form.guests)*80:0;
-  const servicesPrice=services.filter(([n])=>form.services.includes(n)).reduce((s,[,p])=>s+p,0);
-  const total=base+servicesPrice;
+  const [customServices,setCustomServices]=useState([
+    {name:"Fotoğrafçı",price:0},
+    {name:"Video Çekimi",price:0},
+    {name:"Pasta",price:0},
+    {name:"Çiçek Düzenlemesi",price:0},
+    {name:"DJ / Müzik",price:0},
+    {name:"MC (Sunucu)",price:0},
+    {name:"Ulaşım",price:0},
+    {name:"Misafir Ağırlama",price:0},
+  ]);
+  const [newServiceName,setNewServiceName]=useState("");
+  const servicesPrice=customServices.filter(s=>form.services.includes(s.name)).reduce((s,n)=>s+n.price,0);
+  const total=servicesPrice;
   const steps=["Etkinlik Turu","Tarih & Kisi","Konsept","Ek Hizmetler","İletişim","Özet"];
 
   if(done)return(
@@ -1498,19 +1507,39 @@ function ReservationPage({events,addEvent,prefillDate,setPrefillDate}) {
         {step===4&&(
           <div>
             <h3 className="text-sm font-semibold text-white/85 mb-4">Ek Hizmetler</h3>
-            <div className="grid grid-cols-2 gap-3">
-              {services.map(([name,price])=>{
-                const sel=form.services.includes(name);
+            <div className="space-y-2">
+              {customServices.map((svc,idx)=>{
+                const sel=form.services.includes(svc.name);
                 return (
-                  <button key={name} onClick={()=>upd("services",sel?form.services.filter(x=>x!==name):[...form.services,name])}
-                    className={`p-4 rounded-xl border-2 flex items-center justify-between transition-all ${sel?"border-purple-500 bg-purple-500/15":"border-white/3 hover:border-white/20 bg-white/[0.02]"}`}>
-                    <span className="text-sm text-white/75">{name}</span>
-                    <span className="text-[10px] text-white/40 whitespace-nowrap">+{price.toLocaleString()}</span>
-                  </button>
+                  <div key={idx} className={`p-3 rounded-xl border-2 flex items-center gap-3 transition-all ${sel?"border-purple-500 bg-purple-500/10":"border-white/5 hover:border-white/15 bg-white/[0.02]"}`}>
+                    <button onClick={()=>upd("services",sel?form.services.filter(x=>x!==svc.name):[...form.services,svc.name])}
+                      className={`w-5 h-5 rounded-md border-2 flex items-center justify-center flex-shrink-0 transition-all ${sel?"border-purple-500 bg-purple-500":"border-white/20"}`}>
+                      {sel&&<span className="text-white text-xs">✓</span>}
+                    </button>
+                    <span className="text-sm text-white/75 flex-1">{svc.name}</span>
+                    <input type="number" value={svc.price||""} placeholder="Fiyat" onClick={e=>e.stopPropagation()}
+                      onChange={e=>{
+                        const val=parseInt(e.target.value)||0;
+                        setCustomServices(prev=>prev.map((s,i)=>i===idx?{...s,price:val}:s));
+                      }}
+                      className="w-24 bg-white/5 border border-white/10 rounded-lg px-2 py-1.5 text-xs text-white/80 text-right placeholder:text-white/20 focus:outline-none focus:border-purple-500/50"/>
+                    <span className="text-[10px] text-white/30">TL</span>
+                  </div>
                 );
               })}
             </div>
-            {servicesPrice>0&&<div className="mt-3 text-right text-xs text-purple-400">Ek hizmetler: +{servicesPrice.toLocaleString()} TL</div>}
+            {/* Yeni hizmet ekleme */}
+            <div className="mt-3 flex gap-2">
+              <input value={newServiceName} onChange={e=>setNewServiceName(e.target.value)} placeholder="Yeni hizmet adı..."
+                className="flex-1 bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-xs text-white/80 placeholder:text-white/20 focus:outline-none focus:border-purple-500/50"/>
+              <button onClick={()=>{
+                if(newServiceName.trim()){
+                  setCustomServices(prev=>[...prev,{name:newServiceName.trim(),price:0}]);
+                  setNewServiceName("");
+                }
+              }} className="px-3 py-2 rounded-lg text-xs text-purple-400 border border-purple-500/25 hover:bg-purple-500/10 transition-colors">+ Ekle</button>
+            </div>
+            {servicesPrice>0&&<div className="mt-3 text-right text-xs text-purple-400 font-medium">Ek hizmetler toplamı: +{servicesPrice.toLocaleString()} TL</div>}
           </div>
         )}
         {step===5&&(
