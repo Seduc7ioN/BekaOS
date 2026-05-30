@@ -2221,8 +2221,8 @@ function Dashboard() {
         <div className="flex items-center gap-3 px-4 py-5 border-b border-white/[0.1]" style={{minWidth:0}}>
           <div className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0" style={{background:"#111827",border:"1.5px solid rgba(139,92,246,0.4)"}}>
             <svg width="22" height="22" viewBox="0 0 32 32" fill="none">
-              <circle cx="16" cy="14" r="8" stroke="url(#logoGrad)" strokeWidth="2"/>
-              <text x="16" y="18" textAnchor="middle" fontFamily="sans-serif" fontSize="12" fontWeight="700" fill="url(#logoGrad)">B</text>
+              <circle cx="16" cy="13" r="7" stroke="url(#logoGrad)" strokeWidth="1.5"/>
+              <text x="16" y="17" textAnchor="middle" fontFamily="sans-serif" fontSize="11" fontWeight="700" fill="url(#logoGrad)">M</text>
               <defs><linearGradient id="logoGrad" x1="0" y1="0" x2="32" y2="32"><stop stopColor="#8b5cf6"/><stop offset="1" stopColor="#6366f1"/></linearGradient></defs>
             </svg>
           </div>
