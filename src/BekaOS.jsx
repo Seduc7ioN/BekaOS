@@ -1077,6 +1077,20 @@ function ReservationPage() {
         {step===2&&(
           <div className="space-y-4">
             <h3 className="text-sm font-semibold text-white/85 mb-4">Tarih, Saat ve Bilgiler</h3>
+            {form.date&&(() => {
+              const d=new Date(form.date);
+              const holidays=getHoliday(d.getMonth(),d.getDate());
+              if(holidays.length===0)return null;
+              return (
+                <div className="p-3 rounded-xl border border-amber-500/20 bg-amber-500/5 space-y-1">
+                  <div className="text-xs font-semibold text-amber-300">⚠️ Dikkat - Özel Gün!</div>
+                  {holidays.map((h,i)=>(
+                    <div key={i} className="text-[11px] text-amber-200/70">{h.icon} {h.name} - {h.type==="resmi"?"Resmi Tatil":h.type==="bayram"?"Bayram":"Özel Gün"}</div>
+                  ))}
+                  <div className="text-[10px] text-amber-400/50 mt-1">Bu tarihte yoğunluk bekleniyor. Erken rezervasyon önerilir.</div>
+                </div>
+              );
+            })()}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <FieldInput label="Etkinlik Tarihi" type="date" value={form.date} onChange={e=>upd("date",e.target.value)}/>
               <FieldInput label="Saat" type="time" value={form.time} onChange={e=>upd("time",e.target.value)}/>
