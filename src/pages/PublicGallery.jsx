@@ -132,7 +132,23 @@ export default function PublicGalleryPage({ eventId }) {
         <div className="fixed inset-0 z-50 flex flex-col bg-black/95" onClick={() => setLightbox(null)}>
           <div className="flex items-center justify-between p-4">
             <span className="text-xs text-white/40">Fotoğraf</span>
-            <button onClick={() => setLightbox(null)} className="text-white/60 hover:text-white text-2xl leading-none">×</button>
+            <div className="flex items-center gap-3">
+              <button onClick={(e) => {
+                e.stopPropagation();
+                const a = document.createElement('a');
+                a.href = lightbox.url;
+                a.download = `foto-${lightbox.id}.jpg`;
+                a.target = '_blank';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+              }} className="text-white/60 hover:text-white transition-colors p-1" title="İndir">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
+                </svg>
+              </button>
+              <button onClick={() => setLightbox(null)} className="text-white/60 hover:text-white text-2xl leading-none">×</button>
+            </div>
           </div>
           <div className="flex-1 flex items-center justify-center p-4" onClick={e => e.stopPropagation()}>
             <img src={lightbox.url} alt="" className="max-w-full max-h-full object-contain rounded-lg"/>
