@@ -904,6 +904,13 @@ function InvitationsPage({events,guests,updateEvent}) {
             <input defaultValue={activeEv?.iban_name||""} onBlur={e=>{if(activeEv)updateEvent(activeEv.id,{iban_name:e.target.value});}}
               placeholder="Hesap Sahibi Adı Soyadı" className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-xs text-white/80 placeholder:text-white/20 focus:outline-none focus:border-purple-500/50"/>
           </div>
+          {/* Konum Bilgisi */}
+          <div>
+            <p className="text-xs text-white/40 mb-2">📍 Konum (Google Maps Linki)</p>
+            <input defaultValue={activeEv?.location_url||""} onBlur={e=>{if(activeEv)updateEvent(activeEv.id,{location_url:e.target.value});}}
+              placeholder="https://maps.google.com/?q=..." className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-xs text-white/80 placeholder:text-white/20 focus:outline-none focus:border-purple-500/50 mb-2"/>
+            <p className="text-[10px] text-white/25">Google Maps'ten "Paylaş" → "Bağlantıyı kopyala" ile alabilirsiniz</p>
+          </div>
         </div>
         <div>
           <p className="text-xs text-white/40 mb-3">RSVP Özeti</p>
@@ -1079,6 +1086,7 @@ merasim.app`}
 function GalleryPage({events,gallery,setGallery,company}) {
   const [activeEv,setActiveEv]=useState(events[0]);
   const [lightbox,setLightbox]=useState(null);
+  const fileRef=useRef(null);
   const [galleryQr,setGalleryQr]=useState(false);
   const [uploading,setUploading]=useState(false);
   const photos=gallery.filter(g=>g.event_id===activeEv?.id);
@@ -1159,7 +1167,7 @@ function GalleryPage({events,gallery,setGallery,company}) {
               const content=await zip.generateAsync({type:"blob"});
               saveAs(content,`${activeEv?.client||'galeri'}-fotograflar.zip`);
             }}>ZIP</GlassBtn>
-            <button onClick={()=>document.getElementById('gallery-upload-input')?.click()} disabled={uploading} className="px-3 py-2 rounded-xl text-xs text-purple-300 border border-purple-500/25 hover:bg-purple-500/10 transition-colors disabled:opacity-40">{uploading?"Yükleniyor...":"+ Yükle"}</button>
+            <button onClick={()=>fileRef.current?.click()} disabled={uploading} className="px-3 py-2 rounded-xl text-xs text-purple-300 border border-purple-500/25 hover:bg-purple-500/10 transition-colors disabled:opacity-40">{uploading?"Yükleniyor...":"+ Yükle"}</button>
           </div>
         </div>
         <div className="grid grid-cols-3 gap-3 mb-4">
@@ -1187,11 +1195,11 @@ function GalleryPage({events,gallery,setGallery,company}) {
                 {photo.approved&&<div className="absolute top-2 left-2 text-emerald-400 text-xs">&#10003;</div>}
               </div>
             ))}
-            <div className="rounded-xl border-2 border-dashed border-white/3 flex flex-col items-center justify-center cursor-pointer hover:border-white/25 transition-colors" style={{aspectRatio:"16/10"}} onClick={()=>document.getElementById('gallery-upload-input')?.click()}>
+            <div className="rounded-xl border-2 border-dashed border-white/3 flex flex-col items-center justify-center cursor-pointer hover:border-white/25 transition-colors" style={{aspectRatio:"16/10"}} onClick={()=>fileRef.current?.click()}>
               <span className="text-2xl text-white/30 mb-1">+</span>
               <span className="text-[10px] text-white/35">Yukle</span>
             </div>
-            <input type="file" id="gallery-upload-input" accept="image/*" multiple className="hidden" onChange={handleUpload}/>
+            <input type="file" ref={fileRef} accept="image/*" multiple className="hidden" onChange={handleUpload}/>
           </div>
         ):(
           <div className="text-center py-16 border-2 border-dashed border-white/3 rounded-2xl">

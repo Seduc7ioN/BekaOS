@@ -280,6 +280,13 @@ export default function PublicInvitePage({ eventId }) {
               <span className="text-xl">📍</span>
               <span className="text-lg font-semibold" style={{ color: t.text }}>{event?.location}</span>
             </div>
+            {event?.location_url && (
+              <button onClick={() => window.open(event.location_url, '_blank')}
+                className="mt-2 px-6 py-2.5 rounded-xl text-sm font-semibold transition-all active:scale-95"
+                style={{ background: t.cardBg, color: t.accent, border: `2px solid ${t.border}` }}>
+                🗺️ Yol Tarifi Al
+              </button>
+            )}
           </div>
 
           {/* CTA Button */}
