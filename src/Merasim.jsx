@@ -833,11 +833,11 @@ function InvitationsPage({events,guests,updateEvent}) {
   const [contractCompany,setContractCompany]=useState({name:"",phone:"",social:""});
   const [themeIdx,setThemeIdx]=useState(0);
   const themes=[
-    {name:"Klasik Gold",from:"#b8943f",to:"#d4af37",dark:"#1a1200"},
-    {name:"Gül Pembe",from:"#c2185b",to:"#ff6b9d",dark:"#1a0010"},
-    {name:"Lacivert",from:"#1a237e",to:"#3f51b5",dark:"#000820"},
-    {name:"Dogal Yesil",from:"#2e7d32",to:"#66bb6a",dark:"#001a02"},
-    {name:"Mor Dus",from:"#6a1b9a",to:"#ab47bc",dark:"#0d0018"},
+    {id:'gold',name:"Klasik Gold",color:"#d4a853",bg:"#1a1505"},
+    {id:'rose',name:"Gül Pembe",color:"#e879a0",bg:"#1a0a14"},
+    {id:'nature',name:"Doğal Yeşil",color:"#6ee7b7",bg:"#0a1a0d"},
+    {id:'night',name:"Mor Gece",color:"#a78bfa",bg:"#0a0a1e"},
+    {id:'ocean',name:"Okyanus",color:"#38bdf8",bg:"#0a1520"},
   ];
   const th=themes[themeIdx];
   const evGuests=activeEv ? guests.filter(g=>g.event_id===activeEv.id) : [];
