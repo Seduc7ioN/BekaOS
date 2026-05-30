@@ -825,7 +825,7 @@ function TasksPage({tasks,setTasks,events}) {
 }
 
 /* ── INVITATIONS ────────────────────────────────── */
-function InvitationsPage({events,guests}) {
+function InvitationsPage({events,guests,updateEvent}) {
   const [activeEv,setActiveEv]=useState(events[0]);
   const [preview,setPreview]=useState(false);
   const [qrOpen,setQrOpen]=useState(false);
@@ -870,16 +870,27 @@ function InvitationsPage({events,guests}) {
             <button className="px-3 py-2 rounded-xl text-xs font-medium text-white" style={{background:"linear-gradient(135deg,#8b5cf6,#6366f1)"}}>Olustur & Paylas</button>
           </div>
         </div>
-        <div>
-          <p className="text-xs text-white/40 mb-3">Tema</p>
-          <div className="flex gap-3 flex-wrap">
-            {themes.map((t,i)=>(
-              <div key={i} onClick={()=>setThemeIdx(i)} className="flex flex-col items-center gap-1.5 cursor-pointer">
-                <div className={`w-10 h-10 rounded-xl transition-all ${themeIdx===i?"ring-2 ring-white/50 ring-offset-2 ring-offset-[#080810] scale-110":"opacity-60 hover:opacity-90"}`}
-                  style={{background:`linear-gradient(135deg,${t.from},${t.to})`}}/>
-                <span className="text-[9px] text-white/40 text-center w-14 leading-tight">{t.name}</span>
-              </div>
-            ))}
+        <div className="space-y-4">
+          {/* Tema Seçimi */}
+          <div>
+            <p className="text-xs text-white/40 mb-3">Davetiye Teması</p>
+            <div className="flex gap-3 flex-wrap">
+              {[{id:'gold',name:'Klasik Gold',color:'#d4a853'},{id:'rose',name:'Gül Pembe',color:'#e879a0'},{id:'nature',name:'Doğal Yeşil',color:'#6ee7b7'},{id:'night',name:'Mor Gece',color:'#a78bfa'},{id:'ocean',name:'Okyanus',color:'#38bdf8'}].map((t,i)=>(
+                <div key={t.id} onClick={()=>{setThemeIdx(i);if(activeEv)updateEvent(activeEv.id,{theme:t.id});}} className="flex flex-col items-center gap-1.5 cursor-pointer">
+                  <div className={`w-10 h-10 rounded-xl transition-all ${themeIdx===i?"ring-2 ring-white/50 ring-offset-2 ring-offset-[#111827] scale-110":"opacity-60 hover:opacity-90"}`}
+                    style={{background:t.color}}/>
+                  <span className="text-[9px] text-white/40 text-center w-14 leading-tight">{t.name}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+          {/* IBAN Bilgisi */}
+          <div>
+            <p className="text-xs text-white/40 mb-2">🎁 Hediye IBAN (Gelemeyen misafirler için)</p>
+            <input defaultValue={activeEv?.iban||""} onBlur={e=>{if(activeEv)updateEvent(activeEv.id,{iban:e.target.value});}}
+              placeholder="TR00 0000 0000 0000 0000 0000 00" className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-xs text-white/80 placeholder:text-white/20 focus:outline-none focus:border-purple-500/50 mb-2"/>
+            <input defaultValue={activeEv?.iban_name||""} onBlur={e=>{if(activeEv)updateEvent(activeEv.id,{iban_name:e.target.value});}}
+              placeholder="Hesap Sahibi Adı Soyadı" className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-xs text-white/80 placeholder:text-white/20 focus:outline-none focus:border-purple-500/50"/>
           </div>
         </div>
         <div>
@@ -2354,7 +2365,7 @@ function Dashboard() {
     events:<EventsPage events={events} setEvents={setEvents} updateEvent={updateEvent} setPage={navigate}/>,
     calendar:<CalendarPage events={events} setPage={navigate} setPrefillDate={setPrefillDate}/>,
     tasks:<TasksPage tasks={tasks} setTasks={setTasks} events={events}/>,
-    invitations:<InvitationsPage events={events} guests={initGuests}/>,
+    invitations:<InvitationsPage events={events} guests={guests} updateEvent={updateEvent}/>,
     gallery:<GalleryPage events={events} gallery={gallery} setGallery={setGallery} company={company}/>,
     payments:<PaymentsPage events={events}/>,
     reservation:<ReservationPage events={events} addEvent={addEvent} prefillDate={prefillDate} setPrefillDate={setPrefillDate}/>,
