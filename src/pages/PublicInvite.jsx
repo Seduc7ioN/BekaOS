@@ -79,7 +79,7 @@ export default function PublicInvitePage({ eventId }) {
     if (!guestForm.name || !guestForm.response) return
     await supabase.from('guests').insert({
       event_id: eventId,
-      company_id: event.company_id,
+      company_id: event?.company_id,
       name: guestForm.name,
       phone: guestForm.phone,
       response: guestForm.response,
@@ -116,8 +116,15 @@ export default function PublicInvitePage({ eventId }) {
     </div>
   )
 
-  const theme = THEMES[event.theme] || THEMES.gold
-  const emoji = EVENT_EMOJIS[event.type] || '🎉'
+  const theme = THEMES[event?.theme] || THEMES.gold
+  const emoji = EVENT_EMOJIS[event?.type] || '🎉'
+  const clientName = event?.client || 'Etkinlik'
+  const evDate = event?.date || '—'
+  const evTime = event?.time || '—'
+  const evLocation = event?.location || '—'
+  const evGuests = event?.guests || 0
+  const evIban = event?.iban || ''
+  const evIbanName = event?.iban_name || ''
 
   // THANKS SCREEN
   if (step === 'thanks') return (
@@ -127,12 +134,12 @@ export default function PublicInvitePage({ eventId }) {
         <h2 className="text-2xl font-bold mb-2" style={{ color: theme.text }}>Teşekkürler!</h2>
         <p className="text-sm mb-6" style={{ color: theme.textMuted }}>
           {guestForm.name.split(' ')[0]}, katılımınız kaydedildi.<br/>
-          {event.date} tarihinde görüşmek üzere!
+          {evDate} tarihinde görüşmek üzere!
         </p>
         <div className="p-4 rounded-2xl mb-6" style={{ background: theme.accentLight, border: `1px solid ${theme.border}` }}>
           <div className="text-xs mb-1" style={{ color: theme.textMuted }}>Etkinlik Detayı</div>
-          <div className="text-sm font-medium" style={{ color: theme.text }}>📅 {event.date} • 🕐 {event.time}</div>
-          <div className="text-sm" style={{ color: theme.text }}>📍 {event.location}</div>
+          <div className="text-sm font-medium" style={{ color: theme.text }}>📅 {evDate} • 🕐 {evTime}</div>
+          <div className="text-sm" style={{ color: theme.text }}>📍 {evLocation}</div>
         </div>
         <button onClick={() => setStep('invite')}
           className="text-xs px-6 py-2 rounded-xl transition-all hover:opacity-80"
@@ -150,13 +157,13 @@ export default function PublicInvitePage({ eventId }) {
         <div className="text-5xl mb-4">💝</div>
         <h2 className="text-xl font-bold mb-2" style={{ color: theme.text }}>Hediye Gönder</h2>
         <p className="text-sm mb-6" style={{ color: theme.textMuted }}>
-          Katılamıyorsanız ama {event.client.split(' ')[0]} için güzel bir dilek göndermek isterseniz:
+          Katılamıyorsanız ama {clientName.split(' ')[0]} için güzel bir dilek göndermek isterseniz:
         </p>
-        {event.iban ? (
+        {evIban ? (
           <div className="p-5 rounded-2xl mb-6 text-left" style={{ background: theme.accentLight, border: `1px solid ${theme.border}` }}>
             <div className="text-[10px] uppercase tracking-wider mb-3" style={{ color: theme.textMuted }}>IBAN Bilgisi</div>
-            <div className="font-mono text-sm font-medium mb-1 break-all" style={{ color: theme.text }}>{event.iban}</div>
-            {event.iban_name && <div className="text-xs mb-3" style={{ color: theme.textMuted }}>{event.iban_name}</div>}
+            <div className="font-mono text-sm font-medium mb-1 break-all" style={{ color: theme.text }}>{evIban}</div>
+            {evIbanName && <div className="text-xs mb-3" style={{ color: theme.textMuted }}>{evIbanName}</div>}
             <button onClick={copyIban}
               className="w-full py-2.5 rounded-xl text-xs font-medium transition-all hover:opacity-80"
               style={{ background: theme.accent, color: '#000' }}>
@@ -260,12 +267,12 @@ export default function PublicInvitePage({ eventId }) {
           {/* Type Badge */}
           <div className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full mb-4"
             style={{ background: theme.accentLight, border: `1px solid ${theme.border}` }}>
-            <span className="text-[10px] font-medium uppercase tracking-widest" style={{ color: theme.accent }}>{event.type}</span>
+            <span className="text-[10px] font-medium uppercase tracking-widest" style={{ color: theme.accent }}>{event?.type}</span>
           </div>
 
           {/* Client Name */}
           <h1 className="text-3xl md:text-4xl font-bold mb-2 leading-tight" style={{ color: theme.text }}>
-            {event.client}
+            {clientName}
           </h1>
 
           {/* Divider */}
@@ -275,20 +282,20 @@ export default function PublicInvitePage({ eventId }) {
           <div className="space-y-3 mb-8">
             <div className="flex items-center justify-center gap-3">
               <span style={{ color: theme.textMuted }}>📅</span>
-              <span className="text-sm font-medium" style={{ color: theme.text }}>{event.date}</span>
+              <span className="text-sm font-medium" style={{ color: theme.text }}>{evDate}</span>
             </div>
             <div className="flex items-center justify-center gap-3">
               <span style={{ color: theme.textMuted }}>🕐</span>
-              <span className="text-sm" style={{ color: theme.text }}>{event.time}</span>
+              <span className="text-sm" style={{ color: theme.text }}>{evTime}</span>
             </div>
             <div className="flex items-center justify-center gap-3">
               <span style={{ color: theme.textMuted }}>📍</span>
-              <span className="text-sm" style={{ color: theme.text }}>{event.location}</span>
+              <span className="text-sm" style={{ color: theme.text }}>{evLocation}</span>
             </div>
-            {event.guests > 0 && (
+            {evGuests > 0 && (
               <div className="flex items-center justify-center gap-3">
                 <span style={{ color: theme.textMuted }}>👥</span>
-                <span className="text-sm" style={{ color: theme.text }}>{event.guests} Misafir</span>
+                <span className="text-sm" style={{ color: theme.text }}>{evGuests} Misafir</span>
               </div>
             )}
           </div>
@@ -301,7 +308,7 @@ export default function PublicInvitePage({ eventId }) {
           </button>
 
           <p className="text-[10px]" style={{ color: theme.textMuted }}>
-            Davetiye: {event.client} • {event.date}
+            Davetiye: {clientName} • {evDate}
           </p>
         </div>
       </div>
