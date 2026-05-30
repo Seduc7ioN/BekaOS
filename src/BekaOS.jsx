@@ -6,6 +6,7 @@
     <meta name="theme-color" content="#0a0a0f">
 */
 import { useState, useRef, useEffect } from "react";
+import { QRCodeSVG } from "qrcode.react";
 
 const initEvents = [
   { id:1, type:"Nişan",            client:"Ayşe & Mehmet",  date:"2026-06-02", time:"18:00", guests:80,  status:"confirmed", payment:"kapora",  location:"Bahçelievler Salonu", tasks:12, done:8,  budget:15000, paid:5000,  phone:"0532 111 2233", notes:"Kırmızı & altın tema, canlı müzik." },
@@ -744,6 +745,7 @@ function TasksPage({tasks,setTasks,events}) {
 function InvitationsPage({events,guests}) {
   const [activeEv,setActiveEv]=useState(events[0]);
   const [preview,setPreview]=useState(false);
+  const [qrOpen,setQrOpen]=useState(false);
   const [themeIdx,setThemeIdx]=useState(0);
   const themes=[
     {name:"Klasik Gold",from:"#b8943f",to:"#d4af37",dark:"#1a1200"},
@@ -853,8 +855,8 @@ function InvitationsPage({events,guests}) {
             <div className="text-[10px] text-white/35 mb-0.5">Davetiye Linki</div>
             <div className="text-xs font-mono text-purple-400">beka.io/i/{activeEv?.id}</div>
           </div>
-          <GlassBtn>Kopyala</GlassBtn>
-          <GlassBtn>QR</GlassBtn>
+          <GlassBtn onClick={()=>navigator.clipboard?.writeText(`https://beka.io/i/${activeEv?.id}`)}>Kopyala</GlassBtn>
+          <GlassBtn onClick={()=>setQrOpen(true)}>QR Oluştur</GlassBtn>
         </div>
       </Card>
       <Modal open={preview} onClose={()=>setPreview(false)} title="Davetiye Önizlemesi">
@@ -885,6 +887,32 @@ function InvitationsPage({events,guests}) {
           </div>
         </div>
       </Modal>
+      <Modal open={qrOpen} onClose={()=>setQrOpen(false)} title="QR Kod">
+        <div className="flex flex-col items-center gap-4 py-4 qr-modal">
+          <div className="p-4 bg-white rounded-2xl">
+            <QRCodeSVG value={`https://beka.io/i/${activeEv?.id}`} size={200} level="H"/>
+          </div>
+          <div className="text-center">
+            <div className="text-sm font-semibold text-white/85">{activeEv?.client}</div>
+            <div className="text-xs text-white/40">{activeEv?.type} - {activeEv?.date}</div>
+          </div>
+          <div className="p-3 rounded-xl border border-white/3 bg-white/[0.02] w-full">
+            <div className="text-[10px] text-white/35 mb-1">Davetiye Linki</div>
+            <div className="text-xs font-mono text-purple-400">https://beka.io/i/{activeEv?.id}</div>
+          </div>
+          <div className="p-3 rounded-xl border border-white/3 bg-white/[0.02] w-full">
+            <div className="text-[10px] text-white/35 mb-1">Konum</div>
+            <div className="text-xs text-white/60">📍 Yunusemre, Arpacılar Sk Arpacılar Sitesi No:4/BA, 16270 Yıldırım/Bursa</div>
+          </div>
+          <div className="flex gap-2 w-full">
+            <GlassBtn className="flex-1 justify-center" onClick={()=>{
+              const svg=document.querySelector('.qr-modal svg');
+              if(svg){const svgData=new XMLSerializer().serializeToString(svg);const canvas=document.createElement('canvas');canvas.width=256;canvas.height=256;const ctx=canvas.getContext('2d');const img=new Image();img.onload=()=>{ctx.drawImage(img,0,0);const a=document.createElement('a');a.download=`qr-${activeEv?.id}.png`;a.href=canvas.toDataURL();a.click();};img.src='data:image/svg+xml;base64,'+btoa(svgData);}
+            }}>İndir</GlassBtn>
+            <GlassBtn className="flex-1 justify-center" onClick={()=>navigator.clipboard?.writeText(`https://beka.io/i/${activeEv?.id}`)}>Linki Kopyala</GlassBtn>
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 }
@@ -894,6 +922,7 @@ function InvitationsPage({events,guests}) {
 function GalleryPage({events,gallery,setGallery}) {
   const [activeEv,setActiveEv]=useState(events[2]);
   const [lightbox,setLightbox]=useState(null);
+  const [galleryQr,setGalleryQr]=useState(false);
   const photos=gallery.filter(g=>g.eventId===activeEv?.id);
   const approve=(id)=>setGallery(prev=>prev.map(g=>g.id===id?{...g,approved:true}:g));
   const remove=(id)=>{setGallery(prev=>prev.filter(g=>g.id!==id));if(lightbox?.id===id)setLightbox(null);};
@@ -925,9 +954,9 @@ function GalleryPage({events,gallery,setGallery}) {
             <p className="text-xs text-white/35 mt-0.5">{photos.length} medya - QR: <span className="text-purple-400 font-mono text-[10px]">beka.io/g/{activeEv?.id}</span></p>
           </div>
           <div className="flex gap-2">
-            <GlassBtn>QR Indir</GlassBtn>
+            <GlassBtn onClick={()=>setGalleryQr(true)}>QR İndir</GlassBtn>
             <GlassBtn>ZIP</GlassBtn>
-            <button className="px-3 py-2 rounded-xl text-xs text-purple-300 border border-purple-500/25 hover:bg-purple-500/10 transition-colors">+ Yukle</button>
+            <button onClick={()=>document.getElementById('gallery-upload-input')?.click()} className="px-3 py-2 rounded-xl text-xs text-purple-300 border border-purple-500/25 hover:bg-purple-500/10 transition-colors">+ Yükle</button>
           </div>
         </div>
         <div className="grid grid-cols-3 gap-3 mb-4">
@@ -975,12 +1004,32 @@ function GalleryPage({events,gallery,setGallery}) {
             <div className="flex items-center gap-3 p-4" style={{background:"#0f0f1a"}}>
               <span className="text-xs text-white/50 flex-1">{lightbox.approved?"Onaylandı":"Onay Bekliyor"}</span>
               {!lightbox.approved&&<button onClick={()=>{approve(lightbox.id);setLightbox(p=>({...p,approved:true}));}} className="text-xs px-3 py-1.5 rounded-xl bg-emerald-500/20 text-emerald-400">Onayla</button>}
+              <button onClick={()=>{const a=document.createElement('a');a.href=lightbox.url;a.download=`foto-${lightbox.id}.jpg`;a.click();}} className="text-xs px-3 py-1.5 rounded-xl bg-blue-500/15 text-blue-400">İndir</button>
               <button onClick={()=>remove(lightbox.id)} className="text-xs px-3 py-1.5 rounded-xl bg-rose-500/15 text-rose-400">Sil</button>
               <button onClick={()=>setLightbox(null)} className="text-white/30 hover:text-white ml-2 transition-colors text-xl leading-none">x</button>
             </div>
           </div>
         </div>
       )}
+      <Modal open={galleryQr} onClose={()=>setGalleryQr(false)} title="Galeri QR Kod">
+        <div className="flex flex-col items-center gap-4 py-4 gallery-qr-modal">
+          <div className="p-4 bg-white rounded-2xl">
+            <QRCodeSVG value={`https://beka.io/g/${activeEv?.id}`} size={200} level="H"/>
+          </div>
+          <div className="text-center">
+            <div className="text-sm font-semibold text-white/85">{activeEv?.client}</div>
+            <div className="text-xs text-white/40">{photos.length} medya</div>
+          </div>
+          <div className="p-3 rounded-xl border border-white/3 bg-white/[0.02] w-full">
+            <div className="text-[10px] text-white/35 mb-1">Galeri Linki</div>
+            <div className="text-xs font-mono text-purple-400">https://beka.io/g/{activeEv?.id}</div>
+          </div>
+          <GlassBtn className="w-full justify-center" onClick={()=>{
+            const svg=document.querySelector('.gallery-qr-modal svg');
+            if(svg){const svgData=new XMLSerializer().serializeToString(svg);const canvas=document.createElement('canvas');canvas.width=256;canvas.height=256;const ctx=canvas.getContext('2d');const img=new Image();img.onload=()=>{ctx.drawImage(img,0,0);const a=document.createElement('a');a.download=`galeri-qr-${activeEv?.id}.png`;a.href=canvas.toDataURL();a.click();};img.src='data:image/svg+xml;base64,'+btoa(svgData);}
+          }}>QR İndir</GlassBtn>
+        </div>
+      </Modal>
     </div>
   );
 }
@@ -1082,7 +1131,7 @@ function PaymentsPage({events}) {
 
 
 /* ── RESERVATION ────────────────────────────────── */
-function ReservationPage() {
+function ReservationPage({events,setEvents}) {
   const [step,setStep]=useState(1);
   const [form,setForm]=useState({type:"",date:"",time:"",guests:"",location:"",cöncept:"",services:[],name:"",phone:"",email:"",notes:""});
   const upd=(k,v)=>setForm(p=>({...p,[k]:v}));
@@ -1245,7 +1294,11 @@ function ReservationPage() {
               Devam
             </button>
           ):(
-            <button onClick={()=>setDone(true)}
+            <button onClick={()=>{
+              const newEv={id:Date.now(),client:form.name||"Yeni Müşteri",type:form.type||"Nişan",date:form.date||"—",time:form.time||"—",location:form.location||"—",guests:parseInt(form.guests)||0,budget:total,paid:0,payment:"Bekliyor",status:"pending",tasks:3,done:0,phone:form.phone||""};
+              setEvents(prev=>[...prev,newEv]);
+              setDone(true);
+            }}
               className="px-6 py-2 rounded-xl text-xs font-semibold text-white" style={{background:"linear-gradient(135deg,#34d399,#059669)"}}>
               Rezervasyonu Gonder
             </button>
@@ -1698,15 +1751,30 @@ function AIPage() {
     setMsgs(newMsgs);setLoading(true);
     try{
       const API_KEY = import.meta.env.VITE_ANTHROPIC_API_KEY || "";
+      if(!API_KEY){
+        // Fallback: yerel cevaplar
+        const fallbackResponses={
+          offer:"📋 **Teklif Taslağı**\n\nSeçtiğiniz etkinlik için tahmini fiyat aralığı:\n\n• **50 kişi:** 8.000 - 15.000 TL\n• **100 kişi:** 15.000 - 28.000 TL\n• **200 kişi:** 28.000 - 50.000 TL\n\nFiyata dahil: Mekan, dekorasyon, catering, DJ\n\n*Not: Kesin fiyat görüşme sonrası belirlenir.*\n\n🔑 AI asistanı tam kapasite kullanmak için Ayarlar > API Key bölümünden Anthropic API anahtarınızı girin.",
+          cöncept:"🎨 **Konsept Önerisi**\n\n**Renk Paleti:** Pastel pembe, altın, krem\n\n**Dekorasyon:**\n• Çiçek aranjmanları (güller, lilyumlar)\n• Altın çerçeveli aynalar\n• Mum ışığı aydınlatma\n• Tül drapeler\n\n**Masa Düzeni:**\n• Yuvarlak masalar, altın runner\n• Kristal suplalar\n• Şamdanlar\n\n🔑 AI asistanı tam kapasite kullanmak için Ayarlar > API Key bölümünden Anthropic API anahtarınızı girin.",
+          chat:"💬 **BekaOS AI Asistan**\n\nSize nasıl yardımcı olabilirim?\n\n• Etkinlik planlaması\n• Bütçe hesaplama\n• Konsept önerileri\n• Davetiye tasarımı\n• Misafir yönetimi\n\n🔑 AI asistanı tam kapasite kullanmak için Ayarlar > API Key bölümünden Anthropic API anahtarınızı girin."
+        };
+        const response=fallbackResponses[mode]||fallbackResponses.chat;
+        setTimeout(()=>{
+          setMsgs(p=>[...p,{role:"assistant",text:response}]);
+          setLoading(false);
+          setTimeout(()=>endRef.current?.scrollIntoView({behavior:"smooth"}),100);
+        },800);
+        return;
+      }
       const res=await fetch("https://api.anthropic.com/v1/messages",{
         method:"POST",headers:{"Content-Type":"application/json","x-api-key":API_KEY,"anthropic-version":"2023-06-01"},
         body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:1000,system:SYSTEMS[mode],
           messages:newMsgs.map(m=>({role:m.role==="assistant"?"assistant":"user",content:m.text}))})
       });
       const data=await res.json();
-      setMsgs(p=>[...p,{role:"assistant",text:data.content?.[0]?.text||"Bir hata olustu."}]);
+      setMsgs(p=>[...p,{role:"assistant",text:data.content?.[0]?.text||"Bir hata oluştu."}]);
     }catch{
-      setMsgs(p=>[...p,{role:"assistant",text:"Baglanti hatasi. Lütfen tekrar deneyin."}]);
+      setMsgs(p=>[...p,{role:"assistant",text:"Bağlantı hatası. Lütfen tekrar deneyin."}]);
     }
     setLoading(false);
     setTimeout(()=>endRef.current?.scrollIntoView({behavior:"smooth"}),100);
@@ -1937,7 +2005,7 @@ export default function BekaOS() {
     invitations:<InvitationsPage events={events} guests={initGuests}/>,
     gallery:<GalleryPage events={events} gallery={gallery} setGallery={setGallery}/>,
     payments:<PaymentsPage events={events}/>,
-    reservation:<ReservationPage/>,
+    reservation:<ReservationPage events={events} setEvents={setEvents}/>,
     whatsapp:<WhatsAppPage events={events}/>,
     staff:<StaffPage events={events} tasks={tasks}/>,
     crm:<CRMPage events={events}/>,
@@ -1969,8 +2037,13 @@ export default function BekaOS() {
 
         {/* Logo */}
         <div className="flex items-center gap-3 px-4 py-5 border-b border-white/[0.06]" style={{minWidth:0}}>
-          <div className="w-9 h-9 rounded-xl flex items-center justify-center text-sm font-bold flex-shrink-0"
-            style={{background:"linear-gradient(135deg,#8b5cf6,#6366f1)"}}>B</div>
+          <div className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0" style={{background:"#0a0a0f",border:"1.5px solid rgba(139,92,246,0.4)"}}>
+            <svg width="22" height="22" viewBox="0 0 32 32" fill="none">
+              <circle cx="16" cy="14" r="8" stroke="url(#logoGrad)" strokeWidth="2"/>
+              <text x="16" y="18" textAnchor="middle" fontFamily="sans-serif" fontSize="12" fontWeight="700" fill="url(#logoGrad)">B</text>
+              <defs><linearGradient id="logoGrad" x1="0" y1="0" x2="32" y2="32"><stop stopColor="#8b5cf6"/><stop offset="1" stopColor="#6366f1"/></linearGradient></defs>
+            </svg>
+          </div>
           {(sidebar) && (
             <div className="min-w-0">
               <div className="text-sm font-bold tracking-wide text-white whitespace-nowrap">BekaOS</div>
