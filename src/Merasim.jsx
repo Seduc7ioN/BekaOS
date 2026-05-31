@@ -1197,8 +1197,8 @@ function GalleryPage({events,gallery,setGallery,company,addNotif}) {
         {photos.length>0?(
           <div className="grid grid-cols-3 gap-3">
             {photos.map(photo=>(
-              <div key={photo.id} className="relative group rounded-xl overflow-hidden cursor-pointer" style={{aspectRatio:"16/10"}}>
-                <img src={photo.url} alt="" className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" onClick={()=>setLightbox(photo)}/>
+              <div key={photo.id} onClick={()=>setLightbox(photo)} className="relative group rounded-xl overflow-hidden cursor-pointer" style={{aspectRatio:"16/10"}}>
+                <img src={photo.url} alt="" className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"/>
                 <div className="absolute inset-0 bg-black/0 group-hover:bg-black/55 transition-colors flex items-end p-2 gap-1">
                   {!photo.approved&&(
                     <button onClick={e=>{e.stopPropagation();approve(photo.id);}}

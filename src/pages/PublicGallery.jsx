@@ -29,30 +29,41 @@ export default function PublicGalleryPage({ eventId }) {
       try {
         const ext = file.name.split('.').pop() || 'jpg'
         const path = `public/${eventId}/${Date.now()}_${Math.random().toString(36).slice(2,6)}.${ext}`
-        const { error: uploadErr } = await supabase.storage.from('gallery').upload(path, file)
-        if (!uploadErr) {
-          const url = supabase.storage.from('gallery').getPublicUrl(path).data.publicUrl
-          await supabase.from('gallery').insert({
-            company_id: event.company_id,
-            event_id: eventId,
-            url,
-            approved: false,
-          })
+        const { data: uploadData, error: uploadErr } = await supabase.storage.from('gallery').upload(path, file)
+        if (uploadErr) {
+          console.error('Storage upload error:', uploadErr)
+          continue
+        }
+        const url = supabase.storage.from('gallery').getPublicUrl(path).data.publicUrl
+        const { error: insertErr } = await supabase.from('gallery').insert({
+          company_id: event.company_id,
+          event_id: eventId,
+          url,
+          approved: false,
+        })
+        if (insertErr) {
+          console.error('Gallery insert error:', insertErr)
+          continue
+        }
+        // Bildirim opsiyonel - hata olursa devam et
+        if (event.company_id) {
           await supabase.from('notifications').insert({
             company_id: event.company_id,
             icon: '📸',
             text: `${event.client} galerisine yeni fotoğraf yüklendi. Onay bekliyor.`,
             page: 'gallery',
-          })
-          uploaded++
+          }).catch(e => console.warn('Notification error:', e))
         }
+        uploaded++
       } catch (err) {
         console.error('Upload error:', err)
       }
     }
     setUploading(false)
-    setUploadDone(true)
-    setTimeout(() => setUploadDone(false), 3000)
+    if (uploaded > 0) {
+      setUploadDone(true)
+      setTimeout(() => setUploadDone(false), 3000)
+    }
     loadData()
   }
 
