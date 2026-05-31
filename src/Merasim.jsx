@@ -2125,13 +2125,12 @@ function AIPage() {
     const newMsgs=[...msgs,{role:"user",text:txt}];
     setMsgs(newMsgs);setLoading(true);
     try{
-      const API_KEY = import.meta.env.VITE_ANTHROPIC_API_KEY || "";
+      const API_KEY = localStorage.getItem("gemini_api_key") || "";
       if(!API_KEY){
-        // Fallback: yerel cevaplar
         const fallbackResponses={
-          offer:"📋 **Teklif Taslağı**\n\nSeçtiğiniz etkinlik için tahmini fiyat aralığı:\n\n• **50 kişi:** 8.000 - 15.000 TL\n• **100 kişi:** 15.000 - 28.000 TL\n• **200 kişi:** 28.000 - 50.000 TL\n\nFiyata dahil: Mekan, dekorasyon, catering, DJ\n\n*Not: Kesin fiyat görüşme sonrası belirlenir.*\n\n🔑 AI asistanı tam kapasite kullanmak için Ayarlar > API Key bölümünden Anthropic API anahtarınızı girin.",
-          cöncept:"🎨 **Konsept Önerisi**\n\n**Renk Paleti:** Pastel pembe, altın, krem\n\n**Dekorasyon:**\n• Çiçek aranjmanları (güller, lilyumlar)\n• Altın çerçeveli aynalar\n• Mum ışığı aydınlatma\n• Tül drapeler\n\n**Masa Düzeni:**\n• Yuvarlak masalar, altın runner\n• Kristal suplalar\n• Şamdanlar\n\n🔑 AI asistanı tam kapasite kullanmak için Ayarlar > API Key bölümünden Anthropic API anahtarınızı girin.",
-          chat:"💬 **Merasim AI Asistan**\n\nSize nasıl yardımcı olabilirim?\n\n• Etkinlik planlaması\n• Bütçe hesaplama\n• Konsept önerileri\n• Davetiye tasarımı\n• Misafir yönetimi\n\n🔑 AI asistanı tam kapasite kullanmak için Ayarlar > API Key bölümünden Anthropic API anahtarınızı girin."
+          offer:"📋 **Teklif Taslağı**\n\nSeçtiğiniz etkinlik için tahmini fiyat aralığı:\n\n• **50 kişi:** 8.000 - 15.000 TL\n• **100 kişi:** 15.000 - 28.000 TL\n• **200 kişi:** 28.000 - 50.000 TL\n\nFiyata dahil: Mekan, dekorasyon, catering, DJ\n\n*Not: Kesin fiyat görüşme sonrası belirlenir.*\n\n🔑 Tam kapasite için: Ayarlar > Google Gemini API Key",
+          cöncept:"🎨 **Konsept Önerisi**\n\n**Renk Paleti:** Pastel pembe, altın, krem\n\n**Dekorasyon:**\n• Çiçek aranjmanları (güller, lilyumlar)\n• Altın çerçeveli aynalar\n• Mum ışığı aydınlatma\n• Tül drapeler\n\n**Masa Düzeni:**\n• Yuvarlak masalar, altın runner\n• Kristal suplalar\n• Şamdanlar\n\n🔑 Tam kapasite için: Ayarlar > Google Gemini API Key",
+          chat:"💬 **Merasim AI Asistan**\n\nSize nasıl yardımcı olabilirim?\n\n• Etkinlik planlaması\n• Bütçe hesaplama\n• Konsept önerileri\n• Davetiye tasarımı\n• Misafir yönetimi\n\n🔑 Tam kapasite için: Ayarlar > Google Gemini API Key"
         };
         const response=fallbackResponses[mode]||fallbackResponses.chat;
         setTimeout(()=>{
@@ -2141,13 +2140,18 @@ function AIPage() {
         },800);
         return;
       }
-      const res=await fetch("https://api.anthropic.com/v1/messages",{
-        method:"POST",headers:{"Content-Type":"application/json","x-api-key":API_KEY,"anthropic-version":"2023-06-01"},
-        body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:1000,system:SYSTEMS[mode],
-          messages:newMsgs.map(m=>({role:m.role==="assistant"?"assistant":"user",content:m.text}))})
+      const history=newMsgs.map(m=>({role:m.role==="assistant"?"model":"user",parts:[{text:m.text}]}));
+      const res=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${API_KEY}`,{
+        method:"POST",headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({
+          systemInstruction:{parts:[{text:SYSTEMS[mode]}]},
+          contents:history,
+          generationConfig:{maxOutputTokens:1000,temperature:0.7}
+        })
       });
       const data=await res.json();
-      setMsgs(p=>[...p,{role:"assistant",text:data.content?.[0]?.text||"Bir hata oluştu."}]);
+      const reply=data.candidates?.[0]?.content?.parts?.[0]?.text||"Bir hata oluştu. API key'inizi kontrol edin.";
+      setMsgs(p=>[...p,{role:"assistant",text:reply}]);
     }catch{
       setMsgs(p=>[...p,{role:"assistant",text:"Bağlantı hatası. Lütfen tekrar deneyin."}]);
     }
@@ -2250,6 +2254,13 @@ function SettingsPage({company,setPage}) {
   };
   return (
     <div className="max-w-2xl space-y-5">
+      <Card className="p-5 space-y-4">
+        <h2 className="text-sm font-semibold text-white/80">🤖 AI Asistan Ayarları</h2>
+        <div>
+          <FieldInput label="Google Gemini API Key" value={localStorage.getItem("gemini_api_key")||""} onChange={e=>{localStorage.setItem("gemini_api_key",e.target.value);}} placeholder="AIza..."/>
+          <p className="text-[10px] text-white/25 mt-1">Ücretsiz almak için: <a href="https://aistudio.google.com/apikey" target="_blank" className="text-purple-400 underline">aistudio.google.com/apikey</a></p>
+        </div>
+      </Card>
       <Card className="p-5 space-y-4">
         <h2 className="text-sm font-semibold text-white/80">Firma Profili</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
