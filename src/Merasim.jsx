@@ -402,7 +402,7 @@ function DashboardPage({events,tasks,setPage,company}) {
 }
 
 /* ── EVENTS ─────────────────────────────────────── */
-function EventsPage({events,setEvents,updateEvent,setPage}) {
+function EventsPage({events,setEvents,updateEvent,setPage,guests}) {
   const [search,setSearch]=useState("");
   const [filter,setFilter]=useState("Tümü");
   const [statusF,setStatusF]=useState("Tümü");
@@ -504,7 +504,7 @@ function EventsPage({events,setEvents,updateEvent,setPage}) {
             <div className="grid grid-cols-2 gap-2 text-[11px]">
               <div className="text-white/40">📅 {ev.date}</div>
               <div className="text-white/40">📍 <span className="truncate inline-block max-w-[100px] align-bottom">{ev.location}</span></div>
-              <div className="text-white/40">👥 {ev.guests} kişi</div>
+              <div className="text-white/40">👥 {(guests||[]).filter(g=>g.event_id===ev.id&&g.response==="katılıyor").reduce((s,g)=>s+1+(g.plus||0),0)} kişi</div>
               <div className="text-white/60 font-medium">💰 {ev.budget.toLocaleString()} TL</div>
             </div>
             <div className="mt-3 flex items-center gap-2">
@@ -527,7 +527,7 @@ function EventsPage({events,setEvents,updateEvent,setPage}) {
               <div className="text-xs text-white/40 mt-1">{drawer.type}</div>
             </div>
             <div className="space-y-0 mb-5">
-              {[["Tarih",drawer.date],["Saat",drawer.time],["Lokasyon",drawer.location],["Misafir",`${drawer.guests} kişi`],["Bütçe",`${(drawer.budget||0).toLocaleString()} TL`],["Ödenen",`${(drawer.paid||0).toLocaleString()} TL`],["Kalan",`${((drawer.budget||0)-(drawer.paid||0)).toLocaleString()} TL`],["Telefon",drawer.phone]].map(([k,v])=>(
+              {[["Tarih",drawer.date],["Saat",drawer.time],["Lokasyon",drawer.location],["Misafir",`${(guests||[]).filter(g=>g.event_id===drawer.id&&g.response==="katılıyor").reduce((s,g)=>s+1+(g.plus||0),0)} kişi`],["Bütçe",`${(drawer.budget||0).toLocaleString()} TL`],["Ödenen",`${(drawer.paid||0).toLocaleString()} TL`],["Kalan",`${((drawer.budget||0)-(drawer.paid||0)).toLocaleString()} TL`],["Telefon",drawer.phone]].map(([k,v])=>(
                 <div key={k} className="flex justify-between py-2.5 border-b border-white/3">
                   <span className="text-xs text-white/45">{k}</span>
                   <span className="text-xs text-white/75">{v}</span>
@@ -915,7 +915,7 @@ function InvitationsPage({events,guests,updateEvent}) {
         <div>
           <p className="text-xs text-white/40 mb-3">RSVP Özeti</p>
           <div className="grid grid-cols-3 gap-2">
-            {[{label:"Katılıyor",count:evGuests.filter(g=>g.response==="katılıyor").length,color:"#34d399"},{label:"Belki",count:evGuests.filter(g=>g.response==="belki").length,color:"#fbbf24"},{label:"Katılamıyor",count:evGuests.filter(g=>g.response==="katılamıyor").length,color:"#f87171"}].map(s=>(
+            {[{label:"Katılıyor",count:evGuests.filter(g=>g.response==="katılıyor").reduce((s,g)=>s+1+(g.plus||0),0),color:"#34d399"},{label:"Belki",count:evGuests.filter(g=>g.response==="belki").reduce((s,g)=>s+1+(g.plus||0),0),color:"#fbbf24"},{label:"Katılamıyor",count:evGuests.filter(g=>g.response==="katılamıyor").length,color:"#f87171"}].map(s=>(
               <div key={s.label} className="p-3 rounded-xl border border-white/3 text-center" style={{background:"rgba(255,255,255,0.06)"}}>
                 <div className="text-2xl font-bold" style={{color:s.color}}>{s.count}</div>
                 <div className="text-[10px] text-white/40 mt-0.5">{s.label}</div>
@@ -2499,7 +2499,7 @@ function Dashboard() {
 
   const PAGES={
     dashboard:<DashboardPage events={events} tasks={tasks} setPage={navigate} company={company}/>,
-    events:<EventsPage events={events} setEvents={setEvents} updateEvent={updateEvent} setPage={navigate}/>,
+    events:<EventsPage events={events} setEvents={setEvents} updateEvent={updateEvent} setPage={navigate} guests={guests}/>,
     calendar:<CalendarPage events={events} setPage={navigate} setPrefillDate={setPrefillDate}/>,
     tasks:<TasksPage tasks={tasks} setTasks={setTasks} events={events}/>,
     invitations:<InvitationsPage events={events} guests={guests} updateEvent={updateEvent}/>,
