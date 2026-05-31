@@ -272,9 +272,6 @@ function GlobalSearch({events,setPage,onClose}) {
 
 /* ── DASHBOARD ─────────────────────────────────── */
 function DashboardPage({events,tasks,setPage,company}) {
-  const [dashMonth,setDashMonth]=useState(new Date().getMonth());
-  const [dashYear,setDashYear]=useState(new Date().getFullYear());
-  const dashOffset=new Date(dashYear,dashMonth,1).getDay()===0?6:new Date(dashYear,dashMonth,1).getDay()-1;
   const total=events.length, conf=events.filter(e=>e.status==="confirmed").length;
   const pendPay=events.filter(e=>e.payment==="bekliyor").length;
   const guests=events.reduce((s,e)=>s+e.guests,0);
@@ -363,48 +360,6 @@ function DashboardPage({events,tasks,setPage,company}) {
       </div>
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         <Card className="lg:col-span-2 p-5">
-          <div className="flex items-center justify-between mb-5">
-            <button onClick={()=>{setDashMonth(m=>{if(m===0){setDashYear(y=>y-1);return 11;}return m-1;});}} className="w-8 h-8 rounded-lg flex items-center justify-center text-white/40 hover:text-white hover:bg-white/5 border border-white/5 hover:border-white/15 transition-all">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="15 18 9 12 15 6"/></svg>
-            </button>
-            <div className="text-center">
-              <h2 className="text-base font-bold text-white">{MONTH_NAMES[dashMonth]}</h2>
-              <div className="text-xs text-white/30">{dashYear}</div>
-            </div>
-            <button onClick={()=>{setDashMonth(m=>{if(m===11){setDashYear(y=>y+1);return 0;}return m+1;});}} className="w-8 h-8 rounded-lg flex items-center justify-center text-white/40 hover:text-white hover:bg-white/5 border border-white/5 hover:border-white/15 transition-all">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="9 18 15 12 9 6"/></svg>
-            </button>
-          </div>
-          <div className="grid grid-cols-7 gap-1 text-center mb-2">
-            {DAY_NAMES.map(d=><div key={d} className="text-[10px] text-white/25 font-medium pb-1 uppercase tracking-wider">{d}</div>)}
-          </div>
-          <div className="grid grid-cols-7 gap-1">
-            {Array.from({length:new Date(dashYear,dashMonth+1,0).getDate()+dashOffset},(_,i)=>i<dashOffset?null:i-dashOffset+1).map((day,i)=>{
-              if(!day)return<div key={`e${i}`} style={{opacity:0.3}}/>;
-              const now=new Date();
-              const isToday=day===now.getDate()&&dashMonth===now.getMonth()&&dashYear===now.getFullYear();
-              const hasEv=events.some(e=>{const d=new Date(e.date);return d.getFullYear()===dashYear&&d.getMonth()===dashMonth&&d.getDate()===day;});
-              const holidays=getHoliday(dashYear,dashMonth,day);
-              const hasHoliday=holidays.length>0;
-              return (
-                <div key={day} onClick={()=>setPage("calendar")}
-                  className="aspect-square flex flex-col items-center justify-center rounded-xl text-xs cursor-pointer hover:bg-white/5 relative transition-all select-none"
-                  style={{background:hasHoliday?"rgba(251,191,36,0.1)":isToday?"linear-gradient(135deg,rgba(139,92,246,0.3),rgba(99,102,241,0.2))":"transparent",border:isToday?"1.5px solid rgba(139,92,246,0.4)":"1.5px solid transparent",color:hasHoliday?"#fbbf24":isToday?"#fff":hasEv?"rgba(255,255,255,0.8)":"rgba(255,255,255,0.25)",fontWeight:isToday||hasHoliday?"700":"400"}}>
-                  {day}
-                  {hasEv&&!isToday&&!hasHoliday&&<span className="absolute bottom-1 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full" style={{background:"linear-gradient(135deg,#8b5cf6,#6366f1)"}}/>}
-                  {hasHoliday&&<span className="absolute top-0.5 right-1 text-[7px]">{holidays[0]?.icon}</span>}
-                </div>
-              );
-            })}
-          </div>
-          {/* Legend */}
-          <div className="flex items-center gap-4 mt-4 pt-3 border-t border-white/5">
-            <div className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded-full" style={{background:"linear-gradient(135deg,#8b5cf6,#6366f1)"}}/><span className="text-[10px] text-white/30">Bugün</span></div>
-            <div className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-purple-400"/><span className="text-[10px] text-white/30">Etkinlik</span></div>
-            <div className="flex items-center gap-1.5"><span className="text-[10px]">🎉</span><span className="text-[10px] text-white/30">Tatil</span></div>
-          </div>
-        </Card>
-        <Card className="p-5">
           <h2 className="text-sm font-semibold text-white/70 mb-4">Hızlı İşlemler</h2>
           <div className="grid grid-cols-2 gap-2">
             {[{icon:"📋",label:"Rezervasyon",page:"reservation",color:"#8b5cf6"},{icon:"💌",label:"Davetiye",page:"invitations",color:"#ec4899"},{icon:"📸",label:"Galeri",page:"gallery",color:"#f59e0b"},{icon:"💰",label:"Ödemeler",page:"payments",color:"#10b981"},{icon:"👥",label:"CRM",page:"crm",color:"#3b82f6"},{icon:"🤖",label:"AI Asistan",page:"ai",color:"#6366f1"}].map((a,i)=>(
