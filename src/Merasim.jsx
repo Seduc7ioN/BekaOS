@@ -1265,6 +1265,8 @@ function PaymentsPage({events,updateEvent}) {
   const [expenses,setExpenses]=useState([]);
   const [expOpen,setExpOpen]=useState(false);
   const [expForm,setExpForm]=useState({eventId:"",desc:"",amount:""});
+  const [payModal,setPayModal]=useState(null);
+  const [payAmount,setPayAmount]=useState("");
   const totalRev=events.reduce((s,e)=>s+e.budget,0);
   const totalPaid=events.reduce((s,e)=>s+e.paid,0);
   const totalExp=expenses.reduce((s,e)=>s+e.amount,0);
@@ -1322,6 +1324,43 @@ function PaymentsPage({events,updateEvent}) {
           }} className="w-full py-2.5 rounded-xl text-xs font-semibold text-white" style={{background:"linear-gradient(135deg,#8b5cf6,#6366f1)"}}>Ekle</button>
         </div>
       </Modal>
+      <Modal open={!!payModal} onClose={()=>setPayModal(null)} title={`Tahsil Et - ${payModal?.client||""}`}>
+        {payModal&&(
+          <div className="space-y-4">
+            <div className="p-3 rounded-xl bg-white/[0.04] space-y-1">
+              <div className="flex justify-between text-xs"><span className="text-white/40">Toplam</span><span className="text-white/70">{payModal.budget.toLocaleString()} TL</span></div>
+              <div className="flex justify-between text-xs"><span className="text-white/40">Ödenen</span><span className="text-emerald-400">{payModal.paid.toLocaleString()} TL</span></div>
+              <div className="flex justify-between text-xs"><span className="text-white/40">Kalan</span><span className="text-rose-400">{(payModal.budget-payModal.paid).toLocaleString()} TL</span></div>
+            </div>
+            <div>
+              <label className="text-[10px] text-white/40 uppercase tracking-wider mb-1.5 block">Tahsil Edilecek Tutar</label>
+              <input type="number" value={payAmount} onChange={e=>setPayAmount(e.target.value)}
+                className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2.5 text-sm text-white/80 focus:outline-none focus:border-purple-500/50"
+                placeholder="0" min="0" max={payModal.budget-payModal.paid}/>
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              <button onClick={async()=>{
+                const amt=parseInt(payAmount)||0;
+                if(amt<=0)return;
+                const newPaid=payModal.paid+amt;
+                const isFull=newPaid>=payModal.budget;
+                await updateEvent(payModal.id,{paid:newPaid,payment:isFull?"tam":"kapora"});
+                setPayModal(null);
+                setPayAmount("");
+              }} className="py-2.5 rounded-xl text-xs font-semibold text-white" style={{background:"linear-gradient(135deg,#34d399,#059669)"}}>
+                Kapora Tahsil
+              </button>
+              <button onClick={async()=>{
+                await updateEvent(payModal.id,{paid:payModal.budget,payment:"tam"});
+                setPayModal(null);
+                setPayAmount("");
+              }} className="py-2.5 rounded-xl text-xs font-semibold text-white" style={{background:"linear-gradient(135deg,#8b5cf6,#6366f1)"}}>
+                Tamamını Tahsil
+              </button>
+            </div>
+          </div>
+        )}
+      </Modal>
       <Card className="overflow-hidden">
         <SectionHeader title="Ödeme Detayları"/>
         {/* Desktop table */}
@@ -1346,8 +1385,9 @@ function PaymentsPage({events,updateEvent}) {
                     <td className="px-4 py-3 text-xs font-medium text-rose-400 whitespace-nowrap">{rem.toLocaleString()}</td>
                     <td className="px-4 py-3"><div className="flex items-center gap-2"><div className="w-12 h-1.5 rounded-full bg-white/10"><div className="h-1.5 rounded-full" style={{width:`${pct}%`,background:pct===100?"#34d399":"linear-gradient(90deg,#8b5cf6,#6366f1)"}}/></div><span className="text-[10px] text-white/40">{pct}%</span></div></td>
                     <td className="px-4 py-3"><span className={`text-[10px] px-2 py-0.5 rounded-full font-medium ${PAY_COL[ev.payment]?.bg||""} ${PAY_COL[ev.payment]?.tx||""}`}>{ev.payment}</span></td>
-                    <td className="px-4 py-3">{rem>0&&<button onClick={async()=>{
-                      await updateEvent(ev.id,{paid:ev.budget,payment:"tam"});
+                    <td className="px-4 py-3">{rem>0&&<button onClick={()=>{
+                      setPayModal(ev);
+                      setPayAmount(String(rem));
                     }} className="text-[10px] px-2.5 py-1 rounded-lg text-white/50 hover:text-white border border-white/3 hover:border-white/20 transition-colors whitespace-nowrap">Tahsil Et</button>}</td>
                   </tr>
                 );
