@@ -2125,12 +2125,12 @@ function AIPage() {
     const newMsgs=[...msgs,{role:"user",text:txt}];
     setMsgs(newMsgs);setLoading(true);
     try{
-      const API_KEY = localStorage.getItem("gemini_api_key") || "";
+      const API_KEY = localStorage.getItem("openrouter_api_key") || "";
       if(!API_KEY){
         const fallbackResponses={
-          offer:"📋 **Teklif Taslağı**\n\nSeçtiğiniz etkinlik için tahmini fiyat aralığı:\n\n• **50 kişi:** 8.000 - 15.000 TL\n• **100 kişi:** 15.000 - 28.000 TL\n• **200 kişi:** 28.000 - 50.000 TL\n\nFiyata dahil: Mekan, dekorasyon, catering, DJ\n\n*Not: Kesin fiyat görüşme sonrası belirlenir.*\n\n🔑 Tam kapasite için: Ayarlar > Google Gemini API Key",
-          cöncept:"🎨 **Konsept Önerisi**\n\n**Renk Paleti:** Pastel pembe, altın, krem\n\n**Dekorasyon:**\n• Çiçek aranjmanları (güller, lilyumlar)\n• Altın çerçeveli aynalar\n• Mum ışığı aydınlatma\n• Tül drapeler\n\n**Masa Düzeni:**\n• Yuvarlak masalar, altın runner\n• Kristal suplalar\n• Şamdanlar\n\n🔑 Tam kapasite için: Ayarlar > Google Gemini API Key",
-          chat:"💬 **Merasim AI Asistan**\n\nSize nasıl yardımcı olabilirim?\n\n• Etkinlik planlaması\n• Bütçe hesaplama\n• Konsept önerileri\n• Davetiye tasarımı\n• Misafir yönetimi\n\n🔑 Tam kapasite için: Ayarlar > Google Gemini API Key"
+          offer:"📋 **Teklif Taslağı**\n\nSeçtiğiniz etkinlik için tahmini fiyat aralığı:\n\n• **50 kişi:** 8.000 - 15.000 TL\n• **100 kişi:** 15.000 - 28.000 TL\n• **200 kişi:** 28.000 - 50.000 TL\n\nFiyata dahil: Mekan, dekorasyon, catering, DJ\n\n*Not: Kesin fiyat görüşme sonrası belirlenir.*\n\n🔑 Tam kapasite için: Ayarlar > OpenRouter API Key",
+          cöncept:"🎨 **Konsept Önerisi**\n\n**Renk Paleti:** Pastel pembe, altın, krem\n\n**Dekorasyon:**\n• Çiçek aranjmanları (güller, lilyumlar)\n• Altın çerçeveli aynalar\n• Mum ışığı aydınlatma\n• Tül drapeler\n\n**Masa Düzeni:**\n• Yuvarlak masalar, altın runner\n• Kristal suplalar\n• Şamdanlar\n\n🔑 Tam kapasite için: Ayarlar > OpenRouter API Key",
+          chat:"💬 **Merasim AI Asistan**\n\nSize nasıl yardımcı olabilirim?\n\n• Etkinlik planlaması\n• Bütçe hesaplama\n• Konsept önerileri\n• Davetiye tasarımı\n• Misafir yönetimi\n\n🔑 Tam kapasite için: Ayarlar > OpenRouter API Key"
         };
         const response=fallbackResponses[mode]||fallbackResponses.chat;
         setTimeout(()=>{
@@ -2140,20 +2140,24 @@ function AIPage() {
         },800);
         return;
       }
-      const history=newMsgs.map(m=>({role:m.role==="assistant"?"model":"user",parts:[{text:m.text}]}));
-      const res=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`,{
-        method:"POST",headers:{"Content-Type":"application/json"},
+      const res=await fetch("https://openrouter.ai/api/v1/chat/completions",{
+        method:"POST",
+        headers:{"Content-Type":"application/json","Authorization":`Bearer ${API_KEY}`},
         body:JSON.stringify({
-          systemInstruction:{parts:[{text:SYSTEMS[mode]}]},
-          contents:history,
-          generationConfig:{maxOutputTokens:1000,temperature:0.7}
+          model:"meta-llama/llama-3.1-8b-instruct:free",
+          max_tokens:1000,
+          temperature:0.7,
+          messages:[
+            {role:"system",content:SYSTEMS[mode]},
+            ...newMsgs.map(m=>({role:m.role==="assistant"?"assistant":"user",content:m.text}))
+          ]
         })
       });
       const data=await res.json();
       if(data.error){
         setMsgs(p=>[...p,{role:"assistant",text:`API Hatası: ${data.error.message||JSON.stringify(data.error)}`}]);
       } else {
-        const reply=data.candidates?.[0]?.content?.parts?.[0]?.text||"Boş yanıt döndü.";
+        const reply=data.choices?.[0]?.message?.content||"Boş yanıt döndü.";
         setMsgs(p=>[...p,{role:"assistant",text:reply}]);
       }
     }catch{
@@ -2214,7 +2218,7 @@ function AIPage() {
 /* ── SETTINGS ───────────────────────────────────── */
 function SettingsPage({company,setPage}) {
   const [saved,setSaved]=useState(false);
-  const [geminiKey,setGeminiKey]=useState(localStorage.getItem("gemini_api_key")||"");
+  const [aiKey,setAiKey]=useState(localStorage.getItem("openrouter_api_key")||"");
   const [notifs,setNotifs]=useState({rsvp:true,payment:true,task:true,gallery:false,reminder:true});
   const [profile,setProfile]=useState({
     company:company?.name||"",
@@ -2262,9 +2266,10 @@ function SettingsPage({company,setPage}) {
       <Card className="p-5 space-y-4">
         <h2 className="text-sm font-semibold text-white/80">🤖 AI Asistan Ayarları</h2>
         <div>
-          <label className="text-[10px] text-white/40 uppercase tracking-wider block">Google Gemini API Key</label>
-          <input value={geminiKey} onChange={e=>{setGeminiKey(e.target.value);localStorage.setItem("gemini_api_key",e.target.value);}}
-            placeholder="AIzaSy..." className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2.5 text-sm text-white/80 placeholder:text-white/20 focus:outline-none focus:border-purple-500/50"/>
+          <label className="text-[10px] text-white/40 uppercase tracking-wider block">OpenRouter API Key (Ücretsiz)</label>
+          <input value={aiKey} onChange={e=>{setAiKey(e.target.value);localStorage.setItem("openrouter_api_key",e.target.value);}}
+            placeholder="sk-or-..." className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2.5 text-sm text-white/80 placeholder:text-white/20 focus:outline-none focus:border-purple-500/50"/>
+          <p className="text-[10px] text-white/25 mt-1">Ücretsiz almak için: <a href="https://openrouter.ai/keys" target="_blank" className="text-purple-400 underline">openrouter.ai/keys</a> — Kayıt ol → Create Key</p>
           <p className="text-[10px] text-white/25 mt-1">Ücretsiz almak için: <a href="https://aistudio.google.com/apikey" target="_blank" className="text-purple-400 underline">aistudio.google.com/apikey</a></p>
         </div>
       </Card>
