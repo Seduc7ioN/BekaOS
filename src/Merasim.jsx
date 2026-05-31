@@ -2258,7 +2258,9 @@ function SettingsPage({company,setPage}) {
       <Card className="p-5 space-y-4">
         <h2 className="text-sm font-semibold text-white/80">🤖 AI Asistan Ayarları</h2>
         <div>
-          <FieldInput label="Google Gemini API Key" value={geminiKey} onChange={e=>{setGeminiKey(e.target.value);localStorage.setItem("gemini_api_key",e.target.value);}} placeholder="AIza..."/>
+          <label className="text-[10px] text-white/40 uppercase tracking-wider block">Google Gemini API Key</label>
+          <input value={geminiKey} onChange={e=>{setGeminiKey(e.target.value);localStorage.setItem("gemini_api_key",e.target.value);}}
+            placeholder="AIzaSy..." className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2.5 text-sm text-white/80 placeholder:text-white/20 focus:outline-none focus:border-purple-500/50"/>
           <p className="text-[10px] text-white/25 mt-1">Ücretsiz almak için: <a href="https://aistudio.google.com/apikey" target="_blank" className="text-purple-400 underline">aistudio.google.com/apikey</a></p>
         </div>
       </Card>
