@@ -2144,7 +2144,7 @@ function AIPage() {
         method:"POST",
         headers:{"Content-Type":"application/json","Authorization":`Bearer ${API_KEY}`},
         body:JSON.stringify({
-          model:"google/gemma-4-31b-it:free",
+          model:"openrouter/free",
           max_tokens:1000,
           temperature:0.7,
           messages:[
