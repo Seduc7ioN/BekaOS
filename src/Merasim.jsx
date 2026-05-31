@@ -1021,7 +1021,7 @@ function InvitationsPage({events,guests,updateEvent}) {
           </div>
           <div className="p-3 rounded-xl border border-white/3 bg-white/[0.02] w-full">
             <div className="text-[10px] text-white/45 mb-1">Konum</div>
-            <div className="text-xs text-white/60">📍 Yunusemre, Arpacılar Sk Arpacılar Sitesi No:4/BA, 16270 Yıldırım/Bursa</div>
+            <div className="text-xs text-white/60">📍 {activeEv?.location || "Konum belirtilmedi"}</div>
           </div>
           <div className="flex gap-2 w-full">
             <GlassBtn className="flex-1 justify-center" onClick={()=>{
