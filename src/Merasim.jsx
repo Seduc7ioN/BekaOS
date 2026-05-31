@@ -2210,6 +2210,7 @@ function AIPage() {
 /* ── SETTINGS ───────────────────────────────────── */
 function SettingsPage({company,setPage}) {
   const [saved,setSaved]=useState(false);
+  const [geminiKey,setGeminiKey]=useState(localStorage.getItem("gemini_api_key")||"");
   const [notifs,setNotifs]=useState({rsvp:true,payment:true,task:true,gallery:false,reminder:true});
   const [profile,setProfile]=useState({
     company:company?.name||"",
@@ -2257,7 +2258,7 @@ function SettingsPage({company,setPage}) {
       <Card className="p-5 space-y-4">
         <h2 className="text-sm font-semibold text-white/80">🤖 AI Asistan Ayarları</h2>
         <div>
-          <FieldInput label="Google Gemini API Key" value={localStorage.getItem("gemini_api_key")||""} onChange={e=>{localStorage.setItem("gemini_api_key",e.target.value);}} placeholder="AIza..."/>
+          <FieldInput label="Google Gemini API Key" value={geminiKey} onChange={e=>{setGeminiKey(e.target.value);localStorage.setItem("gemini_api_key",e.target.value);}} placeholder="AIza..."/>
           <p className="text-[10px] text-white/25 mt-1">Ücretsiz almak için: <a href="https://aistudio.google.com/apikey" target="_blank" className="text-purple-400 underline">aistudio.google.com/apikey</a></p>
         </div>
       </Card>
