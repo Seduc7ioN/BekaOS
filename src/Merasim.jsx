@@ -906,7 +906,10 @@ function InvitationsPage({events,guests,updateEvent}) {
           </div>
           {/* Konum Bilgisi */}
           <div>
-            <p className="text-xs text-white/40 mb-2">📍 Konum (Google Maps Linki)</p>
+            <p className="text-xs text-white/40 mb-2">📍 Konum Adresi (Davetiyede Görünen)</p>
+            <input defaultValue={activeEv?.location||""} onBlur={e=>{if(activeEv)updateEvent(activeEv.id,{location:e.target.value});}}
+              placeholder="Adres / salon adı..." className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-xs text-white/80 placeholder:text-white/20 focus:outline-none focus:border-purple-500/50 mb-2"/>
+            <p className="text-xs text-white/40 mb-2 mt-3">🗺️ Google Maps Linki ("Yol Tarifi Al" butonu için)</p>
             <input defaultValue={activeEv?.location_url||""} onBlur={e=>{if(activeEv)updateEvent(activeEv.id,{location_url:e.target.value});}}
               placeholder="https://maps.google.com/?q=..." className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-xs text-white/80 placeholder:text-white/20 focus:outline-none focus:border-purple-500/50 mb-2"/>
             <p className="text-[10px] text-white/25">Google Maps'ten "Paylaş" → "Bağlantıyı kopyala" ile alabilirsiniz</p>
