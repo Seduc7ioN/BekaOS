@@ -1477,7 +1477,7 @@ function ReservationPage({events,addEvent,prefillDate,setPrefillDate,addNotif}) 
 
   if(done)return(
     <div className="max-w-md mx-auto text-center py-20">
-      <div className="w-20 h-20 rounded-full flex items-center justify-center text-4xl mx-auto mb-6" style={{background:"rgba(52,211,153,0.15)"}}>&#10003;</div>
+      <div className="w-20 h-20 rounded-full flex items-center justify-center text-4xl mx-auto mb-6" style={{background:"rgba(52,211,153,0.15)"}}>✓</div>
       <h2 className="text-xl font-bold text-white mb-2">Rezervasyon Alindi!</h2>
       <p className="text-white/50 text-sm mb-6">Ekibimiz en kisa surede <span className="text-purple-400">{form.phone||"sizi"}</span> arayacak.</p>
       <div className="p-4 rounded-2xl border border-white/3 bg-white/[0.02] text-left space-y-2 mb-6">
@@ -1500,7 +1500,7 @@ function ReservationPage({events,addEvent,prefillDate,setPrefillDate,addNotif}) 
             <div className="flex flex-col items-center">
               <div onClick={()=>i<step-1&&setStep(i+1)}
                 className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold transition-all ${step>i+1?"bg-emerald-500 text-white cursor-pointer":step===i+1?"bg-purple-500 text-white":"bg-white/8 text-white/40"}`}>
-                {step>i+1?"&#10003;":i+1}
+                {step>i+1?"✓":i+1}
               </div>
               <span className="text-[9px] text-white/35 mt-1 text-center w-14 leading-tight">{s}</span>
             </div>
