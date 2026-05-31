@@ -2123,7 +2123,7 @@ function AIPage() {
     if(!input.trim()||loading)return;
     const txt=input.trim();setInput("");
     const newMsgs=[...msgs,{role:"user",text:txt}];
-    setMsgs(newMsgs);setLoading(true);
+    setMsgs([...newMsgs,{role:"assistant",text:"⏳ Düşünüyorum..."}]);setLoading(true);
     try{
       const API_KEY = localStorage.getItem("openrouter_api_key") || "";
       if(!API_KEY){
@@ -2147,7 +2147,7 @@ function AIPage() {
         signal:controller.signal,
         headers:{"Content-Type":"application/json","Authorization":`Bearer ${API_KEY}`},
         body:JSON.stringify({
-          model:"openrouter/free",
+          model:"google/gemma-4-31b-it:free",
           max_tokens:800,
           temperature:0.7,
           messages:[
@@ -2159,13 +2159,14 @@ function AIPage() {
       clearTimeout(timeout);
       const data=await res.json();
       if(data.error){
-        setMsgs(p=>[...p,{role:"assistant",text:`API Hatası: ${data.error.message||JSON.stringify(data.error)}`}]);
+        setMsgs(p=>{const n=[...p];n[n.length-1]={role:"assistant",text:`API Hatası: ${data.error.message||JSON.stringify(data.error)}`};return n;});
       } else {
         const reply=data.choices?.[0]?.message?.content||"Boş yanıt döndü.";
-        setMsgs(p=>[...p,{role:"assistant",text:reply}]);
+        setMsgs(p=>{const n=[...p];n[n.length-1]={role:"assistant",text:reply};return n;});
       }
-    }catch{
-      setMsgs(p=>[...p,{role:"assistant",text:"Bağlantı hatası. Lütfen tekrar deneyin."}]);
+    }catch(e){
+      const msg=e.name==="AbortError"?"⏰ Zaman aşımı (60sn). Tekrar dene.":"Bağlantı hatası. Lütfen tekrar deneyin.";
+      setMsgs(p=>{const n=[...p];n[n.length-1]={role:"assistant",text:msg};return n;});
     }
     setLoading(false);
     setTimeout(()=>endRef.current?.scrollIntoView({behavior:"smooth"}),100);
