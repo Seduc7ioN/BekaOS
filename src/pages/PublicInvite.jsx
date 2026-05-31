@@ -227,6 +227,26 @@ export default function PublicInvitePage({ eventId }) {
             placeholder="Telefon (opsiyonel)"
             className="w-full px-4 py-3.5 rounded-xl text-base focus:outline-none"
             style={{ background: 'rgba(255,255,255,0.08)', border: `2px solid ${t.border}`, color: '#fff' }} />
+
+          {guestForm.response === 'katılıyor' && (
+            <div>
+              <label className="text-xs font-medium mb-2 block" style={{ color: t.textMuted }}>Aileden Kaç Kişi Katılacak?</label>
+              <div className="grid grid-cols-5 gap-2">
+                {[1,2,3,4,5].map(n => (
+                  <button key={n} type="button" onClick={() => setGuestForm(p => ({ ...p, plus: n - 1 }))}
+                    className="py-3 rounded-xl text-base font-bold transition-all active:scale-95"
+                    style={{
+                      background: guestForm.plus === n - 1 ? t.btnBg : 'rgba(255,255,255,0.08)',
+                      color: guestForm.plus === n - 1 ? t.btnText : t.text,
+                      border: `2px solid ${guestForm.plus === n - 1 ? t.accent : 'rgba(255,255,255,0.1)'}`,
+                    }}>
+                    {n}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
           <select value={guestForm.food} onChange={e => setGuestForm(p => ({ ...p, food: e.target.value }))}
             className="w-full px-4 py-3.5 rounded-xl text-base focus:outline-none"
             style={{ background: 'rgba(255,255,255,0.08)', border: `2px solid ${t.border}`, color: '#fff' }}>

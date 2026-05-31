@@ -1454,7 +1454,7 @@ function PaymentsPage({events,updateEvent}) {
 
 
 /* ── RESERVATION ────────────────────────────────── */
-function ReservationPage({events,addEvent,prefillDate,setPrefillDate}) {
+function ReservationPage({events,addEvent,prefillDate,setPrefillDate,addNotif}) {
   const [step,setStep]=useState(prefillDate?2:1);
   const [form,setForm]=useState({
     type:prefillDate?.type||"",
@@ -1478,7 +1478,7 @@ function ReservationPage({events,addEvent,prefillDate,setPrefillDate}) {
   const [newServiceName,setNewServiceName]=useState("");
   const servicesPrice=customServices.filter(s=>form.services.includes(s.name)).reduce((s,n)=>s+n.price,0);
   const total=servicesPrice;
-  const steps=["Etkinlik Türü","Tarih & Kişi","Konsept","Ek Hizmetler","İletişim","Özet"];
+  const steps=["Etkinlik Türü","Tarih & Kişi","Ek Hizmetler","İletişim","Özet"];
 
   if(done)return(
     <div className="max-w-md mx-auto text-center py-20">
@@ -1555,19 +1555,6 @@ function ReservationPage({events,addEvent,prefillDate,setPrefillDate}) {
         )}
         {step===3&&(
           <div>
-            <h3 className="text-sm font-semibold text-white/85 mb-4">Konsept Seçin</h3>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              {cöncepts.map(c=>(
-                <button key={c} onClick={()=>upd("cöncept",c)}
-                  className={`p-4 rounded-xl border-2 text-left transition-all ${form.cöncept===c?"border-purple-500 bg-purple-500/15":"border-white/3 hover:border-white/20 bg-white/[0.02]"}`}>
-                  <span className="text-sm font-medium text-white/80">{c}</span>
-                </button>
-              ))}
-            </div>
-          </div>
-        )}
-        {step===4&&(
-          <div>
             <h3 className="text-sm font-semibold text-white/85 mb-4">Ek Hizmetler</h3>
             <div className="space-y-2">
               {customServices.map((svc,idx)=>{
@@ -1604,7 +1591,7 @@ function ReservationPage({events,addEvent,prefillDate,setPrefillDate}) {
             {servicesPrice>0&&<div className="mt-3 text-right text-xs text-purple-400 font-medium">Ek hizmetler toplamı: +{servicesPrice.toLocaleString()} TL</div>}
           </div>
         )}
-        {step===5&&(
+        {step===4&&(
           <div className="space-y-4">
             <h3 className="text-sm font-semibold text-white/85 mb-4">İletişim Bilgileri</h3>
             <div className="grid grid-cols-2 gap-4">
@@ -1615,11 +1602,11 @@ function ReservationPage({events,addEvent,prefillDate,setPrefillDate}) {
             <FieldInput label="Ozel Istekler / Notlar" value={form.notes} onChange={e=>upd("notes",e.target.value)} placeholder="Tema, renk, ozel istekler..." rows={3}/>
           </div>
         )}
-        {step===6&&(
+        {step===5&&(
           <div className="space-y-4">
             <h3 className="text-sm font-semibold text-white/85 mb-4">Özet & Onay</h3>
             <div className="p-4 rounded-xl bg-white/[0.04] space-y-2">
-              {[["Etkinlik",form.type||"—"],["Tarih",form.date||"—"],["Saat",form.time||"—"],["Kişi",form.guests?`${form.guests} kişi`:"—"],["Lokasyon",form.location||"—"],["Konsept",form.cöncept||"—"],["Ad Soyad",form.name||"—"],["Telefon",form.phone||"—"]].map(([k,v])=>(
+              {[["Etkinlik",form.type||"—"],["Tarih",form.date||"—"],["Saat",form.time||"—"],["Kişi",form.guests?`${form.guests} kişi`:"—"],["Lokasyon",form.location||"—"],["Ad Soyad",form.name||"—"],["Telefon",form.phone||"—"]].map(([k,v])=>(
                 <div key={k} className="flex justify-between py-1.5 border-b border-white/3">
                   <span className="text-xs text-white/45">{k}</span><span className="text-xs text-white/75">{v}</span>
                 </div>
@@ -1656,7 +1643,7 @@ function ReservationPage({events,addEvent,prefillDate,setPrefillDate}) {
         )}
         <div className="flex items-center justify-between mt-6 pt-4 border-t border-white/3">
           <GlassBtn onClick={()=>setStep(s=>Math.max(1,s-1))} disabled={step===1}>Geri</GlassBtn>
-          {step<6?(
+          {step<5?(
             <button onClick={()=>setStep(s=>s+1)} disabled={step===1&&!form.type}
               className="px-6 py-2 rounded-xl text-xs font-semibold text-white disabled:opacity-40 transition-all hover:opacity-90" style={{background:"linear-gradient(135deg,#8b5cf6,#6366f1)"}}>
               Devam
@@ -1665,6 +1652,9 @@ function ReservationPage({events,addEvent,prefillDate,setPrefillDate}) {
             <button onClick={async()=>{
               const newEv={client:form.name||"Yeni Müşteri",type:form.type||"Nişan",date:form.date||"—",time:form.time||"—",location:form.location||"—",guests:parseInt(form.guests)||0,budget:total,paid:0,payment:"Bekliyor",status:"pending",tasks:3,done:0,phone:form.phone||""};
               await addEvent(newEv);
+              if(addNotif){
+                await addNotif({icon:"📅",text:`Yeni rezervasyon: ${form.name||"Yeni Müşteri"} - ${form.type||"Etkinlik"} (${form.date||"—"})`,page:"reservation"});
+              }
               setDone(true);
             }} disabled={!kvkk}
               className="px-6 py-2 rounded-xl text-xs font-semibold text-white disabled:opacity-40 disabled:cursor-not-allowed" style={{background:kvkk?"linear-gradient(135deg,#34d399,#059669)":"linear-gradient(135deg,#374151,#4b5563)"}}>
@@ -2520,7 +2510,7 @@ function Dashboard() {
     invitations:<InvitationsPage events={events} guests={guests} updateEvent={updateEvent}/>,
     gallery:<GalleryPage events={events} gallery={gallery} setGallery={setGallery} company={company} addNotif={addNotif}/>,
     payments:<PaymentsPage events={events} updateEvent={updateEvent}/>,
-    reservation:<ReservationPage events={events} addEvent={addEvent} prefillDate={prefillDate} setPrefillDate={setPrefillDate}/>,
+    reservation:<ReservationPage events={events} addEvent={addEvent} prefillDate={prefillDate} setPrefillDate={setPrefillDate} addNotif={addNotif}/>,
     whatsapp:<WhatsAppPage events={events}/>,
     staff:<StaffPage events={events} tasks={tasks}/>,
     crm:<CRMPage events={events}/>,

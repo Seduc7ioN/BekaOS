@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect } from 'react'
 import { supabase } from '../lib/supabase'
 
 export default function PublicGalleryPage({ eventId }) {
@@ -8,7 +8,6 @@ export default function PublicGalleryPage({ eventId }) {
   const [lightbox, setLightbox] = useState(null)
   const [uploading, setUploading] = useState(false)
   const [uploadDone, setUploadDone] = useState(false)
-  const fileRef = useRef(null)
 
   useEffect(() => { loadData() }, [eventId])
 
@@ -22,8 +21,7 @@ export default function PublicGalleryPage({ eventId }) {
     setLoading(false)
   }
 
-  const handleUpload = async (e) => {
-    const files = Array.from(e.target.files)
+  const processFiles = async (files) => {
     if (!files.length || !event) return
     setUploading(true)
     let uploaded = 0
@@ -40,7 +38,6 @@ export default function PublicGalleryPage({ eventId }) {
             url,
             approved: false,
           })
-          // Bildirim oluştur
           await supabase.from('notifications').insert({
             company_id: event.company_id,
             icon: '📸',
@@ -56,8 +53,16 @@ export default function PublicGalleryPage({ eventId }) {
     setUploading(false)
     setUploadDone(true)
     setTimeout(() => setUploadDone(false), 3000)
-    e.target.value = ''
     loadData()
+  }
+
+  const triggerUpload = () => {
+    const input = document.createElement('input')
+    input.type = 'file'
+    input.accept = 'image/*'
+    input.multiple = true
+    input.onchange = (e) => processFiles(Array.from(e.target.files))
+    input.click()
   }
 
   if (loading) return (
@@ -93,7 +98,7 @@ export default function PublicGalleryPage({ eventId }) {
 
       {/* Upload Section */}
       <div className="px-4 mb-6">
-        <div onClick={() => fileRef.current?.click()}
+        <div onClick={triggerUpload}
           className="p-4 rounded-2xl border-2 border-dashed border-purple-500/25 flex flex-col items-center gap-2 cursor-pointer hover:border-purple-500/40 transition-colors"
           style={{ background: 'rgba(139,92,246,0.04)' }}>
           {uploading ? (
@@ -114,7 +119,6 @@ export default function PublicGalleryPage({ eventId }) {
             </>
           )}
         </div>
-        <input ref={fileRef} type="file" accept="image/*" multiple className="hidden" onChange={handleUpload}/>
       </div>
 
       {/* Photo Grid */}
