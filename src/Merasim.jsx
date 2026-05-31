@@ -2140,12 +2140,15 @@ function AIPage() {
         },800);
         return;
       }
+      const controller=new AbortController();
+      const timeout=setTimeout(()=>controller.abort(),60000);
       const res=await fetch("https://openrouter.ai/api/v1/chat/completions",{
         method:"POST",
+        signal:controller.signal,
         headers:{"Content-Type":"application/json","Authorization":`Bearer ${API_KEY}`},
         body:JSON.stringify({
           model:"openrouter/free",
-          max_tokens:1000,
+          max_tokens:800,
           temperature:0.7,
           messages:[
             {role:"system",content:SYSTEMS[mode]},
@@ -2153,6 +2156,7 @@ function AIPage() {
           ]
         })
       });
+      clearTimeout(timeout);
       const data=await res.json();
       if(data.error){
         setMsgs(p=>[...p,{role:"assistant",text:`API Hatası: ${data.error.message||JSON.stringify(data.error)}`}]);
