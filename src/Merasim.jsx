@@ -2150,8 +2150,12 @@ function AIPage() {
         })
       });
       const data=await res.json();
-      const reply=data.candidates?.[0]?.content?.parts?.[0]?.text||"Bir hata oluştu. API key'inizi kontrol edin.";
-      setMsgs(p=>[...p,{role:"assistant",text:reply}]);
+      if(data.error){
+        setMsgs(p=>[...p,{role:"assistant",text:`API Hatası: ${data.error.message||JSON.stringify(data.error)}`}]);
+      } else {
+        const reply=data.candidates?.[0]?.content?.parts?.[0]?.text||"Boş yanıt döndü.";
+        setMsgs(p=>[...p,{role:"assistant",text:reply}]);
+      }
     }catch{
       setMsgs(p=>[...p,{role:"assistant",text:"Bağlantı hatası. Lütfen tekrar deneyin."}]);
     }
