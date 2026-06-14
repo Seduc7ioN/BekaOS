@@ -4,6 +4,19 @@ import { runProvider } from './_providers.js'
 
 const BATCH = 3
 
+// Firebase ID token doğrula ve kullanıcı kimliğini (uid) döndür.
+async function verifyFirebaseUser(idToken) {
+  const apiKey = process.env.VITE_FIREBASE_API_KEY || process.env.FIREBASE_API_KEY
+  if (!idToken || !apiKey) return null
+  const response = await fetch(
+    `https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=${apiKey}`,
+    { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ idToken }) },
+  )
+  if (!response.ok) return null
+  const result = await response.json()
+  return result.users?.[0]?.localId || null
+}
+
 // Kuyruktaki bir üretimi işle: proje + kredi + ledger güncellemeleriyle.
 async function processGeneration(db, snapshot) {
   const generation = { id: snapshot.id, ...snapshot.data() }
@@ -60,29 +73,33 @@ async function processGeneration(db, snapshot) {
 }
 
 export default async function handler(request, response) {
-  // Cron/manuel tetikleme güvenliği.
-  const secret = process.env.CRON_SECRET
-  if (secret) {
-    const provided = (request.headers.authorization || '').replace(/^Bearer\s+/i, '')
-    if (provided !== secret) {
-      response.status(401).json({ error: 'Yetkisiz' })
-      return
-    }
-  }
-
   if (!adminReady) {
     response.status(503).json({ error: 'Firebase Admin yapılandırılmamış.' })
     return
   }
 
+  // İki tetikleme yolu:
+  // 1) Cron: Authorization === CRON_SECRET → tüm kuyruğu işle.
+  // 2) İstemci: geçerli Firebase ID token → yalnızca o kullanıcının kuyruğunu işle.
+  const provided = (request.headers.authorization || '').replace(/^Bearer\s+/i, '')
+  const secret = process.env.CRON_SECRET
+  let ownerScope = null
+
+  // Cron (secret) tüm kuyruğu işler; aksi halde kullanıcı token'ı kendi kuyruğunu işler.
+  if (!secret || provided !== secret) {
+    const uid = await verifyFirebaseUser(provided)
+    if (!uid) {
+      response.status(401).json({ error: 'Yetkisiz' })
+      return
+    }
+    ownerScope = uid
+  }
+
   try {
     const db = adminDb()
-    const queued = await db
-      .collection('generations')
-      .where('status', '==', 'queued')
-      .orderBy('createdAt', 'asc')
-      .limit(BATCH)
-      .get()
+    let queryRef = db.collection('generations').where('status', '==', 'queued')
+    if (ownerScope) queryRef = queryRef.where('ownerId', '==', ownerScope)
+    const queued = await queryRef.orderBy('createdAt', 'asc').limit(BATCH).get()
 
     const results = []
     for (const snapshot of queued.docs) {

@@ -177,5 +177,11 @@ export async function createProject(userId, form, files) {
     createdAt: serverTimestamp(),
   })
 
+  // Üretimi anında tetikle (cron yalnızca yedek). Token ile kullanıcının kuyruğu işlenir.
+  fetch('/api/process', {
+    method: 'POST',
+    headers: { Authorization: `Bearer ${idToken}` },
+  }).catch(() => {})
+
   return project.id
 }
